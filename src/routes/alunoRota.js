@@ -1,10 +1,11 @@
 const router = require("express").Router()
+const excelToJson = require("../utils/excelParseJson")
 const { uploadArquivoAlunos } = require("../utils/salvarExcel")
 
 router.post("/cadastrar/multiplos", uploadArquivoAlunos.single("alunosFile"), (req, res) => {
 
-    console.log(req.file.path)
-    res.json("ok")
+    const responseJson = excelToJson(req.file.path)
+    res.json({data:responseJson})
 
 })
 
