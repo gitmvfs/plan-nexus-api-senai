@@ -13,12 +13,16 @@ const cursoModel = sequelize.define('curso', {
     type: DataTypes.STRING(50),
     allowNull: false
   },
-  data_inicio: {
-    type: DataTypes.DATE,
+  ano_inicio: {
+    type: DataTypes.STRING(4),
     allowNull: false
   },
-  data_termino: {
-    type: DataTypes.DATE,
+  semestre_inicio: {
+    type: DataTypes.ENUM(["1","2"]),
+    allowNull: false
+  },
+  curso_duracao:{
+    type: DataTypes.INTEGER,
     allowNull: false
   },
   modalidade:{

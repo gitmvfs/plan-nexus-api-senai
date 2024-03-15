@@ -4,7 +4,9 @@ function cadastroDeTurmas(listaAlunos) {
 
     const listaTurmas = extrairTurmasDosAlunos(listaAlunos)
     const turmarUnicas = retirarTurmasRepetidas(listaTurmas)
-    colocarNivelGraduacao(turmarUnicas)
+    const turmasDefinidas = calcularDuracaoSemestresCursos(turmarUnicas) // nesta estapa os dados das turmas já estão prontos para inserir no banco
+    enviarParaOBanco(turmasDefinidas)
+
 }
 
 function extrairTurmasDosAlunos(listaAlunos) {
@@ -34,81 +36,86 @@ function retirarTurmasRepetidas(listaTurmasRepetidas) {
 
     listaTurmasRepetidas.map((turma) => {
 
-        // Verifica se existe a turma , caso a turma for unica e não existir adiciona na lista de turmas unicas
-        setTurmasUnicas.has(turma.nomeCurso + turma.Tipo + turma.CodigoTurma)
-            ? ""
-            : arrayTurmasUnicas.push({ nomeCurso: turma.nomeCurso, Tipo: turma.Tipo, CodigoTurma: turma.CodigoTurma })
+        // const listaCursosTecnicos = ["técnico", "técnica", "tecnico", "tecnica"] // palavras-chaves para cursos técnicos
+        const listaCursosSuperiores = ["técnologico", "técnologo", "bacharelado", "graduação", "extensão"] // palavras-chaves para cursos superiores
 
-        setTurmasUnicas.add(turma.nomeCurso + turma.Tipo + turma.CodigoTurma)
+        //Compara se a lista é de curso superior
+        for (const palavraChave of listaCursosSuperiores) {
+
+            if (turma.Tipo.toLowerCase().includes(palavraChave)) {
+                turma.Tipo = "superior";
+                break; // Se encontrou, pode parar a iteração
+            }
+        }
+
+        //Se não for superior é tecnico
+        if (!turma.Tipo.includes("superior")) {
+            turma.Tipo = "tecnico"
+        }
+
+        //Se precisar criar outras categorias é só criar uma condição que compara que não é nem superior e nem técnico
+
+        // Verifica se existe a turma , caso a turma for unica e não existir adiciona na lista de turmas unicas
+        setTurmasUnicas.has(turma.nomeCurso + turma.Tipo)
+            ? ""
+            : arrayTurmasUnicas.push({ nomeCurso: turma.nomeCurso, Tipo: turma.Tipo })
+
+        setTurmasUnicas.add(turma.nomeCurso + turma.Tipo)
     })
 
     return arrayTurmasUnicas;
 }
 
-function colocarNivelGraduacao(listaTurmasUnicas) {
+function calcularDuracaoSemestresCursos(listaTurmasUnicas) {
 
-    const listaTurmasComGraduacao = []
+    const dataAtual = new Date()
+    const anoAtual = new Date().getFullYear()
+    const fechamentoPrimeiroSemestre = new Date(`${anoAtual}-06-01`)
 
-    const listaCursosTecnicos = ["técnico", "técnica", "tecnico", "tecnica"] // palavras-chaves para cursos técnicos
-    const listaCursosSuperiores = ["técnologico", "técnologo", "bacharelado", "graduação", "extensão"] // palavras-chaves para cursos superiores
+    const listaTurmasDefinidas = []
 
     listaTurmasUnicas.map((turma) => {
+        let duracaoCurso = 2 // Padrão dos cursos técnicos 
+        let semestreInicio = 1
 
-        let cursoTecnico = false
-        let cursoSuperior = false
-        let turmaEstado = false
-
-        //Verifica se a turma é técnico
-        for (const palavraChave of listaCursosTecnicos) {
-            if (turma.Tipo.toLowerCase().includes(palavraChave)) {
-
-                cursoTecnico = true;
-
-                //Se for técnico verifica se é do estado 
-                if (turma.CodigoTurma.toLowerCase().includes("seduc")) {
-
-                    turmaEstado = true
-                }
-                break; // Se encontrou, pode parar a iteração
-            }
+        // Define a duração do curso para nivel superior
+        if (turma.Tipo.includes("superior")) {
+            duracaoCurso = 3
         }
 
-        //Se não for técnico vai verificar se é superior
-        if (!cursoTecnico) {
-            for (const palavraChave of listaCursosSuperiores) {
-                if (turma.Tipo.toLowerCase().includes(palavraChave)) {
-                    cursoSuperior = true;
-                    break; // Se encontrou, pode parar a iteração
-                }
-            }
-
+        // Define o semestre de inicio
+        if (dataAtual > fechamentoPrimeiroSemestre) {
+            semestreInicio = 2
         }
 
-        // Define a data de acordo com o tipo da graduação
+        listaTurmasDefinidas.push({
+            nome: turma.nomeCurso.toLowerCase(),
+            modalidade: turma.Tipo.toLowerCase(),
+            semestre_inicio: semestreInicio,
+            ano_inicio: anoAtual,
+            curso_duracao: duracaoCurso
+        })
 
-        // Se a turma é técnico do estado
-        if (cursoTecnico && turmaEstado) {
-            console.log(" É ESTADO: " + turma.Tipo)
-        }
-        // Se a turma é curso técnico
-        if (cursoTecnico) {
-            console.log(" É tecnico: " + turma.Tipo)
+    })
 
-        }
-        // Se a turma é superior
-        if (cursoSuperior) {
-            console.log(" É superior: " + turma.Tipo)
+    return listaTurmasDefinidas
 
-        }
-        if (!cursoTecnico && !cursoSuperior) {
-            console.log(" É outros: " + turma.Tipo)
-
-        }
-
-
-    }
-    )
 }
-// console.log(listaTurmasParaCadastro)
+
+function enviarParaOBanco(turmasDefinidas) {
+
+    turmasDefinidas.map((turma) => {
+        cursoModel.create({
+            nome: turma.nome,
+            modalidade: turma.modalidade,
+            semestre_inicio: turma.semestre_inicio,
+            ano_inicio: turma.ano_inicio,
+            curso_duracao: turma.curso_duracao
+        })
+    })
+
+
+}
+
 
 module.exports = { cadastroDeTurmas }
