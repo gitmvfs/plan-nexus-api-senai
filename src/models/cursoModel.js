@@ -1,5 +1,5 @@
 const { DataTypes} = require('sequelize');
-const conectar_db = require("../utils/conectarDb")
+const conectar_db = require("../services/conectarDB")
 
 const sequelize = conectar_db
 
