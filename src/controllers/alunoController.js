@@ -6,8 +6,8 @@ async function cadastroAlunos(listaAluno) {
 
     // Pega o id da turma do aluno e coloca no fk_curso
     const alunosSeparadosPorTurmas = await separarAlunosNasTurmas(listaAluno)
-    mandarAlunosDb(alunosSeparadosPorTurmas)
-
+    const resultado = await mandarAlunosDb(alunosSeparadosPorTurmas)
+    return resultado
 
 
 
@@ -20,7 +20,6 @@ async function separarAlunosNasTurmas(listaAlunos) {
     const listaAlunosNasTurmas = [];
 
     for (const aluno of listaAlunos) {
-        let duracaoCurso = 2; // Padrão dos cursos técnicos 
         let semestreInicio = 1;
 
         aluno.Tipo = definirGraduacao(aluno);
@@ -83,11 +82,10 @@ async function mandarAlunosDb(listaAlunos) {
             }
         });
 
-        console.log('Alunos cadastrados:', alunosCadastrados);
-        console.log('Alunos com erro:', alunosComErro);
+        return  {alunosCadastrados: alunosCadastrados, alunosNaoCadastrados: alunosComErro}
 
     } catch (error) {
-        console.error('Erro ao cadastrar alunos:', error);
+        return (error)
     }
 
 }
