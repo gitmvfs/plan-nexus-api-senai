@@ -1,6 +1,8 @@
 const cursoModel = require("../models/cursoModel")
 const conectar_db = require("../services/conectarDB")
 const Sequelize = require("sequelize")
+const definirGraduacao = require("../utils/definirGraduacao")
+
 
 async function cadastroDeTurmas(listaAlunos) {
 
@@ -8,7 +10,6 @@ async function cadastroDeTurmas(listaAlunos) {
     const turmasUnicas = retirarTurmasRepetidas(listaTurmas)
     const turmasDefinidas = calcularDuracaoSemestresCursos(turmasUnicas) // nesta estapa os dados das turmas já estão prontos para inserir no banco
     await enviarTurmasParaDB(turmasDefinidas)
-
 }
 
 function extrairTurmasDosAlunos(listaAlunos) {
@@ -38,22 +39,7 @@ function retirarTurmasRepetidas(listaTurmasRepetidas) {
 
     listaTurmasRepetidas.map((turma) => {
 
-        // const listaCursosTecnicos = ["técnico", "técnica", "tecnico", "tecnica"] // palavras-chaves para cursos técnicos
-        const listaCursosSuperiores = ["técnologico", "técnologo", "bacharelado", "graduação", "extensão"] // palavras-chaves para cursos superiores
-
-        //Compara se a lista é de curso superior
-        for (const palavraChave of listaCursosSuperiores) {
-
-            if (turma.Tipo.toLowerCase().includes(palavraChave)) {
-                turma.Tipo = "superior";
-                break; // Se encontrou, pode parar a iteração
-            }
-        }
-
-        //Se não for superior é tecnico
-        if (!turma.Tipo.includes("superior")) {
-            turma.Tipo = "tecnico"
-        }
+        turma.Tipo = definirGraduacao(turma)
 
         //Se precisar criar outras categorias é só criar uma condição que compara que não é nem superior e nem técnico
 
