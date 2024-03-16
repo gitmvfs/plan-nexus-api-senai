@@ -1,11 +1,13 @@
 const cursoModel = require("../models/cursoModel")
+const conectar_db = require("../services/conectarDB")
+const Sequelize = require("sequelize")
 
-function cadastroDeTurmas(listaAlunos) {
+async function cadastroDeTurmas(listaAlunos) {
 
     const listaTurmas = extrairTurmasDosAlunos(listaAlunos)
-    const turmarUnicas = retirarTurmasRepetidas(listaTurmas)
-    const turmasDefinidas = calcularDuracaoSemestresCursos(turmarUnicas) // nesta estapa os dados das turmas já estão prontos para inserir no banco
-    enviarParaOBanco(turmasDefinidas)
+    const turmasUnicas = retirarTurmasRepetidas(listaTurmas)
+    const turmasDefinidas = calcularDuracaoSemestresCursos(turmasUnicas) // nesta estapa os dados das turmas já estão prontos para inserir no banco
+    await enviarTurmasParaDB(turmasDefinidas)
 
 }
 
@@ -58,7 +60,7 @@ function retirarTurmasRepetidas(listaTurmasRepetidas) {
         // Verifica se existe a turma , caso a turma for unica e não existir adiciona na lista de turmas unicas
         setTurmasUnicas.has(turma.nomeCurso + turma.Tipo)
             ? ""
-            : arrayTurmasUnicas.push({ nomeCurso: turma.nomeCurso, Tipo: turma.Tipo })
+            : arrayTurmasUnicas.push({ nomeCurso: turma.nomeCurso, Tipo: turma.Tipo, codigoTurma: turma.CodigoTurma })
 
         setTurmasUnicas.add(turma.nomeCurso + turma.Tipo)
     })
@@ -87,8 +89,10 @@ function calcularDuracaoSemestresCursos(listaTurmasUnicas) {
         if (dataAtual > fechamentoPrimeiroSemestre) {
             semestreInicio = 2
         }
+        // console.log(turma)
 
         listaTurmasDefinidas.push({
+            // CodigoTurma: turma.codigoTurma,
             nome: turma.nomeCurso.toLowerCase(),
             modalidade: turma.Tipo.toLowerCase(),
             semestre_inicio: semestreInicio,
@@ -102,20 +106,36 @@ function calcularDuracaoSemestresCursos(listaTurmasUnicas) {
 
 }
 
-function enviarParaOBanco(turmasDefinidas) {
+async function enviarTurmasParaDB(turmasDefinidas) {
 
+    // Vai tentar inserir cada turma individualmente para ver se ja está cadastrada ou não
     turmasDefinidas.map((turma) => {
-        cursoModel.create({
-            nome: turma.nome,
-            modalidade: turma.modalidade,
-            semestre_inicio: turma.semestre_inicio,
-            ano_inicio: turma.ano_inicio,
-            curso_duracao: turma.curso_duracao
+
+        //Realiza uma pesquisa no modelo do curso para inserir as turmas
+        const listaTurmasCadastradas = []
+
+        cursoModel.findAll({
+            where: {
+                nome: turma.nome,
+                modalidade: turma.modalidade,
+                semestre_inicio: turma.semestre_inicio,
+                ano_inicio: turma.ano_inicio,
+                curso_duracao: turma.curso_duracao
+            }
         })
+            .then((r) => {
+
+                // Caso não exista registro, cadastra no banco
+                if (r.length == 0) {
+                    cursoModel.create(turma)
+                        .then((r) => {
+                            console.log("Turma cadastrada: " + r)
+                        })
+                }
+            })
     })
 
 
 }
-
 
 module.exports = { cadastroDeTurmas }
