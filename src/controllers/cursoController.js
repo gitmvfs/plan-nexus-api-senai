@@ -6,10 +6,21 @@ const definirGraduacao = require("../utils/definirGraduacao")
 
 async function cadastroDeTurmas(listaAlunos) {
 
-    const listaTurmas = extrairTurmasDosAlunos(listaAlunos)
-    const turmasUnicas = retirarTurmasRepetidas(listaTurmas)
-    const turmasDefinidas = calcularDuracaoSemestresCursos(turmasUnicas) // nesta estapa os dados das turmas já estão prontos para inserir no banco
-    await enviarTurmasParaDB(turmasDefinidas)
+    return new Promise(async (resolve, reject) => {
+
+        try {
+            const listaTurmas = extrairTurmasDosAlunos(listaAlunos)
+            const turmasUnicas = retirarTurmasRepetidas(listaTurmas)
+            const turmasDefinidas = calcularDuracaoSemestresCursos(turmasUnicas) // nesta estapa os dados das turmas já estão prontos para inserir no banco
+            await enviarTurmasParaDB(turmasDefinidas)
+            resolve(200)
+        }
+        catch (err) {
+            reject(err)
+        }
+
+    })
+
 }
 
 function extrairTurmasDosAlunos(listaAlunos) {
@@ -91,16 +102,10 @@ function calcularDuracaoSemestresCursos(listaTurmasUnicas) {
     return listaTurmasDefinidas
 
 }
-
 async function enviarTurmasParaDB(turmasDefinidas) {
-
-    // Vai tentar inserir cada turma individualmente para ver se ja está cadastrada ou não
-    turmasDefinidas.map((turma) => {
-
-        //Realiza uma pesquisa no modelo do curso para inserir as turmas
-        const listaTurmasCadastradas = []
-
-        cursoModel.findAll({
+    // Mapeia as promessas de inserção de turmas
+    const insercoesTurmas = turmasDefinidas.map(async (turma) => {
+        const listaTurmasCadastradas = await cursoModel.findAll({
             where: {
                 nome: turma.nome,
                 modalidade: turma.modalidade,
@@ -108,20 +113,27 @@ async function enviarTurmasParaDB(turmasDefinidas) {
                 ano_inicio: turma.ano_inicio,
                 curso_duracao: turma.curso_duracao
             }
-        })
-            .then((r) => {
+        });
+        // Se não houver registro, cadastra a turma no banco
+        if (listaTurmasCadastradas.length === 0) {
+            return cursoModel.create(turma);
+        } else {
+            return null; // Retorna null para indicar que a turma já está cadastrada
+        }
+    });
 
-                // Caso não exista registro, cadastra no banco
-                if (r.length == 0) {
-                    cursoModel.create(turma)
-                        .then((r) => {
-                            console.log("Turma cadastrada: " + r)
-                        })
-                }
-            })
-    })
+    // Aguarda a conclusão de todas as inserções
+    const resultadosInsercao = await Promise.all(insercoesTurmas);
 
+    // Filtra os resultados para remover entradas nulas
+    const turmasInseridas = resultadosInsercao.filter(resultado => resultado !== null);
 
+    // Retorna as turmas inseridas
+    return turmasInseridas;
 }
+
+
+
+
 
 module.exports = { cadastroDeTurmas }
