@@ -132,8 +132,4 @@ async function enviarTurmasParaDB(turmasDefinidas) {
     return turmasInseridas;
 }
 
-
-
-
-
 module.exports = { cadastroDeTurmas }

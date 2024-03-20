@@ -2,14 +2,12 @@ const cursoModel = require("../models/cursoModel")
 const alunoModel = require("../models/alunoModel")
 const definirGraduacao = require("../utils/definirGraduacao")
 
-async function cadastroAlunos(listaAluno) {
+async function cadastroMultiplosAlunos(listaAluno) {
 
     // Pega o id da turma do aluno e coloca no fk_curso
     const alunosSeparadosPorTurmas = await separarAlunosNasTurmas(listaAluno)
     const resultado = await mandarAlunosDb(alunosSeparadosPorTurmas)
     return resultado
-
-
 
 }
 
@@ -90,6 +88,24 @@ async function mandarAlunosDb(listaAlunos) {
 
 }
 
+function cadastroUnicoAluno(aluno, socioAapm) {
+
+    return new Promise(async (resolve, reject) => {
+        try {
+
+            await alunoModel.create(aluno)
+                .then((r) => resolve(r))
+                .catch((e) => {
+                   reject(e)
+                })
+        }
+        catch (err) {
+            reject(e)
+        }
+    })
+
+
+}
 
 function atualizarAluno(cpfAluno, emailAluno, dados) {
 
@@ -124,4 +140,4 @@ function atualizarAluno(cpfAluno, emailAluno, dados) {
     })
 }
 
-module.exports = { cadastroAlunos, atualizarAluno }
+module.exports = { cadastroMultiplosAlunos, cadastroUnicoAluno, atualizarAluno }
