@@ -82,7 +82,7 @@ async function mandarAlunosDb(listaAlunos) {
             }
         });
 
-        return  {alunosCadastrados: alunosCadastrados, alunosNaoCadastrados: alunosComErro}
+        return { alunosCadastrados: alunosCadastrados, alunosNaoCadastrados: alunosComErro }
 
     } catch (error) {
         return (error)
@@ -90,4 +90,38 @@ async function mandarAlunosDb(listaAlunos) {
 
 }
 
-module.exports = cadastroAlunos
+
+function atualizarAluno(cpfAluno, emailAluno) {
+
+    // const dados_exemplo = {
+    //     "nome": "nomeTeste",
+    //     "email": "emailTeste@gmail.com",
+    //     "fk_curso": "2"
+    // }
+
+    return new Promise(async (resolve, reject) => {
+
+        try {
+            let condicao = {}
+
+            //Verifica se o dado do aluno está vazio, null e etc... Se estiver ele usa como condição o email para atualizar
+            !!cpfAluno == false
+                ? condicao = { email: emailAluno } :
+                condicao = { CPF: cpfAluno }
+
+            await alunoModel.update(
+                dados,
+                {
+                    where: condicao
+                })
+                .then((r) => resolve(r))
+                .catch((e) => reject(e))
+        }
+
+        catch (err) {
+            reject(err)
+        }
+    })
+}
+
+module.exports = {cadastroAlunos, atualizarAluno}
