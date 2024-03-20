@@ -91,7 +91,7 @@ async function mandarAlunosDb(listaAlunos) {
 }
 
 
-function atualizarAluno(cpfAluno, emailAluno) {
+function atualizarAluno(cpfAluno, emailAluno, dados) {
 
     // const dados_exemplo = {
     //     "nome": "nomeTeste",
@@ -124,4 +124,4 @@ function atualizarAluno(cpfAluno, emailAluno) {
     })
 }
 
-module.exports = {cadastroAlunos, atualizarAluno}
+module.exports = { cadastroAlunos, atualizarAluno }
