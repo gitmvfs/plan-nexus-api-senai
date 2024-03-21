@@ -162,5 +162,33 @@ function pesquisaUnicoAluno(cpfAluno, emailAluno) {
     })
 }
 
+function pesquisaTodosAlunos(filtro) {
+
+    return new Promise(async (resolve, reject) => {
+
+        try {
+
+            //Verifica se o filtro está vazio e passa um json vazio caso contrario passa o proprio filtro
+            !!filtro == false ? filtro = {} : filtro = filtro
+
+            const listaAlunos = []
+
+            const resultado = await alunoModel.findAll({
+                where: filtro
+            })
+
+            resultado == null
+                ? reject("Alunos não encontrado, verifique os filtros.")
+                : resultado.map((aluno) => listaAlunos.push(aluno.dataValues))
+            // console.log(listaAlunos)
+            resolve(listaAlunos)
+        }
+        catch (err) {
+            reject(err)
+        }
+    })
+
+
+}
 
 module.exports = { cadastroMultiplosAlunos, cadastroUnicoAluno, atualizarAluno, pesquisaUnicoAluno }
