@@ -3,7 +3,7 @@ const { definirStatusArmario } = require("../utils/converterString")
 
 const router = require("express").Router()
 
-router.post("/atualizar", async (req, res) => {
+router.patch("/atualizar", async (req, res) => {
 
     try {
         let { numeroArmario, CPF, statusArmario } = req.body
