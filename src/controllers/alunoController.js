@@ -96,7 +96,7 @@ function cadastroUnicoAluno(aluno, socioAapm) {
             await alunoModel.create(aluno)
                 .then((r) => resolve(r))
                 .catch((e) => {
-                   reject(e)
+                    reject(e)
                 })
         }
         catch (err) {
@@ -140,4 +140,27 @@ function atualizarAluno(cpfAluno, emailAluno, dados) {
     })
 }
 
-module.exports = { cadastroMultiplosAlunos, cadastroUnicoAluno, atualizarAluno }
+function pesquisaUnicoAluno(cpfAluno, emailAluno) {
+    return new Promise(async (resolve, reject) => {
+
+        try {
+
+            !!cpfAluno == false
+                ? condicao = { email: emailAluno } :
+                condicao = { CPF: cpfAluno }
+
+            const aluno = await alunoModel.findOne({
+                where: condicao
+            })
+            aluno == null
+                ? reject("Aluno não encontrado, verifique os dados.")
+                : resolve(aluno.dataValues)
+        }
+        catch (err) {
+            reject(err)
+        }
+    })
+}
+
+
+module.exports = { cadastroMultiplosAlunos, cadastroUnicoAluno, atualizarAluno, pesquisaUnicoAluno }

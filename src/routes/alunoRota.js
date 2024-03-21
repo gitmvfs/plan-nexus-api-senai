@@ -1,5 +1,5 @@
 const router = require("express").Router()
-const { cadastroMultiplosAlunos, atualizarAluno, cadastroUnicoAluno } = require("../controllers/alunoController")
+const { cadastroMultiplosAlunos, atualizarAluno, cadastroUnicoAluno, pesquisaUnicoAluno } = require("../controllers/alunoController")
 const { cadastroDeTurmas } = require("../controllers/cursoController")
 const tratarMensagensDeErro = require("../utils/errorMsg")
 const excelToJson = require("../utils/excelParseJson")
@@ -34,8 +34,8 @@ router.post("/cadastro/unico", async (req, res) => {
         const response = await cadastroUnicoAluno(aluno, socioAapm)
 
         response[0] == 1
-            ? res.json({ "msg": "Atualizado com sucesso", "statudCode": 200 }).status(200)
-            : res.json({ "msg": "Erro ao atualizar", "statusCode": 500 }).status(500)
+            ? res.json({ "msg": "cadastrado com sucesso", "statudCode": 200 }).status(200)
+            : res.json({ "msg": "Erro ao cadastrar", "statusCode": 400 }).status(400)
 
     }
     catch (err) {
@@ -53,13 +53,30 @@ router.patch("/atualizar", async (req, res) => {
 
         response[0] == 1
             ? res.json({ "msg": "Atualizado com sucesso", "statusCode": 200 }).status(200)
-            : res.json({ "msg": "Erro ao atualizar aluno, verifique os campos.", "statusCode": 500 }).status(500)
+            : res.json({ "msg": "Erro ao atualizar aluno, verifique os campos.", "statusCode": 400 }).status(400)
 
     }
     catch (err) {
         const errMsg = tratarMensagensDeErro(err)
         res.json({ errMsg: errMsg, "statusCode": 500 }).status(500)
     }
+})
+
+router.get("/unico", async (req, res) => {
+
+    const { CPF, email } = req.body
+
+    try {
+        await pesquisaUnicoAluno(CPF, email)
+            .then((resposta) => res.json({ msg: "Consulta realizada com sucesso", "statusCode": 200, data: resposta }).status(200))
+            .catch((e) => res.json({ msg: "Erro ao realizar consulta", "statusCode": 400, errMsg: e }))
+    }
+    catch (err) {
+        const errMsg = tratarMensagensDeErro(err)
+        res.json({ errMsg: errMsg, "statusCode": 500 }).status(500)
+
+    }
+
 })
 
 module.exports = router
