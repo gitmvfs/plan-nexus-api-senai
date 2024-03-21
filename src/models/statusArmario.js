@@ -18,6 +18,4 @@ const statusArmarioModel = sequelize.define('status', {
     timestamps: false // Se não houver colunas de timestamp
 });
 
-statusArmarioModel.sync()
-
 module.exports = statusArmarioModel
