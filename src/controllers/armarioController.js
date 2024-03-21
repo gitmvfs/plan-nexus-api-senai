@@ -27,5 +27,13 @@ function atualizarArmario(numeroArmario, cpf, statusArmario) {
 
 }
 
+function pesquisarTodosArmario(){
+
+    armarioModel.findAll({
+        where:condicao
+    })
+
+}
+
 module.exports = {atualizarArmario}
 
