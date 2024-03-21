@@ -1,6 +1,8 @@
 const alunoModel = require("./alunoModel")
 const statusArmarioModel = require("./statusArmario")
-
+const { DataTypes } = require('sequelize');
+const conectar_db = require("../services/conectarDB")
+const sequelize = conectar_db
 
 const armarioModel = sequelize.define('armario', {
     numero: {
@@ -30,3 +32,5 @@ const armarioModel = sequelize.define('armario', {
     timestamps: false // Se não houver colunas de timestamp
   });
   
+
+  module.exports = armarioModel
