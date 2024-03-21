@@ -9,7 +9,7 @@ router.patch("/atualizar", async (req, res) => {
         let { numeroArmario, CPF, statusArmario } = req.body
         statusArmario = definirStatusArmario(statusArmario)
 
-        const response = await atualizarArmario(statusArmario)
+        const response = await atualizarArmario(numeroArmario,CPF,statusArmario)
 
         response[0] == 1
             ? res.json({ "msg": "Atualizado com sucesso", "statusCode": 200 }).status(200)
