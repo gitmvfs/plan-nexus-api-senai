@@ -22,4 +22,22 @@ function definirGraduacao(objeto) {
 
 }
 
-module.exports = definirGraduacao
+function definirStatusArmario(status){
+
+    let statusLowerCase = status.toLowerCase()
+
+    switch (statusLowerCase) {
+        case "ocupado":
+            return 1
+            break;
+        case "desocupado":
+            return 2
+            break;
+        default:
+            return 3 // retorna trancado por padrão
+            break;
+    }
+
+}
+
+module.exports = {definirGraduacao , definirStatusArmario}

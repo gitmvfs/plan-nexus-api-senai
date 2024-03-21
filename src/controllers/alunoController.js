@@ -1,6 +1,6 @@
 const cursoModel = require("../models/cursoModel")
 const alunoModel = require("../models/alunoModel")
-const definirGraduacao = require("../utils/definirGraduacao")
+const {definirGraduacao} = require("../utils/converterString")
 
 async function cadastroMultiplosAlunos(listaAluno) {
 
