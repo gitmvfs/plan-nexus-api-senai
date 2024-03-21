@@ -32,8 +32,7 @@ router.post("/cadastro/unico", async (req, res) => {
     }
     try {
         const response = await cadastroUnicoAluno(aluno, socioAapm)
-
-        response[0] == 1
+        !!response == true
             ? res.json({ "msg": "cadastrado com sucesso", "statudCode": 200 }).status(200)
             : res.json({ "msg": "Erro ao cadastrar", "statusCode": 400 }).status(400)
 
