@@ -1,15 +1,13 @@
 const cursoModel = require("../models/cursoModel")
 const alunoModel = require("../models/alunoModel")
-const definirGraduacao = require("../utils/definirGraduacao")
+const {definirGraduacao} = require("../utils/converterString")
 
-async function cadastroAlunos(listaAluno) {
+async function cadastroMultiplosAlunos(listaAluno) {
 
     // Pega o id da turma do aluno e coloca no fk_curso
     const alunosSeparadosPorTurmas = await separarAlunosNasTurmas(listaAluno)
     const resultado = await mandarAlunosDb(alunosSeparadosPorTurmas)
     return resultado
-
-
 
 }
 
@@ -82,7 +80,7 @@ async function mandarAlunosDb(listaAlunos) {
             }
         });
 
-        return  {alunosCadastrados: alunosCadastrados, alunosNaoCadastrados: alunosComErro}
+        return { alunosCadastrados: alunosCadastrados, alunosNaoCadastrados: alunosComErro }
 
     } catch (error) {
         return (error)
@@ -90,4 +88,107 @@ async function mandarAlunosDb(listaAlunos) {
 
 }
 
-module.exports = cadastroAlunos
+function cadastroUnicoAluno(aluno, socioAapm) {
+
+    return new Promise(async (resolve, reject) => {
+        try {
+
+            await alunoModel.create(aluno)
+                .then((r) => resolve(r))
+                .catch((e) => {
+                    reject(e)
+                })
+        }
+        catch (err) {
+            reject(e)
+        }
+    })
+
+
+}
+
+function atualizarAluno(cpfAluno, emailAluno, dados) {
+
+    // const dados_exemplo = {
+    //     "nome": "nomeTeste",
+    //     "email": "emailTeste@gmail.com",
+    //     "fk_curso": "2"
+    // }
+
+    return new Promise(async (resolve, reject) => {
+
+        try {
+            let condicao = {}
+
+            //Verifica se o dado do aluno está vazio, null e etc... Se estiver ele usa como condição o email para atualizar
+            !!cpfAluno == false
+                ? condicao = { email: emailAluno } :
+                condicao = { CPF: cpfAluno }
+
+            await alunoModel.update(
+                dados,
+                {
+                    where: condicao
+                })
+                .then((r) => resolve(r))
+                .catch((e) => reject(e))
+        }
+
+        catch (err) {
+            reject(err)
+        }
+    })
+}
+
+function pesquisaUnicoAluno(cpfAluno, emailAluno) {
+    return new Promise(async (resolve, reject) => {
+
+        try {
+
+            !!cpfAluno == false
+                ? condicao = { email: emailAluno } :
+                condicao = { CPF: cpfAluno }
+
+            const aluno = await alunoModel.findOne({
+                where: condicao
+            })
+            aluno == null
+                ? reject("Aluno não encontrado, verifique os dados.")
+                : resolve(aluno.dataValues)
+        }
+        catch (err) {
+            reject(err)
+        }
+    })
+}
+
+function pesquisaTodosAlunos(filtro) {
+
+    return new Promise(async (resolve, reject) => {
+
+        try {
+
+            //Verifica se o filtro está vazio e passa um json vazio caso contrario passa o proprio filtro
+            !!filtro == false ? filtro = {} : filtro = filtro
+
+            const listaAlunos = []
+
+            const resultado = await alunoModel.findAll({
+                where: filtro
+            })
+
+            resultado == null
+                ? reject("Alunos não encontrado, verifique os filtros.")
+                : resultado.map((aluno) => listaAlunos.push(aluno.dataValues))
+            // console.log(listaAlunos)
+            resolve(listaAlunos)
+        }
+        catch (err) {
+            reject(err)
+        }
+    })
+
+
+}
+
+module.exports = { cadastroMultiplosAlunos, cadastroUnicoAluno, atualizarAluno, pesquisaUnicoAluno }

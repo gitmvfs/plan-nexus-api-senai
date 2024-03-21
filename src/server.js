@@ -7,6 +7,7 @@ const cors = require("cors")
 
 //Importando as rotas
 const alunosRota = require("./routes/alunoRota")
+const armarioRota = require("./routes/armarioRota")
 
 
 // Config dotenv
@@ -21,5 +22,6 @@ app.use(cors())
 
 //Configurando rotas
 app.use("/aluno", alunosRota)
+app.use("/armario", armarioRota)
 
 app.listen(serverPort, () => console.log(`HTTP RUNNING AT: http://localhost:${serverPort}`))
