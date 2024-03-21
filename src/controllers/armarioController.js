@@ -26,8 +26,6 @@ function atualizarArmario(numeroArmario, cpf, statusArmario) {
     })
 
 }
-atualizarArmario("1", "12345678911", "2")
-.then((r)=> console.log(r))
-.catch((e) => console.log(e))
-// module.exports = {alterarArmario}
+
+module.exports = {atualizarArmario}
 
