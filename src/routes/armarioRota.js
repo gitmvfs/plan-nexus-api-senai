@@ -12,12 +12,12 @@ router.patch("/atualizar", async (req, res) => {
         const response = await atualizarArmario(numeroArmario,CPF,statusArmario)
 
         response[0] == 1
-            ? res.json({ "msg": "Atualizado com sucesso", "statusCode": 200 }).status(200)
-            : res.json({ "msg": "Erro ao atualizar armario, verifique os campos.", "statusCode": 400 }).status(400)
+            ? res.status(200).json({ "msg": "Atualizado com sucesso", "statusCode": 200 })
+            : res.status(400).json({ "msg": "Erro ao atualizar armario, verifique os campos.", "statusCode": 400 })
     }
     catch (err) {
         const errMsg = tratarMensagensDeErro(err)
-        res.json({ errMsg: errMsg, "statusCode": 500 }).status(500)
+        res.status(500).json({ errMsg: errMsg, "statusCode": 500 })
     }
 })
 
