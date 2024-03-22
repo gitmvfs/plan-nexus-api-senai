@@ -88,12 +88,17 @@ async function mandarAlunosDb(listaAlunos) {
 
 }
 
-function cadastroUnicoAluno(aluno, socioAapm) {
+function cadastroUnicoAluno(aluno) {
 
     return new Promise(async (resolve, reject) => {
         try {
 
-            await alunoModel.create(aluno)
+            await alunoModel.create({
+                CPF:aluno.CPF,
+                nome: aluno.nome,
+                email: aluno.email,
+                fk_curso: aluno.fk_curso
+            })
                 .then((r) => resolve(r))
                 .catch((e) => {
                     reject(e)
