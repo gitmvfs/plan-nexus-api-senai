@@ -1,4 +1,4 @@
-const { atualizarArmario, pesquisarTodosArmario } = require("../controllers/armarioController")
+const { atualizarArmario, pesquisarTodosArmario, pesquisarArmarioPorStatus } = require("../controllers/armarioController")
 const { definirStatusArmario } = require("../utils/converterString")
 const tratarMensagensDeErro = require("../utils/errorMsg")
 
@@ -10,7 +10,7 @@ router.patch("/atualizar", async (req, res) => {
         let { numeroArmario, CPF, statusArmario } = req.body
         statusArmario = definirStatusArmario(statusArmario)
 
-        const response = await atualizarArmario(numeroArmario,CPF,statusArmario)
+        const response = await atualizarArmario(numeroArmario, CPF, statusArmario)
 
         response[0] == 1
             ? res.status(200).json({ "msg": "Atualizado com sucesso", "statusCode": 200 })
@@ -22,15 +22,31 @@ router.patch("/atualizar", async (req, res) => {
     }
 })
 
-router.get("/todos",async(req,res) =>{
+router.get("/todos", async (req, res) => {
 
-    try{
+    try {
         const response = await pesquisarTodosArmario()
-        res.status(200).json({"statusCode": 200, data: response})
+        res.status(200).json({ "statusCode": 200, data: response })
     }
-    catch(err){
+    catch (err) {
         const errMsg = tratarMensagensDeErro(err)
-        res.status(500).json({"statusCode": 500, errMsg: errMsg})
+        res.status(500).json({ "statusCode": 500, errMsg: errMsg })
+    }
+
+})
+
+router.get("/status", async (req, res) => {
+    let statusArmario = req.body.statusArmario
+
+    try {
+        statusArmario = definirStatusArmario(statusArmario)
+        console.log(statusArmario)
+        const response = await pesquisarArmarioPorStatus(statusArmario)
+        res.status(200).json({ "statusCode": 200, data: response })
+    }
+    catch (err) {
+        const errMsg = tratarMensagensDeErro(err)
+        res.status(500).json({ "statusCode": 500, errMsg: errMsg })
     }
 
 })
