@@ -11,12 +11,12 @@ router.post("/cadastro/multiplos", uploadArquivoAlunos.single("alunosFile"), asy
         const listaALunos = await excelToJson(req.file.path) // pega o arquivo do excel e devolve os alunos em json
         await cadastroDeTurmas(listaALunos) // pega o json dos alunos e cadastra as turmas
         const resultadoCadastro = await cadastroMultiplosAlunos(listaALunos)
-        res.json({ msg: "Operação realizada", "statusCode": "200", resultadoCadastro: resultadoCadastro })
+        res.status(200).json({ msg: "Operação realizada", "statusCode": "200", resultadoCadastro: resultadoCadastro })
 
     }
     catch (err) {
         const errMsg = tratarMensagensDeErro(err)
-        res.json({ errMsg: errMsg, "statusCode": 500 }).status(500)
+        res.status(500).json({ errMsg: errMsg, "statusCode": 500 })
     }
 })
 
@@ -33,13 +33,13 @@ router.post("/cadastro/unico", async (req, res) => {
     try {
         const response = await cadastroUnicoAluno(aluno, socioAapm)
         !!response == true
-            ? res.json({ "msg": "cadastrado com sucesso", "statudCode": 200 }).status(200)
-            : res.json({ "msg": "Erro ao cadastrar", "statusCode": 400 }).status(400)
+            ? res.status(200).json({ "msg": "cadastrado com sucesso", "statusCode": 200 })
+            : res.status(400).json({ "msg": "Erro ao cadastrar", "statusCode": 400 })
 
     }
     catch (err) {
         const errMsg = tratarMensagensDeErro(err)
-        res.json({ errMsg: errMsg, "statusCode": 500 }).status(500)
+        res.status(500).json({ errMsg: errMsg, "statusCode": 500 })
     }
 })
 
@@ -51,8 +51,8 @@ router.patch("/atualizar", async (req, res) => {
         const response = await atualizarAluno(CPF, email, dados)
 
         response[0] == 1
-            ? res.json({ "msg": "Atualizado com sucesso", "statusCode": 200 }).status(200)
-            : res.json({ "msg": "Erro ao atualizar aluno, verifique os campos.", "statusCode": 400 }).status(400)
+            ? res.status(200).json({ "msg": "Atualizado com sucesso", "statusCode": 200 })
+            : res.status(400).json({ "msg": "Erro ao atualizar aluno, verifique os campos.", "statusCode": 400 })
 
     }
     catch (err) {
@@ -67,12 +67,12 @@ router.get("/unico", async (req, res) => {
 
     try {
         await pesquisaUnicoAluno(CPF, email)
-            .then((resposta) => res.json({ msg: "Consulta realizada com sucesso", "statusCode": 200, data: resposta }).status(200))
-            .catch((e) => res.json({ msg: "Erro ao realizar consulta", "statusCode": 400, errMsg: e }))
+            .then((resposta) => res.status(200).json({ msg: "Consulta realizada com sucesso", "statusCode": 200, data: resposta }))
+            .catch((e) => res.status(400).json({ msg: "Erro ao realizar consulta", "statusCode": 400, errMsg: e }))
     }
     catch (err) {
         const errMsg = tratarMensagensDeErro(err)
-        res.json({ errMsg: errMsg, "statusCode": 500 }).status(500)
+        res.status(500).json({ errMsg: errMsg, "statusCode": 500 })
 
     }
 
