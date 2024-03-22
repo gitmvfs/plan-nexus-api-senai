@@ -1,6 +1,6 @@
 const cursoModel = require("../models/cursoModel")
 const alunoModel = require("../models/alunoModel")
-const {definirGraduacao} = require("../utils/converterString")
+const { definirGraduacao } = require("../utils/converterString")
 
 async function cadastroMultiplosAlunos(listaAluno) {
 
@@ -94,7 +94,7 @@ function cadastroUnicoAluno(aluno) {
         try {
 
             await alunoModel.create({
-                CPF:aluno.CPF,
+                CPF: aluno.CPF,
                 nome: aluno.nome,
                 email: aluno.email,
                 fk_curso: aluno.fk_curso
@@ -113,12 +113,6 @@ function cadastroUnicoAluno(aluno) {
 }
 
 function atualizarAluno(cpfAluno, emailAluno, dados) {
-
-    // const dados_exemplo = {
-    //     "nome": "nomeTeste",
-    //     "email": "emailTeste@gmail.com",
-    //     "fk_curso": "2"
-    // }
 
     return new Promise(async (resolve, reject) => {
 

@@ -19,7 +19,7 @@ function atualizarArmario(numeroArmario, cpf, statusArmario) {
                 .catch((e) => reject(e))
 
         }
-        catch(err){
+        catch (err) {
             reject(err)
         }
 
@@ -27,13 +27,25 @@ function atualizarArmario(numeroArmario, cpf, statusArmario) {
 
 }
 
-function pesquisarTodosArmario(){
+function pesquisarTodosArmario() {
 
-    armarioModel.findAll({
-        where:condicao
+    return new Promise(async (resolve, reject) => {
+
+        try {
+            await armarioModel.findAll()
+                .then((r) => {
+                    const listaArmarios = []
+                    r.map((armario) => listaArmarios.push(armario.dataValues))
+                    resolve(listaArmarios)
+                })
+                .catch((e) => reject(e))
+        }
+        catch (err) {
+            reject(err)
+        }
     })
-
 }
 
-module.exports = {atualizarArmario}
+
+module.exports = { atualizarArmario, pesquisarTodosArmario }
 

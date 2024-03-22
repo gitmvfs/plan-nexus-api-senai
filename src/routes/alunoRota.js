@@ -40,12 +40,12 @@ router.post("/cadastro/unico", async (req, res) => {
         const response = await cadastroUnicoAluno(alunoValidado)
         !!response == true
             ? res.status(200).json({ "msg": "cadastrado com sucesso", "statusCode": 200 })
-            : res.status(400).json({ "msg": "Erro ao cadastrar", "statusCode": 400 })
+            : res.status(500).json({ "msg": "Erro ao cadastrar", "statusCode": 500 })
 
     }
     catch (err) {
         const errMsg = tratarMensagensDeErro(err)
-        res.status(500).json({ errMsg: errMsg, "statusCode": 500 })
+        res.status(400).json({ errMsg: errMsg, "statusCode": 400 })
     }
 })
 
