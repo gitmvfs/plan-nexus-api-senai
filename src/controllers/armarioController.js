@@ -1,4 +1,5 @@
 const armarioModel = require("../models/armarioModel")
+const { definirStatusArmario } = require("../utils/converterString")
 
 function atualizarArmario(numeroArmario, cpf, statusArmario) {
 
@@ -19,15 +20,60 @@ function atualizarArmario(numeroArmario, cpf, statusArmario) {
                 .catch((e) => reject(e))
 
         }
-        catch(err){
+        catch (err) {
             reject(err)
         }
 
     })
 
 }
-atualizarArmario("1", "12345678911", "2")
-.then((r)=> console.log(r))
-.catch((e) => console.log(e))
-// module.exports = {alterarArmario}
+
+function pesquisarTodosArmario() {
+
+    return new Promise(async (resolve, reject) => {
+
+        try {
+            await armarioModel.findAll()
+                .then((r) => {
+                    const listaArmarios = []
+                    r.map((armario) => listaArmarios.push(armario.dataValues))
+                    resolve(listaArmarios)
+                })
+                .catch((e) => reject(e))
+        }
+        catch (err) {
+            reject(err)
+        }
+    })
+}
+
+function pesquisarArmarioPorStatus(status) {
+
+    return new Promise(async (resolve, reject) => {
+
+        try {
+
+            await armarioModel.findAll({
+                where: {
+                    status: status
+                }
+            })
+                .then((r) => {
+                    const listaArmarios = []
+                    r.map((armario) => listaArmarios.push(armario.dataValues))
+                    resolve(listaArmarios)
+                })
+                .catch((e) => reject(e))
+        }
+        catch (err) {
+            reject(err)
+        }
+
+
+    })
+
+
+}
+
+module.exports = { atualizarArmario, pesquisarTodosArmario, pesquisarArmarioPorStatus }
 
