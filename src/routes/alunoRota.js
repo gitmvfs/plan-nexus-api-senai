@@ -39,7 +39,7 @@ router.post("/cadastro/unico", async (req, res) => {
 
         const response = await cadastroUnicoAluno(alunoValidado)
         !!response == true
-            ? res.status(200).json({ "msg": "cadastrado com sucesso", "statusCode": 200 })
+            ? res.status(201).json({ "msg": "cadastrado com sucesso", "statusCode": 201 })
             : res.status(500).json({ "msg": "Erro ao cadastrar", "statusCode": 500 })
 
     }
@@ -51,7 +51,7 @@ router.post("/cadastro/unico", async (req, res) => {
 
 router.patch("/atualizar", async (req, res) => {
 
-    const { CPF, email, alunoDadosAtualizacao } = req.body
+    const { CPF, email, dados } = req.body
 
     try {
         const response = await atualizarAluno(CPF, email, dados)
