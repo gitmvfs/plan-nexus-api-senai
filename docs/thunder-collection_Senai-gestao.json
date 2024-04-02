@@ -1,0 +1,190 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "Senai-gestao",
+    "dateExported": "2024-04-02T07:54:02.718Z",
+    "version": "1.1",
+    "folders": [
+        {
+            "_id": "49eea8f2-4034-45df-9e50-7c2d27da12d6",
+            "name": "alunos",
+            "containerId": "",
+            "created": "2024-03-30T19:33:48.378Z",
+            "sortNum": 10000
+        },
+        {
+            "_id": "5523b788-6455-43cf-a66f-fd1c4d9bba7c",
+            "name": "Armarios",
+            "containerId": "",
+            "created": "2024-04-02T07:41:29.158Z",
+            "sortNum": 20000
+        }
+    ],
+    "requests": [
+        {
+            "_id": "1b4ea8ff-85e0-40b8-9ab2-476841cddf43",
+            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
+            "containerId": "49eea8f2-4034-45df-9e50-7c2d27da12d6",
+            "name": "Cadastro Multiplos",
+            "url": "http://{{baseUrl}}:{{Port}}/aluno/cadastro/multiplos",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-03-30T19:34:09.345Z",
+            "modified": "2024-03-30T19:52:11.922Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "formdata",
+                "raw": "",
+                "form": [],
+                "files": [
+                    {
+                        "name": "alunosFile",
+                        "value": "c:\\Users\\Blood3\\Documents\\dadosMockados.xlsx"
+                    }
+                ]
+            },
+            "tests": []
+        },
+        {
+            "_id": "4063fe43-b505-47ec-a434-50287e7b8b30",
+            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
+            "containerId": "49eea8f2-4034-45df-9e50-7c2d27da12d6",
+            "name": "Cadastro Unico",
+            "url": "http://{{baseUrl}}:{{Port}}/aluno/cadastro/unico",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2024-04-02T07:23:23.512Z",
+            "modified": "2024-04-02T07:25:07.846Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"CPF\":\"12345678901\",\n  \"nome\":\"Teste Unico\",\n  \"email\":\"testeUnico@gmail.com\",\n  \"fk_curso\":203,\n  \"socioAapm\":true\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "376fa7b1-0555-40f1-be92-cee5d8fc6261",
+            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
+            "containerId": "49eea8f2-4034-45df-9e50-7c2d27da12d6",
+            "name": "Atualizar Aluno",
+            "url": "http://{{baseUrl}}:{{Port}}/aluno/atualizar",
+            "method": "PATCH",
+            "sortNum": 30000,
+            "created": "2024-04-02T07:28:28.938Z",
+            "modified": "2024-04-02T07:33:56.934Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"CPF\":\"12345678901\",\n  \"email\":\"\",\n  \"dados\":{\n    \"nome\":\"Teste Atualizado\"\n  }\n}",
+                "form": []
+            },
+            "tests": [],
+            "preReq": {
+                "runRequests": [
+                    {
+                        "reqId": "4063fe43-b505-47ec-a434-50287e7b8b30",
+                        "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
+                        "triggerCondition": "run-always",
+                        "triggerValue": ""
+                    }
+                ]
+            }
+        },
+        {
+            "_id": "bf42d5cd-c635-4117-b9d4-66c2df005193",
+            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
+            "containerId": "49eea8f2-4034-45df-9e50-7c2d27da12d6",
+            "name": "Pesquisar Um Aluno",
+            "url": "http://{{baseUrl}}:{{Port}}/aluno/unico",
+            "method": "GET",
+            "sortNum": 40000,
+            "created": "2024-04-02T07:35:05.523Z",
+            "modified": "2024-04-02T07:36:19.463Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"CPF\":\"12345678901\",\n  \"email\":\"\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "fe47d092-2fa1-47b8-883f-89a6c28a29d3",
+            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
+            "containerId": "49eea8f2-4034-45df-9e50-7c2d27da12d6",
+            "name": "Pesquisar varios alunos",
+            "url": "",
+            "method": "GET",
+            "sortNum": 50000,
+            "created": "2024-04-02T07:37:11.125Z",
+            "modified": "2024-04-02T07:37:11.125Z",
+            "headers": []
+        },
+        {
+            "_id": "09cdceeb-6125-422f-8693-29078712f9f8",
+            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
+            "containerId": "5523b788-6455-43cf-a66f-fd1c4d9bba7c",
+            "name": "Atualizar Armario",
+            "url": "http://{{baseUrl}}:{{Port}}/armario/atualizar",
+            "method": "PATCH",
+            "sortNum": 70000,
+            "created": "2024-04-02T07:45:49.646Z",
+            "modified": "2024-04-02T07:47:37.786Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"numeroArmario\":\"1\",\n  \"CPF\":\"12345678901\",\n  \"statusArmario\":\"Ocupado\"\n}",
+                "form": []
+            },
+            "tests": [],
+            "preReq": {
+                "runRequests": [
+                    {
+                        "reqId": "4063fe43-b505-47ec-a434-50287e7b8b30",
+                        "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
+                        "triggerCondition": "run-always",
+                        "triggerValue": ""
+                    }
+                ]
+            }
+        },
+        {
+            "_id": "14952ba4-14bf-4c25-9693-bcb7b7f2b5e3",
+            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
+            "containerId": "5523b788-6455-43cf-a66f-fd1c4d9bba7c",
+            "name": "Pesquisar todos Armarios",
+            "url": "http://{{baseUrl}}:{{Port}}/armario/todos",
+            "method": "GET",
+            "sortNum": 80000,
+            "created": "2024-04-02T07:48:12.305Z",
+            "modified": "2024-04-02T07:48:29.095Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "dfb0a620-1ebd-48ff-b8c0-68faf0508b3a",
+            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
+            "containerId": "5523b788-6455-43cf-a66f-fd1c4d9bba7c",
+            "name": "Pesquisar Por Status",
+            "url": "http://{{baseUrl}}:{{Port}}/armario/status",
+            "method": "GET",
+            "sortNum": 90000,
+            "created": "2024-04-02T07:49:00.038Z",
+            "modified": "2024-04-02T07:52:41.123Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"statusArmario\":\"Ocupado\"\n}",
+                "form": []
+            },
+            "tests": []
+        }
+    ]
+}
