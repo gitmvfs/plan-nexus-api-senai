@@ -1,7 +1,7 @@
 const router = require("express").Router()
 const { cadastroMultiplosAlunos, atualizarAluno, cadastroUnicoAluno, pesquisaUnicoAluno } = require("../controllers/alunoController")
 const { cadastroDeTurmas } = require("../controllers/cursoController")
-const tratarMensagensDeErro = require("../utils/errorMsg")
+const {tratarMensagensDeErro} = require("../utils/errorMsg")
 const excelToJson = require("../utils/excelParseJson")
 const { uploadArquivoAlunos } = require("../utils/salvarExcel")
 const { alunoUnicoValidacao } = require("../utils/validacao")
@@ -38,14 +38,13 @@ router.post("/cadastro/unico", async (req, res) => {
         const alunoValidado = alunoUnicoValidacao.parse(aluno)
 
         const response = await cadastroUnicoAluno(alunoValidado)
-        !!response == true
-            ? res.status(201).json({ "msg": "cadastrado com sucesso", "statusCode": 201 })
-            : res.status(500).json({ "msg": "Erro ao cadastrar", "statusCode": 500 })
+        
+        res.status(201).json({ "msg": "cadastrado com sucesso", "statusCode": 201 , "response":{response} })
 
     }
     catch (err) {
-        const errMsg = tratarMensagensDeErro(err)
-        res.status(400).json({ errMsg: errMsg, "statusCode": 400 })
+        const erroTratado = await tratarMensagensDeErro(err)
+        res.status(300).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
     }
 })
 
@@ -62,7 +61,7 @@ router.patch("/atualizar", async (req, res) => {
 
     }
     catch (err) {
-        const errMsg = tratarMensagensDeErro(err)
+        const errMsg = await tratarMensagensDeErro(err)
         res.json({ errMsg: errMsg, "statusCode": 500 }).status(500)
     }
 })
