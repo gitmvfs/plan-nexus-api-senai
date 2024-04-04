@@ -5,8 +5,8 @@ const { object, string, number } = require('zod')
 const funcionarioValidacao = object({
     NIF: string().min(1).max(20),
     nome: string().min(1).max(50),
-    email: string().email().min(1).max(100),
-    nivel_acesso: number().min(1).max(10)
+    email: string().email().max(100),
+    nivel_acesso: number().min(1).max(3)
 });
 
 router.post('/', async (req, res) => {
