@@ -1,6 +1,6 @@
 const { resolve } = require("path")
 const dotenv = require("dotenv").config({ path: resolve(__dirname, "../", "../", ".env") })
-const Sequelize = require("sequelize")
+const {Sequelize} = require("sequelize")
 
 //Conectando com o banco
 
