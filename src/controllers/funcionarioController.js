@@ -48,4 +48,26 @@ async function editarFuncionario(NIF, novosDados) {
     });
 }
 
-module.exports = { cadastrarFuncionario, editarFuncionario };
+function pesquisarTodosFuncionarios() {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const listaFuncionarios = []
+            const funcionarios = await funcionarioModel.findAll({ attributes: { exclude: ['senha'] } })
+
+            if (funcionarios.length === 0) {
+                reject("Funcionários não encontrados, verifique os filtros.")
+                return
+            }
+
+            funcionarios.forEach((funcionario) => {
+                listaFuncionarios.push(funcionario.dataValues)
+            })
+
+            resolve(listaFuncionarios)
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
+
+module.exports = { cadastrarFuncionario, editarFuncionario, pesquisarTodosFuncionarios };
