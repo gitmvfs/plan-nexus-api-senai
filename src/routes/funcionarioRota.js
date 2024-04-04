@@ -1,5 +1,5 @@
 const router = require("express").Router()
-const { cadastrarFuncionario, editarFuncionario } = require("../controllers/funcionarioController")
+const { cadastrarFuncionario, editarFuncionario, loginFuncionario } = require("../controllers/funcionarioController")
 const { object, string, number } = require('zod')
 
 const funcionarioValidacao = object({
@@ -51,5 +51,29 @@ router.put('/:NIF', async (req, res) => {
         res.status(500).send(err)
     }
 })
+
+router.post("/login",async(req,res) => {
+
+
+    try {
+        const {email, senha } = req.body
+      
+        const funcionario = {email,senha}
+        
+        const response = await loginFuncionario(funcionario)
+        !!response == true
+        ?res.status(200).json(response)
+        :res.status(400).json("Usuario ou senha inválidos")
+    }
+    catch(err){
+        const status = err.status?? 500 
+        const msg = err.issues ?? err.message 
+
+        console.log(err)
+        res.status(status).json(msg)
+    }
+})
+
+
 
 module.exports = router

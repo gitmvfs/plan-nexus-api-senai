@@ -1,4 +1,6 @@
 const funcionarioModel = require('../models/funcionarioModel')
+const {compararHash} = require("../utils/bcrypt")
+const {gerarToken} = require("../utils/jwt")
 
 async function emailExiste(email) {
     const funcionario = await funcionarioModel.findOne({ where: { email: email } })
@@ -48,4 +50,55 @@ async function editarFuncionario(NIF, novosDados) {
     });
 }
 
-module.exports = { cadastrarFuncionario, editarFuncionario };
+async function loginFuncionario(funcionario){
+    
+    return new Promise(async (resolve, reject) => {
+
+        try {
+
+            const { email, senha } = funcionario
+
+            // verifica se o usuario existe
+            let usuario = await funcionarioModel.findOne({
+                where: {
+                    email
+                }
+            })
+
+            // Caso o usuario não exista
+            !!usuario == true
+                ? usuario = usuario.dataValues
+                : (() => { resolve(null) })()
+
+            //Confirma se o hash da senha está certo.
+            const confirmarSenha = await compararHash(funcionario.senha, usuario.senha)
+
+            if (!confirmarSenha) {
+                resolve(null)
+            }
+
+            // Deolve os dados do usuario sem a senha
+            let { senha: _, CPF: __, ...resposta } = usuario
+
+            //Gera o token para verificar se está logado
+            resposta.token = gerarToken(resposta.email, resposta.nome, "12h")
+
+            await funcionarioModel.update({
+                token: resposta.token
+            },
+                {
+                    where: {
+                        email
+                    }
+                })
+
+            resolve(resposta)
+        }
+        catch (err) {
+            // Se der algum erro inesperado no processo
+            reject(err)
+        }
+    })
+}
+
+module.exports = { cadastrarFuncionario, editarFuncionario, loginFuncionario };
