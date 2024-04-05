@@ -1,8 +1,12 @@
 const { atualizarArmario, pesquisarTodosArmario, pesquisarArmarioPorStatus } = require("../controllers/armarioController")
 const { definirStatusArmario } = require("../utils/converterString")
 const tratarMensagensDeErro = require("../utils/errorMsg")
+const authMiddleware = require("../middleware/auth")
 
 const router = require("express").Router()
+
+// ROTAS PROTEGIDAS
+router.use(authMiddleware)
 
 router.patch("/atualizar", async (req, res) => {
 
