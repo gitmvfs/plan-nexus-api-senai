@@ -139,7 +139,7 @@ function atualizarAluno(cpfAluno, emailAluno, dados) {
     })
 }
 
-function pesquisaUnicoAluno(cpfAluno, emailAluno) {
+function pesquisaUnicoAluno(cpfAluno, emailAluno, sequelize) {
     return new Promise(async (resolve, reject) => {
 
         try {
@@ -148,7 +148,7 @@ function pesquisaUnicoAluno(cpfAluno, emailAluno) {
                 ? condicao = { email: emailAluno } :
                 condicao = { CPF: cpfAluno }
 
-            const aluno = await alunoModel.findOne({
+            const aluno = await alunoModel(sequelize).findOne({
                 where: condicao
             })
             aluno == null
@@ -156,6 +156,7 @@ function pesquisaUnicoAluno(cpfAluno, emailAluno) {
                 : resolve(aluno.dataValues)
         }
         catch (err) {
+            console.log(err)
             reject(err)
         }
     })
