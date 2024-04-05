@@ -15,7 +15,7 @@ function tratarMensagensDeErro(err) {
         try {
 
             let mensagem = err.message
-            let status = 500 // devolve 500 por padrão
+            let status = err.status || 500 // devolve 500 por padrão
 
             //Erros de valização do Sequelize
             if (err instanceof ValidationError) {
