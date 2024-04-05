@@ -1,11 +1,14 @@
 const router = require("express").Router()
 const { cadastroMultiplosAlunos, atualizarAluno, cadastroUnicoAluno, pesquisaUnicoAluno } = require("../controllers/alunoController")
 const { cadastroDeTurmas } = require("../controllers/cursoController")
+const authMiddleware = require("../middleware/auth")
 const {tratarMensagensDeErro} = require("../utils/errorMsg")
 const excelToJson = require("../utils/excelParseJson")
 const { uploadArquivoAlunos } = require("../utils/salvarExcel")
 const { alunoUnicoValidacao } = require("../utils/validacao")
 
+// ROTAS PROTEGIDAS
+router.use(authMiddleware)
 router.post("/cadastro/multiplos", uploadArquivoAlunos.single("alunosFile"), async (req, res) => {
 
     try {
@@ -71,7 +74,7 @@ router.get("/unico", async (req, res) => {
     const { CPF, email } = req.body
 
     try {
-        await pesquisaUnicoAluno(CPF, email)
+        await pesquisaUnicoAluno(CPF, email, req.sequelize)
             .then((resposta) => res.status(200).json({ msg: "Consulta realizada com sucesso", "statusCode": 200, data: resposta }))
             .catch((e) => res.status(400).json({ msg: "Erro ao realizar consulta", "statusCode": 400, errMsg: e }))
     }
