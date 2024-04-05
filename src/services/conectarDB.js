@@ -6,8 +6,8 @@ const {Sequelize} = require("sequelize")
 
 const sequelize = new Sequelize(
     process.env.database_name,
-    process.env.database_user,
-    process.env.database_password, {
+    process.env.database_user_root,
+    process.env.database_password_root, {
     host: process.env.database_host,
     dialect: "mysql"
 })
