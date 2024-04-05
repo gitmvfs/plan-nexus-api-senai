@@ -1,5 +1,5 @@
 const router = require("express").Router()
-const { cadastrarFuncionario, editarFuncionario, pesquisarTodosFuncionarios } = require("../controllers/funcionarioController")
+const { cadastrarFuncionario, pesquisarTodosFuncionarios, pesquisarUnicoFuncionario, editarFuncionario } = require("../controllers/funcionarioController")
 const { object, string, number } = require('zod')
 
 const funcionarioValidacao = object({
@@ -31,6 +31,29 @@ router.post('/', async (req, res) => {
     }
   })
 
+router.get('/', async (req, res) => {
+    try {
+        await pesquisarTodosFuncionarios()
+            .then((resposta) => res.status(200).json({ msg: "Consulta realizada com sucesso", "statusCode": 200, data: resposta }))
+            .catch((e) => res.status(400).json({ msg: "Erro ao realizar consulta", "statusCode": 400, errMsg: e }))
+    }
+    catch (err) {
+        res.status(500).json({ errMsg: err, "statusCode": 500 })
+    }
+})
+
+router.get('/:NIF', async (req, res) => {
+    try {
+        const { NIF } = req.params
+        
+        await pesquisarUnicoFuncionario(NIF)
+            .then((funcionario) => res.status(200).json({ msg: "Consulta realizada com sucesso", "statusCode": 200, data: funcionario }))
+            .catch((e) => res.status(404).json({ msg: "Funcionário não encontrado", "statusCode": 404, errMsg: e }))
+    } catch (err) {
+        res.status(500).json({ errMsg: err, "statusCode": 500 })
+    }
+})
+
 router.put('/:NIF', async (req, res) => {
     const { NIF } = req.params
     const { nome, email, fk_nivel_acesso } = req.body
@@ -49,17 +72,6 @@ router.put('/:NIF', async (req, res) => {
         res.send('Informações do funcionário atualizadas com sucesso.')
     } catch (err) {
         res.status(500).send(err)
-    }
-})
-
-router.get('/', async (req, res) => {
-    try {
-        await pesquisarTodosFuncionarios()
-            .then((resposta) => res.status(200).json({ msg: "Consulta realizada com sucesso", "statusCode": 200, data: resposta }))
-            .catch((e) => res.status(400).json({ msg: "Erro ao realizar consulta", "statusCode": 400, errMsg: e }))
-    }
-    catch (err) {
-        res.status(500).json({ errMsg: err, "statusCode": 500 })
     }
 })
 

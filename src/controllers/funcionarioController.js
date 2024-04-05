@@ -31,23 +31,6 @@ async function encontrarFuncionarioPorNIF(NIF) {
     return funcionarioModel.findOne({ where: { NIF: NIF } });
 }
 
-async function editarFuncionario(NIF, novosDados) {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const funcionarioExistente = await encontrarFuncionarioPorNIF(NIF)
-            if (!funcionarioExistente) {
-                return res.status(404).send('Funcionário não encontrado.')
-            }
-
-            await funcionarioModel.update(novosDados, { where: { NIF: NIF } });
-
-            resolve("Funcionário atualizado com sucesso.");
-        } catch (err) {
-            reject(err);
-        }
-    });
-}
-
 function pesquisarTodosFuncionarios() {
     return new Promise(async (resolve, reject) => {
         try {
@@ -70,4 +53,38 @@ function pesquisarTodosFuncionarios() {
     })
 }
 
-module.exports = { cadastrarFuncionario, editarFuncionario, pesquisarTodosFuncionarios };
+function pesquisarUnicoFuncionario(NIF) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const funcionario = await funcionarioModel.findOne({ where: { NIF }, attributes: { exclude: ['senha'] } })
+
+            if (!funcionario) {
+                reject("Funcionário não encontrado para o NIF fornecido.")
+                return
+            }
+
+            resolve(funcionario.dataValues)
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
+
+async function editarFuncionario(NIF, novosDados) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const funcionarioExistente = await encontrarFuncionarioPorNIF(NIF)
+            if (!funcionarioExistente) {
+                return res.status(404).send('Funcionário não encontrado.')
+            }
+
+            await funcionarioModel.update(novosDados, { where: { NIF: NIF } });
+
+            resolve("Funcionário atualizado com sucesso.");
+        } catch (err) {
+            reject(err);
+        }
+    });
+}
+
+module.exports = { cadastrarFuncionario, pesquisarTodosFuncionarios, pesquisarUnicoFuncionario, editarFuncionario };
