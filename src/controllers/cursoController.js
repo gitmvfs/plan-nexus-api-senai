@@ -4,15 +4,16 @@ const Sequelize = require("sequelize")
 const {definirGraduacao} = require("../utils/converterString")
 
 
-async function cadastroDeTurmas(listaAlunos) {
+async function cadastroDeTurmas(listaAlunos,sequelize) {
 
     return new Promise(async (resolve, reject) => {
 
         try {
+            console.log(cursoModel)
             const listaTurmas = extrairTurmasDosAlunos(listaAlunos)
             const turmasUnicas = retirarTurmasRepetidas(listaTurmas)
             const turmasDefinidas = calcularDuracaoSemestresCursos(turmasUnicas) // nesta estapa os dados das turmas já estão prontos para inserir no banco
-            await enviarTurmasParaDB(turmasDefinidas)
+            await enviarTurmasParaDB(turmasDefinidas,sequelize)
             resolve(200)
         }
         catch (err) {
@@ -102,10 +103,10 @@ function calcularDuracaoSemestresCursos(listaTurmasUnicas) {
     return listaTurmasDefinidas
 
 }
-async function enviarTurmasParaDB(turmasDefinidas) {
+async function enviarTurmasParaDB(turmasDefinidas,sequelize) {
     // Mapeia as promessas de inserção de turmas
     const insercoesTurmas = turmasDefinidas.map(async (turma) => {
-        const listaTurmasCadastradas = await cursoModel.findAll({
+        const listaTurmasCadastradas = await cursoModel(sequelize).find({
             where: {
                 nome: turma.nome,
                 modalidade: turma.modalidade,
@@ -116,7 +117,7 @@ async function enviarTurmasParaDB(turmasDefinidas) {
         });
         // Se não houver registro, cadastra a turma no banco
         if (listaTurmasCadastradas.length === 0) {
-            return cursoModel.create(turma);
+            return cursoModel(sequelize).create(turma);
         } else {
             return null; // Retorna null para indicar que a turma já está cadastrada
         }

@@ -2,11 +2,11 @@ const cursoModel = require("../models/cursoModel")
 const alunoModel = require("../models/alunoModel")
 const { definirGraduacao } = require("../utils/converterString")
 
-async function cadastroMultiplosAlunos(listaAluno) {
+async function cadastroMultiplosAlunos(listaAluno, sequelize) {
 
     // Pega o id da turma do aluno e coloca no fk_curso
     const alunosSeparadosPorTurmas = await separarAlunosNasTurmas(listaAluno)
-    const resultado = await mandarAlunosDb(alunosSeparadosPorTurmas)
+    const resultado = await mandarAlunosDb(alunosSeparadosPorTurmas , sequelize)
     return resultado
 
 }
@@ -48,14 +48,14 @@ async function separarAlunosNasTurmas(listaAlunos) {
 }
 
 
-async function mandarAlunosDb(listaAlunos) {
+async function mandarAlunosDb(listaAlunos, sequelize) {
 
     // Manda eles para o banco de dados comparando se ja não está cadastrado
 
     try {
         const promisesCriacaoAlunos = listaAlunos.map(async (aluno) => {
             try {
-                await alunoModel.create(aluno);
+                await alunoModel(seque).create(aluno);
 
                 return { aluno, status: 'cadastrado' };
             } catch (error) {
@@ -88,12 +88,13 @@ async function mandarAlunosDb(listaAlunos) {
 
 }
 
-function cadastroUnicoAluno(aluno) {
+function cadastroUnicoAluno(aluno,sequelize) {
 
     return new Promise(async (resolve, reject) => {
         try {
-
-            await alunoModel.create({
+            console.log("Chegou")
+            console.log(aluno)
+            await alunoModel(sequelize).create({
                 CPF: aluno.CPF,
                 nome: aluno.nome,
                 email: aluno.email,
@@ -104,7 +105,8 @@ function cadastroUnicoAluno(aluno) {
                     reject(e)
                 })
         }
-        catch (err) {
+        catch (e) {
+            
             reject(e)
         }
     })
@@ -112,7 +114,7 @@ function cadastroUnicoAluno(aluno) {
 
 }
 
-function atualizarAluno(cpfAluno, emailAluno, dados) {
+function atualizarAluno(cpfAluno, emailAluno, dados, sequelize) {
 
     return new Promise(async (resolve, reject) => {
 
@@ -124,7 +126,7 @@ function atualizarAluno(cpfAluno, emailAluno, dados) {
                 ? condicao = { email: emailAluno } :
                 condicao = { CPF: cpfAluno }
 
-            await alunoModel.update(
+            await alunoModel(sequelize).update(
                 dados,
                 {
                     where: condicao
@@ -162,7 +164,7 @@ function pesquisaUnicoAluno(cpfAluno, emailAluno, sequelize) {
     })
 }
 
-function pesquisaTodosAlunos(filtro) {
+function pesquisaTodosAlunos(filtro,sequelize) {
 
     return new Promise(async (resolve, reject) => {
 
@@ -173,7 +175,7 @@ function pesquisaTodosAlunos(filtro) {
 
             const listaAlunos = []
 
-            const resultado = await alunoModel.findAll({
+            const resultado = await alunoModel(sequelize).findAll({
                 where: filtro
             })
 
