@@ -12,10 +12,13 @@ const authMiddleware = (req, res, next) => {
     return new Promise(async (resolve, reject) => {
 
         try {
-            const { nif, token } = req.headers
-
             let usuarioBanco = ""
             let senhaBanco = ""
+            const { nif, token } = req.headers
+
+            if(!!nif == false || !!token == false){
+                novoErro("Usuario ou token inválidos, permissão negada")
+            }
 
             //Procura pelo usuario
             const funcionario = await funcionarioModel.findOne({
