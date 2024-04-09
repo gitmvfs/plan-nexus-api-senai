@@ -13,14 +13,14 @@ router.post("/cadastro/multiplos", uploadArquivoAlunos.single("alunosFile"), asy
 
     try {
         const listaALunos = await excelToJson(req.file.path) // pega o arquivo do excel e devolve os alunos em json
-        await cadastroDeTurmas(listaALunos) // pega o json dos alunos e cadastra as turmas
-        const resultadoCadastro = await cadastroMultiplosAlunos(listaALunos)
+        await cadastroDeTurmas(listaALunos,req.sequelize) // pega o json dos alunos e cadastra as turmas
+        const resultadoCadastro = await cadastroMultiplosAlunos(listaALunos,req.sequelize)
         res.status(200).json({ msg: "Operação realizada", "statusCode": "200", resultadoCadastro: resultadoCadastro })
-
     }
     catch (err) {
-        const errMsg = tratarMensagensDeErro(err)
-        res.status(500).json({ errMsg: errMsg, "statusCode": 500 })
+        const erroTratado = await tratarMensagensDeErro(err)
+        console.log(err)
+        res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
     }
 })
 
@@ -40,14 +40,14 @@ router.post("/cadastro/unico", async (req, res) => {
     try {
         const alunoValidado = alunoUnicoValidacao.parse(aluno)
 
-        const response = await cadastroUnicoAluno(alunoValidado)
+        const response = await cadastroUnicoAluno(alunoValidado,req.sequelize)
         
-        res.status(201).json({ "msg": "cadastrado com sucesso", "statusCode": 201 , "response":{response} })
+        res.status(201).json({ "msg": "cadastrado com sucesso", "statusCode": 201 , response })
 
     }
     catch (err) {
         const erroTratado = await tratarMensagensDeErro(err)
-        res.status(300).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
+        res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
     }
 })
 
@@ -64,8 +64,8 @@ router.patch("/atualizar", async (req, res) => {
 
     }
     catch (err) {
-        const errMsg = await tratarMensagensDeErro(err)
-        res.json({ errMsg: errMsg, "statusCode": 500 }).status(500)
+        const erroTratado = await tratarMensagensDeErro(err)
+        res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
     }
 })
 
@@ -79,8 +79,8 @@ router.get("/unico", async (req, res) => {
             .catch((e) => res.status(400).json({ msg: "Erro ao realizar consulta", "statusCode": 400, errMsg: e }))
     }
     catch (err) {
-        const errMsg = tratarMensagensDeErro(err)
-        res.status(500).json({ errMsg: errMsg, "statusCode": 500 })
+        const erroTratado = await tratarMensagensDeErro(err)
+        res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
 
     }
 
