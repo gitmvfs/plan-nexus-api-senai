@@ -17,7 +17,7 @@ const authMiddleware = (req, res, next) => {
             const { nif, token } = req.headers
 
             if(!!nif == false || !!token == false){
-                novoErro("Usuario ou token inválidos, permissão negada")
+                novoErro("Usuario ou token inválidos, permissão negada",403)
             }
 
             //Procura pelo usuario
@@ -32,7 +32,7 @@ const authMiddleware = (req, res, next) => {
             }
 
             // Define qual usuario ira logar
-            console.log(funcionario.fk_nivel_acesso)
+            // console.log(funcionario.fk_nivel_acesso)
 
             switch (funcionario.fk_nivel_acesso) {
                 case 2:
@@ -40,7 +40,6 @@ const authMiddleware = (req, res, next) => {
                     senhaBanco = process.env.database_password_diretoria
                     break;
                 case 3:
-                    console.log("aqui")
                     usuarioBanco = process.env.database_user_admin
                     senhaBanco = process.env.database_password_admin
                     break;
@@ -52,7 +51,7 @@ const authMiddleware = (req, res, next) => {
             }
 
 
-            console.log(usuarioBanco,senhaBanco)
+            console.log(" teste14:" ,usuarioBanco,senhaBanco)
 
             // Configure a conexão do Sequelize com base no usuário
             const sequelize = new Sequelize({
@@ -77,7 +76,7 @@ const authMiddleware = (req, res, next) => {
         }
         catch (err) {
             const erroTratado = await tratarMensagensDeErro(err)
-            res.status(300).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
+            res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
         }
 
     })
