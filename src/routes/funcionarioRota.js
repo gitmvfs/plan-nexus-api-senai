@@ -43,16 +43,17 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/:NIF', async (req, res) => {
+    const { NIF } = req.params;
     try {
-        const { NIF } = req.params
-        
         await pesquisarUnicoFuncionario(NIF)
-            .then((funcionario) => res.status(200).json({ msg: "Consulta realizada com sucesso", "statusCode": 200, data: funcionario }))
-            .catch((e) => res.status(404).json({ msg: "Funcionário não encontrado", "statusCode": 404, errMsg: e }))
+            .then((funcionario) => {
+                res.status(200).json({ msg: "Consulta realizada com sucesso", "statusCode": 200, ...funcionario });
+            })
+            .catch((e) => res.status(400).json({ msg: "Erro ao realizar consulta", "statusCode": 400, errMsg: e }));
     } catch (err) {
-        res.status(500).json({ errMsg: err, "statusCode": 500 })
+        res.status(500).json({ errMsg: err, "statusCode": 500 });
     }
-})
+});
 
 router.put('/:NIF', async (req, res) => {
     const { NIF } = req.params
