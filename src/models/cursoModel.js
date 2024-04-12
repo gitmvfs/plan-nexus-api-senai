@@ -17,21 +17,21 @@ module.exports = (sequelize) => {
       allowNull: false
     },
     semestre_inicio: {
-      type: DataTypes.ENUM(["1","2"]),
+      type: DataTypes.ENUM(["1", "2"]),
       allowNull: false
     },
-    curso_duracao:{
+    curso_duracao: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    modalidade:{
-      type:DataTypes.STRING(255),
+    modalidade: {
+      type: DataTypes.STRING(255),
       allowNull: false
     }
   }, {
     timestamps: false,
     tableName: 'curso'
   });
-    
-return cursoModel
+
+  return cursoModel
 }

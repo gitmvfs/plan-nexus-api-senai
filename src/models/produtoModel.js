@@ -1,8 +1,7 @@
-const conectarDB = require("../services/conectarDB")
-const { DataTypes } = require("sequelize")
-const sequelize = conectarDB
+module.exports = (sequelize) => {
+  const { DataTypes } = require("sequelize")
 
-const produtoModel = sequelize.define('produto', {
+  const produtoModel = sequelize.define('produto', {
     id_produto: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -42,4 +41,5 @@ const produtoModel = sequelize.define('produto', {
     timestamps: false // Se não tiver campos de created_at e updated_at
   });
   
-module.exports = produtoModel
+  return produtoModel
+}
