@@ -1,6 +1,6 @@
 const router = require("express").Router()
 
-const { cadastrarFuncionario, pesquisarTodosFuncionarios, pesquisarUnicoFuncionario, editarFuncionario, loginFuncionario } = require("../controllers/funcionarioController")
+const { cadastrarFuncionario, pesquisarTodosFuncionarios, pesquisarUnicoFuncionario, editarFuncionario, loginFuncionario, deslogarFuncionario } = require("../controllers/funcionarioController")
 
 const { object, string, number } = require('zod')
 const authMiddleware = require("../middleware/auth")
@@ -37,6 +37,11 @@ router.post("/login",async(req,res) => {
 // ROTAS PROTEGIDAS
 router.use(authMiddleware)
 
+router.post("/token", (req,res) =>{
+
+    res.json(true)
+
+})
 
 router.post('/', async (req, res) => {
     const { NIF, nome, email, fk_nivel_acesso } = req.body
@@ -69,6 +74,26 @@ router.get('/', async (req, res) => {
     catch (err) {
         res.status(500).json({ errMsg: err, "statusCode": 500 })
     }
+})
+
+router.get('/todos', async (req, res) => {
+    try {
+        console.log("cHAMOU 2")
+        await pesquisarTodosFuncionarios(req.sequelize)
+            .then((resposta) => res.status(200).json({ msg: "Consulta realizada com sucesso", "statusCode": 200, data: resposta }))
+            .catch((e) => console.log(e))
+    }
+    catch (err) {
+        res.status(500).json({ errMsg: err, "statusCode": 500 })
+    }
+})
+
+router.post("/deslogar", async(req,res)=>{
+
+    const {nif, token} = req.funcionario
+    const response = await deslogarFuncionario(nif,token, req.sequelize)
+    console.log(response)
+    
 })
 
 router.get('/:NIF', async (req, res) => {
@@ -104,6 +129,7 @@ router.put('/:NIF', async (req, res) => {
         res.status(500).send(err)
     }
 })
+
 
 
 
