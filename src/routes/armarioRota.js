@@ -30,7 +30,7 @@ router.get("/todos", async (req, res) => {
 
     try {
         const response = await pesquisarTodosArmario()
-        res.status(200).json({ "statusCode": 200, data: response })
+        res.status(200).json({ "statusCode": 200,  ...response })
     }
     catch (err) {
         const errMsg = tratarMensagensDeErro(err)
@@ -44,9 +44,8 @@ router.get("/status", async (req, res) => {
 
     try {
         statusArmario = definirStatusArmario(statusArmario)
-        console.log(statusArmario)
         const response = await pesquisarArmarioPorStatus(statusArmario)
-        res.status(200).json({ "statusCode": 200, data: response })
+        res.status(200).json({ "statusCode": 200,...response })
     }
     catch (err) {
         const errMsg = tratarMensagensDeErro(err)
