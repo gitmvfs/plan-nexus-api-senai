@@ -1,8 +1,7 @@
-const conectarDB = require("../services/conectarDB")
-const { DataTypes } = require("sequelize")
-const sequelize = conectarDB
+module.exports = (sequelize) => {
+  const { DataTypes } = require("sequelize")
 
- const funcionarioModel = sequelize.define('funcionario', {
+  const funcionarioModel = sequelize.define('funcionario', {
     NIF: {
       type: DataTypes.STRING(20),
       allowNull: false,
@@ -14,7 +13,8 @@ const sequelize = conectarDB
     },
     email: {
       type: DataTypes.STRING(100),
-      allowNull: false
+      allowNull: false,
+      unique: true
     },
     foto: {
       type: DataTypes.STRING(255),
@@ -59,4 +59,5 @@ const sequelize = conectarDB
     ]
   });
 
-  module.exports = funcionarioModel
+  return funcionarioModel
+}

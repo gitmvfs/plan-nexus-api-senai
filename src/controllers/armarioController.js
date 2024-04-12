@@ -1,12 +1,12 @@
 const armarioModel = require("../models/armarioModel")
 const { definirStatusArmario } = require("../utils/converterString")
 
-function atualizarArmario(numeroArmario, cpf, statusArmario) {
+function atualizarArmario(numeroArmario, cpf, statusArmario, sequelize) {
 
     return new Promise(async (resolve, reject) => {
 
         try {
-            await armarioModel.update(
+            await armarioModel(sequelize).update(
                 {
                     fk_CPF: cpf,
                     status: statusArmario
@@ -28,12 +28,12 @@ function atualizarArmario(numeroArmario, cpf, statusArmario) {
 
 }
 
-function pesquisarTodosArmario() {
+function pesquisarTodosArmario(sequelize) {
 
     return new Promise(async (resolve, reject) => {
 
         try {
-            await armarioModel.findAll()
+            await armarioModel(sequelize).findAll()
                 .then((r) => {
                     const listaArmarios = []
                     r.map((armario) => listaArmarios.push(armario.dataValues))
@@ -47,13 +47,13 @@ function pesquisarTodosArmario() {
     })
 }
 
-function pesquisarArmarioPorStatus(status) {
+function pesquisarArmarioPorStatus(status, sequelize) {
 
     return new Promise(async (resolve, reject) => {
 
         try {
 
-            await armarioModel.findAll({
+            await armarioModel(sequelize).findAll({
                 where: {
                     status: status
                 }

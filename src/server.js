@@ -10,7 +10,6 @@ const alunosRota = require("./routes/alunoRota")
 const armarioRota = require("./routes/armarioRota")
 const funcionarioRota = require("./routes/funcionarioRota")
 
-
 // Config dotenv
 dotenv.config({ path: resolve("../", ".env") })
 const serverPort = process.env.PORT || 3333

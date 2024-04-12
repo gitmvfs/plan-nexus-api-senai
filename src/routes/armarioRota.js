@@ -1,8 +1,12 @@
 const { atualizarArmario, pesquisarTodosArmario, pesquisarArmarioPorStatus } = require("../controllers/armarioController")
 const { definirStatusArmario } = require("../utils/converterString")
 const tratarMensagensDeErro = require("../utils/errorMsg")
+const authMiddleware = require("../middleware/auth")
 
 const router = require("express").Router()
+
+// ROTAS PROTEGIDAS
+router.use(authMiddleware)
 
 router.patch("/atualizar", async (req, res) => {
 
@@ -26,7 +30,7 @@ router.get("/todos", async (req, res) => {
 
     try {
         const response = await pesquisarTodosArmario()
-        res.status(200).json({ "statusCode": 200, data: response })
+        res.status(200).json({ "statusCode": 200,  ...response })
     }
     catch (err) {
         const errMsg = tratarMensagensDeErro(err)
@@ -40,9 +44,8 @@ router.get("/status", async (req, res) => {
 
     try {
         statusArmario = definirStatusArmario(statusArmario)
-        console.log(statusArmario)
         const response = await pesquisarArmarioPorStatus(statusArmario)
-        res.status(200).json({ "statusCode": 200, data: response })
+        res.status(200).json({ "statusCode": 200,...response })
     }
     catch (err) {
         const errMsg = tratarMensagensDeErro(err)
