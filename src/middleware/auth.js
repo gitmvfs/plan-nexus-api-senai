@@ -2,10 +2,30 @@ const funcionarioModel = require("../models/funcionarioModel");
 const { novoErro, tratarMensagensDeErro } = require("../utils/errorMsg");
 const { resolve } = require("path")
 const dotenv = require("dotenv").config({ path: resolve(__dirname, "../", "../", ".env") })
-const {Sequelize} = require("sequelize")
+const { Sequelize } = require("sequelize")
+const jwt = require("jsonwebtoken")
 
+function validarDataToken(token) {
 
-async function encontrarFuncionarioLogin (nif){
+    return new Promise((resolve, reject) => {
+
+        const tokenDecodificado = jwt.decode(token)
+
+        if (!tokenDecodificado || !tokenDecodificado.exp) {
+            reject("Token inválido", 403)  // Token inválido ou sem data de expiração
+        }
+
+        const dataExpiracaoToken = new Date(tokenDecodificado.exp * 1000)
+        const dataAtual = new Date();
+
+        if (dataExpiracaoToken < dataAtual) {
+            reject("Token expirado", 403)
+        }
+        resolve(true)
+    })
+}
+
+async function encontrarFuncionarioLogin(nif, token) {
 
     // Se conecta usando um usuario q só tem acesso a uma view de login
     const sequelize_login = new Sequelize({
@@ -18,22 +38,21 @@ async function encontrarFuncionarioLogin (nif){
 
     const response = await funcionarioModel(sequelize_login).findOne({
         where: {
-            nif,
+            NIF: nif,
+            token
         }
     })
-
     if (!!response == false) {
         novoErro("Usuario ou token inválidos, permissão negada.", 403)
     }
     return response
 }
 
-function definirPermissaoNoBanco(funcionario){
+function definirPermissaoNoBanco(funcionario) {
 
     let usuarioBanco = ""
     let senhaBanco = ""
-    
-    console.log(funcionario)
+
 
     switch (funcionario.fk_nivel_acesso) {
         case 2:
@@ -51,11 +70,10 @@ function definirPermissaoNoBanco(funcionario){
             break;
     }
 
-    console.log(usuarioBanco, senhaBanco)
-    return {usuarioBanco, senhaBanco}
+    return { usuarioBanco, senhaBanco }
 }
 
-function criarConexaoBanco(usuarioBanco,senhaBanco){
+function criarConexaoBanco(usuarioBanco, senhaBanco) {
 
     const sequelize = new Sequelize({
         database: process.env.database_name,
@@ -71,30 +89,33 @@ function criarConexaoBanco(usuarioBanco,senhaBanco){
 
 const authMiddleware = (req, res, next) => {
     // Faça a autenticação do usuário e obtenha as informações necessárias
-    
+
     return new Promise(async (resolve, reject) => {
 
         try {
             const { nif, token } = req.headers
 
-            if(!!nif == false || !!token == false){
-                novoErro("Usuario ou token inválidos, permissão negada",403)
+            if (!!nif == false || !!token == false) {
+                novoErro("Usuario ou token inválidos, permissão negada", 403)
             }
 
-           const funcionario = await encontrarFuncionarioLogin(nif) // procura o funcionario no banco
+            await validarDataToken(token)
+            .catch((e)=> novoErro("Token inválido ou expirado", 403))
 
-           const {usuarioBanco, senhaBanco} = definirPermissaoNoBanco(funcionario) // define a permissão dele de acordo com o banco
-            
-            const sequelize = criarConexaoBanco(usuarioBanco,senhaBanco) // cria uma conexão no banco com o nivel da permissão
-            
+            const funcionario = await encontrarFuncionarioLogin(nif, token) // procura o funcionario no banco
+
+            const { usuarioBanco, senhaBanco } = definirPermissaoNoBanco(funcionario) // define a permissão dele de acordo com o banco
+
+            const sequelize = criarConexaoBanco(usuarioBanco, senhaBanco) // cria uma conexão no banco com o nivel da permissão
+
             //Autentica a conexão no banco de dados
             await sequelize.authenticate()
-            .catch((e) => novoErro("Erro ao autenticar usuario do banco",500))            
-           
+                .catch((e) => novoErro("Erro ao autenticar usuario do banco", 500))
 
-           // Define o req.sequelize 
+
+            // Define o req.sequelize 
             req.sequelize = sequelize
-
+            req.funcionario = {nif, token}
             // Prossiga para a próxima etapa da requisição
             next();
         }
