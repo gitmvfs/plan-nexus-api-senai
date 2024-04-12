@@ -1,8 +1,12 @@
+const { Sequelize, DATE } = require('sequelize')
 const funcionarioModel = require('../models/funcionarioModel')
-const {compararHash} = require("../utils/bcrypt")
-const {gerarToken} = require("../utils/jwt")
+const { compararHash } = require("../utils/bcrypt")
+const { gerarToken } = require("../utils/jwt")
+const { resolve } = require("path")
+const { novoErro } = require('../utils/errorMsg')
+const dotenv = require("dotenv").config({ path: resolve(__dirname, "../", "../", ".env") })
 
-async function emailExiste(email,sequelize) {
+async function emailExiste(email, sequelize) {
     const funcionario = await funcionarioModel(sequelize).findOne({ where: { email: email } })
     return funcionario !== null
 }
@@ -15,7 +19,7 @@ function cadastrarFuncionario(funcionario, sequelize) {
                 reject("Email já existe no banco de dados.")
                 return;
             }
-            
+
             await funcionarioModel(sequelize).create({
                 NIF: funcionario.NIF,
                 nome: funcionario.nome,
@@ -29,31 +33,8 @@ function cadastrarFuncionario(funcionario, sequelize) {
     })
 }
 
-async function encontrarFuncionarioPorNIF(NIF,sequelize) {
+async function encontrarFuncionarioPorNIF(NIF, sequelize) {
     return funcionarioModel(sequelize).findOne({ where: { NIF: NIF } });
-}
-
-
-function pesquisarTodosFuncionarios(sequelize) {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const listaFuncionarios = []
-            const funcionarios = await funcionarioModel(sequelize).findAll({ attributes: { exclude: ['senha'] } })
-
-            if (funcionarios.length === 0) {
-                reject("Funcionários não encontrados, verifique os filtros.")
-                return
-            }
-
-            funcionarios.forEach((funcionario) => {
-                listaFuncionarios.push(funcionario.dataValues)
-            })
-
-            resolve(listaFuncionarios)
-        } catch (error) {
-            reject(error)
-        }
-    })
 }
 
 function pesquisarUnicoFuncionario(NIF, sequelize) {
@@ -74,11 +55,11 @@ function pesquisarUnicoFuncionario(NIF, sequelize) {
 }
 
 
-async function editarFuncionario(NIF, novosDados,sequelize) {
+async function editarFuncionario(NIF, novosDados, sequelize) {
 
     return new Promise(async (resolve, reject) => {
         try {
-            const funcionarioExistente = await encontrarFuncionarioPorNIF(NIF,sequelize)
+            const funcionarioExistente = await encontrarFuncionarioPorNIF(NIF, sequelize)
             if (!funcionarioExistente) {
                 return res.status(404).send('Funcionário não encontrado.')
             }
@@ -92,16 +73,24 @@ async function editarFuncionario(NIF, novosDados,sequelize) {
     });
 }
 
-async function loginFuncionario(funcionario,sequelize){
-    
+async function loginFuncionario(funcionario) {
+
     return new Promise(async (resolve, reject) => {
 
         try {
 
+            const sequelize_login = new Sequelize({
+                database: process.env.database_name,
+                username: process.env.database_user_root, // dps atualizar para o login funcionario
+                password: process.env.database_password_root, // dps atualizar para o senha funcionario
+                host: process.env.database_host,
+                dialect: 'mysql'
+            });
+
             const { email, senha } = funcionario
 
             // verifica se o usuario existe
-            let usuario = await funcionarioModel(sequelize).findOne({
+            let usuario = await funcionarioModel(sequelize_login).findOne({
                 where: {
                     email
                 }
@@ -125,7 +114,7 @@ async function loginFuncionario(funcionario,sequelize){
             //Gera o token para verificar se está logado
             resposta.token = gerarToken(resposta.email, resposta.nome, "12h")
 
-            await funcionarioModel(sequelize).update({
+            await funcionarioModel(sequelize_login).update({
                 token: resposta.token
             },
                 {
@@ -143,4 +132,43 @@ async function loginFuncionario(funcionario,sequelize){
     })
 }
 
-module.exports = { cadastrarFuncionario,pesquisarTodosFuncionarios,pesquisarUnicoFuncionario , editarFuncionario, loginFuncionario };
+function pesquisarTodosFuncionarios(sequelize) {
+
+    return new Promise(async(resolve, reject) => {
+        try {
+            console.log("CHAMANDO")
+
+           await sequelize.query("select * from todos_funcionarios order by nome;")
+            .then((r) => resolve(r))
+            .catch((e)=> console.log(e))
+        
+        } catch (error) {
+            console.log(error)
+            reject(error)
+        }
+    })
+}
+
+
+function deslogarFuncionario(nif,token,sequelize){
+
+    return new Promise((resolve,reject)=>{
+
+        funcionarioModel(sequelize).update(
+            {token: null},
+            {
+            where:{
+                NIF:nif,
+                token
+            }
+        })
+        .then((r)=> resolve(r))
+        .catch((e)=> reject(e))
+        
+
+    })
+
+
+}
+
+module.exports = { cadastrarFuncionario, pesquisarTodosFuncionarios, pesquisarUnicoFuncionario, editarFuncionario, loginFuncionario , deslogarFuncionario};
