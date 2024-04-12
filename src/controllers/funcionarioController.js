@@ -2,12 +2,12 @@ const funcionarioModel = require('../models/funcionarioModel')
 const {compararHash} = require("../utils/bcrypt")
 const {gerarToken} = require("../utils/jwt")
 
-async function emailExiste(email) {
-    const funcionario = await funcionarioModel.findOne({ where: { email: email } })
+async function emailExiste(email,sequelize) {
+    const funcionario = await funcionarioModel(sequelize).findOne({ where: { email: email } })
     return funcionario !== null
 }
 
-function cadastrarFuncionario(funcionario) {
+function cadastrarFuncionario(funcionario, sequelize) {
     return new Promise(async (resolve, reject) => {
         try {
             const emailJaExiste = await emailExiste(funcionario.email)
@@ -16,7 +16,7 @@ function cadastrarFuncionario(funcionario) {
                 return;
             }
             
-            await funcionarioModel.create({
+            await funcionarioModel(sequelize).create({
                 NIF: funcionario.NIF,
                 nome: funcionario.nome,
                 email: funcionario.email,
@@ -29,11 +29,11 @@ function cadastrarFuncionario(funcionario) {
     })
 }
 
-async function encontrarFuncionarioPorNIF(NIF) {
-    return funcionarioModel.findOne({ where: { NIF: NIF } });
+async function encontrarFuncionarioPorNIF(NIF,sequelize) {
+    return funcionarioModel(sequelize).findOne({ where: { NIF: NIF } });
 }
 
-async function editarFuncionario(NIF, novosDados) {
+async function editarFuncionario(NIF, novosDados,sequelize) {
     return new Promise(async (resolve, reject) => {
         try {
             const funcionarioExistente = await encontrarFuncionarioPorNIF(NIF)
@@ -41,7 +41,7 @@ async function editarFuncionario(NIF, novosDados) {
                 return res.status(404).send('Funcionário não encontrado.')
             }
 
-            await funcionarioModel.update(novosDados, { where: { NIF: NIF } });
+            await funcionarioModel.update(sequelize)(novosDados, { where: { NIF: NIF } });
 
             resolve("Funcionário atualizado com sucesso.");
         } catch (err) {
@@ -50,7 +50,7 @@ async function editarFuncionario(NIF, novosDados) {
     });
 }
 
-async function loginFuncionario(funcionario){
+async function loginFuncionario(funcionario,sequelize){
     
     return new Promise(async (resolve, reject) => {
 
@@ -59,7 +59,7 @@ async function loginFuncionario(funcionario){
             const { email, senha } = funcionario
 
             // verifica se o usuario existe
-            let usuario = await funcionarioModel.findOne({
+            let usuario = await funcionarioModel(sequelize).findOne({
                 where: {
                     email
                 }
@@ -83,7 +83,7 @@ async function loginFuncionario(funcionario){
             //Gera o token para verificar se está logado
             resposta.token = gerarToken(resposta.email, resposta.nome, "12h")
 
-            await funcionarioModel.update({
+            await funcionarioModel(sequelize).update({
                 token: resposta.token
             },
                 {

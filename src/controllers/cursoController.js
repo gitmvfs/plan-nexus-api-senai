@@ -1,6 +1,4 @@
 const cursoModel = require("../models/cursoModel")
-const conectar_db = require("../services/conectarDB")
-const Sequelize = require("sequelize")
 const {definirGraduacao} = require("../utils/converterString")
 
 
@@ -9,7 +7,6 @@ async function cadastroDeTurmas(listaAlunos,sequelize) {
     return new Promise(async (resolve, reject) => {
 
         try {
-            console.log(cursoModel)
             const listaTurmas = extrairTurmasDosAlunos(listaAlunos)
             const turmasUnicas = retirarTurmasRepetidas(listaTurmas)
             const turmasDefinidas = calcularDuracaoSemestresCursos(turmasUnicas) // nesta estapa os dados das turmas já estão prontos para inserir no banco
