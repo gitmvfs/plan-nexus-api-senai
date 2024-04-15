@@ -3,7 +3,7 @@ module.exports = (sequelize) => {
 
   const produtoModel = sequelize.define('produto', {
     id_produto: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.INTEGER.UNSIGNED,
       primaryKey: true,
       autoIncrement: true
     },
@@ -19,26 +19,33 @@ module.exports = (sequelize) => {
       type: DataTypes.JSON,
       allowNull: false
     },
-    qtd_estoque: {
-      type: DataTypes.INTEGER,
+    cor: {
+      type: DataTypes.STRING(25),
+      allowNull: true
+    },
+    tamanho: {
+      type: DataTypes.ENUM('PP', 'P', 'M', 'G1', 'G2', 'G3'),
       allowNull: true
     },
     valor: {
       type: DataTypes.DECIMAL(5, 2),
       allowNull: false
     },
+    qtd_estoque: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    qtd_reservada: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      defaultValue: 0
+    },
     brinde: {
       type: DataTypes.BOOLEAN,
       allowNull: true
-    },
-    status: {
-      type: DataTypes.BOOLEAN,
-      allowNull: true,
-      defaultValue: true
     }
   }, {
     tableName: 'produto',
-    timestamps: false // Se não tiver campos de created_at e updated_at
+    timestamps: false
   });
   
   return produtoModel

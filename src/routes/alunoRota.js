@@ -88,9 +88,6 @@ router.get("/unico", async (req, res) => {
 
 router.get("/todos", async (req, res) => {
 
-
-    const { CPF, email } = req.body
-
     try {
         await pesquisaTodosAlunos(req.sequelize)
             .then((response) => res.status(200).json({ msg: "Consulta realizada com sucesso", "statusCode": 200, ...response }))

@@ -1,6 +1,5 @@
 const router = require("express").Router()
-
-const { cadastrarFuncionario, pesquisarTodosFuncionarios, pesquisarUnicoFuncionario, editarFuncionario, loginFuncionario } = require("../controllers/funcionarioController")
+const { cadastrarFuncionario, pesquisarTodosFuncionarios, pesquisarUnicoFuncionario, editarFuncionario, loginFuncionario, deslogarFuncionario } = require("../controllers/funcionarioController")
 
 const { object, string, number } = require('zod')
 const authMiddleware = require("../middleware/auth")
@@ -26,17 +25,19 @@ router.post("/login",async(req,res) => {
         :res.status(400).json("Usuario ou senha inválidos")
     }
     catch(err){
-        const status = err.status?? 500 
-        const msg = err.issues ?? err.message 
-
-        console.log(err)
-        res.status(status).json(msg)
+        const erroTratado = await tratarMensagensDeErro(err)
+        res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
     }
 })
 
 // ROTAS PROTEGIDAS
 router.use(authMiddleware)
 
+router.post("/token", (req,res) =>{
+
+    res.json(true)
+
+})
 
 router.post('/', async (req, res) => {
     const { NIF, nome, email, fk_nivel_acesso } = req.body
@@ -56,31 +57,55 @@ router.post('/', async (req, res) => {
         res.send('Funcionário cadastrado com sucesso.')
     }
     catch (err) {
-        res.status(500).send(err)
+        const erroTratado = await tratarMensagensDeErro(err)
+        res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
+
     }
   })
 
-router.get('/', async (req, res) => {
+router.get('/todos', async (req, res) => {
     try {
-        await pesquisarTodosFuncionarios()
-            .then((resposta) => res.status(200).json({ msg: "Consulta realizada com sucesso", "statusCode": 200, data: resposta }))
-            .catch((e) => res.status(400).json({ msg: "Erro ao realizar consulta", "statusCode": 400, errMsg: e }))
+        await pesquisarTodosFuncionarios(req.sequelize)
+            .then((response) => res.status(200).json({ msg: "Consulta realizada com sucesso", "statusCode": 200, ...response }))
+            .catch((e) => console.log(e))
     }
     catch (err) {
-        res.status(500).json({ errMsg: err, "statusCode": 500 })
+        const erroTratado = await tratarMensagensDeErro(err)
+        res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
+
+    }
+})
+
+router.post("/deslogar", async(req,res)=>{
+
+    const {nif, token} = req.funcionario
+    try{
+
+        const response = await deslogarFuncionario(nif,token, req.sequelize)
+    
+        response[0] == 1? res.json({msg: "Usuario deslogado com sucesso", "statusCode": 200})
+        : res.status(500).json({msg: "Erro ao deslogar usuario", "statusCode": 500})
+    
+    }
+    catch(err){
+        const erroTratado = await tratarMensagensDeErro(err)
+        res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
+
     }
 })
 
 router.get('/:NIF', async (req, res) => {
     const { NIF } = req.params;
     try {
-        await pesquisarUnicoFuncionario(NIF)
-            .then((funcionario) => {
-                res.status(200).json({ msg: "Consulta realizada com sucesso", "statusCode": 200, ...funcionario });
+        await pesquisarUnicoFuncionario(NIF,req.sequelize)
+            .then((response) => {
+                res.status(200).json({ msg: "Consulta realizada com sucesso", "statusCode": 200, ...response });
             })
             .catch((e) => res.status(400).json({ msg: "Erro ao realizar consulta", "statusCode": 400, errMsg: e }));
     } catch (err) {
-        res.status(500).json({ errMsg: err, "statusCode": 500 });
+        const erroTratado = await tratarMensagensDeErro(err)
+        res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
+
     }
 });
 
@@ -101,11 +126,10 @@ router.put('/:NIF', async (req, res) => {
         await editarFuncionario(NIF, funcionarioValidado)
         res.send('Informações do funcionário atualizadas com sucesso.')
     } catch (err) {
-        res.status(500).send(err)
+        const erroTratado = await tratarMensagensDeErro(err)
+        res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
+
     }
 })
-
-
-
 
 module.exports = router

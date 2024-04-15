@@ -9,6 +9,7 @@ const cors = require("cors")
 const alunosRota = require("./routes/alunoRota")
 const armarioRota = require("./routes/armarioRota")
 const funcionarioRota = require("./routes/funcionarioRota")
+const produtoRota = require("./routes/produtoRota")
 
 // Config dotenv
 dotenv.config({ path: resolve("../", ".env") })
@@ -21,8 +22,9 @@ app.use(cors())
 
 
 //Configurando rotas
+app.use("/funcionario", funcionarioRota)
 app.use("/aluno", alunosRota)
 app.use("/armario", armarioRota)
-app.use("/funcionario", funcionarioRota)
+app.use("/produto", produtoRota)
 
 app.listen(serverPort, () => console.log(`HTTP RUNNING AT: http://localhost:${serverPort}`))
