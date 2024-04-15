@@ -1,7 +1,7 @@
 {
     "client": "Thunder Client",
     "collectionName": "Senai-gestao",
-    "dateExported": "2024-04-02T07:54:02.718Z",
+    "dateExported": "2024-04-15T13:23:57.117Z",
     "version": "1.1",
     "folders": [
         {
@@ -17,6 +17,27 @@
             "containerId": "",
             "created": "2024-04-02T07:41:29.158Z",
             "sortNum": 20000
+        },
+        {
+            "_id": "8d0a9014-abbf-4a72-8294-a52e982515cb",
+            "name": "Produto",
+            "containerId": "",
+            "created": "2024-04-15T12:16:53.666Z",
+            "sortNum": 30000
+        },
+        {
+            "_id": "31b685d1-2707-4b83-a1f8-d01c3b7c3f81",
+            "name": "Funcionarios",
+            "containerId": "",
+            "created": "2024-04-15T12:33:56.667Z",
+            "sortNum": 40000
+        },
+        {
+            "_id": "87c78178-878f-4016-b1c3-9b04cc9f89bd",
+            "name": "Produtos",
+            "containerId": "",
+            "created": "2024-04-15T13:02:07.197Z",
+            "sortNum": 50000
         }
     ],
     "requests": [
@@ -29,8 +50,17 @@
             "method": "POST",
             "sortNum": 10000,
             "created": "2024-03-30T19:34:09.345Z",
-            "modified": "2024-03-30T19:52:11.922Z",
-            "headers": [],
+            "modified": "2024-04-10T00:02:17.043Z",
+            "headers": [
+                {
+                    "name": "token",
+                    "value": ""
+                },
+                {
+                    "name": "nif",
+                    "value": ""
+                }
+            ],
             "params": [],
             "body": {
                 "type": "formdata",
@@ -54,12 +84,12 @@
             "method": "POST",
             "sortNum": 20000,
             "created": "2024-04-02T07:23:23.512Z",
-            "modified": "2024-04-02T07:25:07.846Z",
+            "modified": "2024-04-02T08:45:30.623Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"CPF\":\"12345678901\",\n  \"nome\":\"Teste Unico\",\n  \"email\":\"testeUnico@gmail.com\",\n  \"fk_curso\":203,\n  \"socioAapm\":true\n}",
+                "raw": "{\n  \"CPF\":\"1234567901\",\n  \"nome\":\"Teste Unico\",\n  \"email\":\"testeUnico@gmail.com\",\n  \"socioAapm\":true\n}",
                 "form": []
             },
             "tests": []
@@ -102,12 +132,21 @@
             "method": "GET",
             "sortNum": 40000,
             "created": "2024-04-02T07:35:05.523Z",
-            "modified": "2024-04-02T07:36:19.463Z",
-            "headers": [],
+            "modified": "2024-04-05T19:07:43.187Z",
+            "headers": [
+                {
+                    "name": "nif",
+                    "value": "000111999223"
+                },
+                {
+                    "name": "token",
+                    "value": "teste"
+                }
+            ],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"CPF\":\"12345678901\",\n  \"email\":\"\"\n}",
+                "raw": "{\n  \"CPF\":\"15180738884\",\n  \"email\":\"\"\n}",
                 "form": []
             },
             "tests": []
@@ -117,12 +156,23 @@
             "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
             "containerId": "49eea8f2-4034-45df-9e50-7c2d27da12d6",
             "name": "Pesquisar varios alunos",
-            "url": "",
+            "url": "http://{{baseUrl}}:{{Port}}/aluno/todos",
             "method": "GET",
             "sortNum": 50000,
             "created": "2024-04-02T07:37:11.125Z",
-            "modified": "2024-04-02T07:37:11.125Z",
-            "headers": []
+            "modified": "2024-04-12T01:35:58.765Z",
+            "headers": [
+                {
+                    "name": "token",
+                    "value": "123"
+                },
+                {
+                    "name": "nif",
+                    "value": "000111999223"
+                }
+            ],
+            "params": [],
+            "tests": []
         },
         {
             "_id": "09cdceeb-6125-422f-8693-29078712f9f8",
@@ -182,6 +232,150 @@
             "body": {
                 "type": "json",
                 "raw": "{\n  \"statusArmario\":\"Ocupado\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "81dfd826-a892-43e1-abbe-6e895fcde8e8",
+            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
+            "containerId": "31b685d1-2707-4b83-a1f8-d01c3b7c3f81",
+            "name": "Login",
+            "url": "http://{{baseUrl}}:{{Port}}/funcionario/login",
+            "method": "POST",
+            "sortNum": 100000,
+            "created": "2024-04-15T12:34:02.091Z",
+            "modified": "2024-04-15T12:43:22.883Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\":\"marcos@senaisp.edu.br\",\n  \"senha\":\"teste\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "5b4193cc-b0c8-40be-8651-a6e9efbb0f78",
+            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
+            "containerId": "31b685d1-2707-4b83-a1f8-d01c3b7c3f81",
+            "name": "Logout",
+            "url": "http://{{baseUrl}}:{{Port}}/funcionario/deslogar",
+            "method": "POST",
+            "sortNum": 110000,
+            "created": "2024-04-15T12:34:07.282Z",
+            "modified": "2024-04-15T12:52:14.070Z",
+            "headers": [
+                {
+                    "name": "nif",
+                    "value": "000111999224"
+                },
+                {
+                    "name": "token",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtYXJjb3NAc2VuYWlzcC5lZHUuYnIiLCJuYW1lIjoiTUFSQ09PT1UiLCJpYXQiOjE3MTMxODU1MjEsImV4cCI6MTcxMzIyODcyMX0.D6IHu4rhUaDykHeTt9Tc0FTtrHZo8fXstL2TstwHaiM"
+                }
+            ],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "37ac2109-2d12-44c2-a575-043072b1582a",
+            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
+            "containerId": "31b685d1-2707-4b83-a1f8-d01c3b7c3f81",
+            "name": "Atualizar por NIF",
+            "url": "",
+            "method": "PUT",
+            "sortNum": 115000,
+            "created": "2024-04-15T12:35:29.801Z",
+            "modified": "2024-04-15T13:01:44.068Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "ddabac12-ce40-4447-8194-728c91c03dd0",
+            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
+            "containerId": "31b685d1-2707-4b83-a1f8-d01c3b7c3f81",
+            "name": "Cadastro",
+            "url": "",
+            "method": "POST",
+            "sortNum": 120000,
+            "created": "2024-04-15T12:34:13.634Z",
+            "modified": "2024-04-15T13:01:56.875Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "d5e21922-8e50-4102-bb7a-03d8feadee9f",
+            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
+            "containerId": "31b685d1-2707-4b83-a1f8-d01c3b7c3f81",
+            "name": "Pesquisar por NIF",
+            "url": "http://{{baseUrl}}:{{Port}}/funcionario/000111999224",
+            "method": "GET",
+            "sortNum": 130000,
+            "created": "2024-04-15T12:34:44.914Z",
+            "modified": "2024-04-15T13:00:21.767Z",
+            "headers": [
+                {
+                    "name": "nif",
+                    "value": "000111999224"
+                },
+                {
+                    "name": "token",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtYXJjb3NAc2VuYWlzcC5lZHUuYnIiLCJuYW1lIjoiTUFSQ09PT1UiLCJpYXQiOjE3MTMxODYwMDAsImV4cCI6MTcxMzIyOTIwMH0.LvPWZH5Mw221zY788fywEaUH3KdNA8bCRMPx3QrYOXU"
+                }
+            ],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "f16f0b2d-3d61-4cd9-8f06-f392815eda16",
+            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
+            "containerId": "31b685d1-2707-4b83-a1f8-d01c3b7c3f81",
+            "name": "Pesquisar todos os funcionarios",
+            "url": "http://{{baseUrl}}:{{Port}}/funcionario/todos",
+            "method": "GET",
+            "sortNum": 150000,
+            "created": "2024-04-15T12:35:49.282Z",
+            "modified": "2024-04-15T12:57:25.851Z",
+            "headers": [
+                {
+                    "name": "token",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtYXJjb3NAc2VuYWlzcC5lZHUuYnIiLCJuYW1lIjoiTUFSQ09PT1UiLCJpYXQiOjE3MTMxODU1NTIsImV4cCI6MTcxMzIyODc1Mn0.ENQdZju4XAEhginTG3yOVV4P9cMCY3x1gf-kJACkXg8"
+                },
+                {
+                    "name": "nif",
+                    "value": "000111999224"
+                }
+            ],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "8ea2ee1a-2863-40d4-9eed-fecff2e5cbd8",
+            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
+            "containerId": "87c78178-878f-4016-b1c3-9b04cc9f89bd",
+            "name": "Cadastro",
+            "url": "http://{{baseUrl}}:{{Port}}/produto/cadastro",
+            "method": "POST",
+            "sortNum": 160000,
+            "created": "2024-04-15T13:02:13.068Z",
+            "modified": "2024-04-15T13:18:36.016Z",
+            "headers": [
+                {
+                    "name": "token",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtYXJjb3NAc2VuYWlzcC5lZHUuYnIiLCJuYW1lIjoiTUFSQ09PT1UiLCJpYXQiOjE3MTMxODYwMDAsImV4cCI6MTcxMzIyOTIwMH0.LvPWZH5Mw221zY788fywEaUH3KdNA8bCRMPx3QrYOXU"
+                },
+                {
+                    "name": "nif",
+                    "value": "000111999224"
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{ \"nome\": \"camiseta\",\r\n    \"cores\": [\"branco\", \"vermelho\"],\r\n    \"tamanhos\": [\"G\", \"GG\", \"P\", \"PP\"],\r\n    \"fotos\": {\r\n        \"branco\": {\r\n            \"link\": \"link branco\"\r\n        },\r\n        \"vermelho\": {\r\n            \"link\": \"link vermelho\"\r\n        }\r\n    },\r\n    \"valor\": 40,\r\n    \"descricao\": \"Sim é a descrição\",\r\n    \"brinde\": true}",
                 "form": []
             },
             "tests": []
