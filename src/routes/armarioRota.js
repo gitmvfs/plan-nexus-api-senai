@@ -11,10 +11,10 @@ router.use(authMiddleware)
 router.patch("/atualizar", async (req, res) => {
 
     try {
-        let { numeroArmario, CPF, statusArmario } = req.body
+        let { numeroArmario, idAluno, statusArmario } = req.body
         statusArmario = definirStatusArmario(statusArmario)
 
-        const response = await atualizarArmario(numeroArmario, CPF, statusArmario, req.sequelize)
+        const response = await atualizarArmario(numeroArmario, idAluno, statusArmario, req.sequelize)
 
         response[0] == 1
             ? res.status(200).json({ "msg": "Atualizado com sucesso", "statusCode": 200 })
