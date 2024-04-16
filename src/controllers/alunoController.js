@@ -55,7 +55,7 @@ async function mandarAlunosDb(listaAlunos, sequelize) {
     try {
         const promisesCriacaoAlunos = listaAlunos.map(async (aluno) => {
             try {
-                await alunoModel(seque).create(aluno);
+                await alunoModel(sequelize).create(aluno);
 
                 return { aluno, status: 'cadastrado' };
             } catch (error) {
