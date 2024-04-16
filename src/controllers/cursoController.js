@@ -84,7 +84,6 @@ function calcularDuracaoSemestresCursos(listaTurmasUnicas) {
         if (dataAtual > fechamentoPrimeiroSemestre) {
             semestreInicio = 2
         }
-        // console.log(turma)
 
         listaTurmasDefinidas.push({
             // CodigoTurma: turma.codigoTurma,

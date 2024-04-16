@@ -6,7 +6,6 @@ function atualizarArmario(numeroArmario, idAluno, statusArmario, sequelize) {
     return new Promise(async (resolve, reject) => {
 
         try {
-            console.log(idAluno)
             await armarioModel(sequelize).update(
                 {
                     fk_aluno: idAluno,
@@ -60,8 +59,6 @@ function pesquisarArmarioPorStatus(status, sequelize) {
         catch (err) {
             reject(err)
         }
-
-
     })
 
 

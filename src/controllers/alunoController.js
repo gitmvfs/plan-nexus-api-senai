@@ -92,8 +92,6 @@ function cadastroUnicoAluno(aluno,sequelize) {
 
     return new Promise(async (resolve, reject) => {
         try {
-            console.log("Chegou")
-            console.log(aluno)
             await alunoModel(sequelize).create({
                 CPF: aluno.CPF,
                 nome: aluno.nome,

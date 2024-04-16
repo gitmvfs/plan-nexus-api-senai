@@ -136,14 +136,12 @@ function pesquisarTodosFuncionarios(sequelize) {
 
     return new Promise(async(resolve, reject) => {
         try {
-            console.log("CHAMANDO")
 
            await sequelize.query("select * from todos_funcionarios order by nome;")
             .then((r) => resolve(r))
-            .catch((e)=> console.log(e))
+            .catch((e)=>reject(e))
         
         } catch (error) {
-            console.log(error)
             reject(error)
         }
     })
