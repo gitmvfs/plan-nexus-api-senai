@@ -33,13 +33,9 @@ function pesquisarTodosArmario(sequelize) {
     return new Promise(async (resolve, reject) => {
 
         try {
-            await armarioModel(sequelize).findAll()
-                .then((r) => {
-                    const listaArmarios = []
-                    r.map((armario) => listaArmarios.push(armario.dataValues))
-                    resolve(listaArmarios)
-                })
-                .catch((e) => reject(e))
+           sequelize.query("select * from todos_armarios order by numero;")
+           .then((r) => resolve(r))
+            .catch((e) => reject(e))
         }
         catch (err) {
             reject(err)
