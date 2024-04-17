@@ -21,8 +21,8 @@ router.patch("/atualizar", async (req, res) => {
             : res.status(400).json({ "msg": "Erro ao atualizar armario, verifique os campos.", "statusCode": 400 })
     }
     catch (err) {
-        const errMsg = tratarMensagensDeErro(err)
-        res.status(500).json({ errMsg: errMsg, "statusCode": 500 })
+        const erroTratado = await tratarMensagensDeErro(err)
+        res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
     }
 })
 
@@ -35,8 +35,8 @@ router.get("/todos", async (req, res) => {
         res.status(200).json({ "statusCode": 200, response   })
     }
     catch (err) {
-        const errMsg = tratarMensagensDeErro(err)
-        res.status(500).json({ "statusCode": 500, errMsg: errMsg })
+        const erroTratado = await tratarMensagensDeErro(err)
+        res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
     }
 
 })
@@ -50,8 +50,8 @@ router.get("/status", async (req, res) => {
         res.status(200).json({ "statusCode": 200,...response })
     }
     catch (err) {
-        const errMsg = tratarMensagensDeErro(err)
-        res.status(500).json({ "statusCode": 500, errMsg: errMsg })
+        const erroTratado = await tratarMensagensDeErro(err)
+        res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
     }
 
 })
