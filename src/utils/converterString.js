@@ -40,4 +40,10 @@ function definirStatusArmario(status){
 
 }
 
-module.exports = {definirGraduacao , definirStatusArmario}
+function retirarFormatacao(string){
+
+    return new String(string).replace("(", "").replace(".","").replace("-","").replace(")","").trim()
+
+}
+
+module.exports = {definirGraduacao , definirStatusArmario, retirarFormatacao}
