@@ -169,7 +169,7 @@ function pesquisaTodosAlunos(sequelize) {
         try {
             //Verifica se o filtro está vazio e passa um json vazio caso contrario passa o proprio filtro
             sequelize.query("select * from todos_alunos order by nome;")
-            .then((r) => resolve(r))
+            .then((r) => resolve(r[0]))
             .catch((e) => resolve(e))
         }
         catch (err) {
