@@ -1,12 +1,12 @@
 {
     "client": "Thunder Client",
     "collectionName": "Senai-gestao",
-    "dateExported": "2024-04-15T13:23:57.117Z",
+    "dateExported": "2024-04-18T16:10:27.273Z",
     "version": "1.1",
     "folders": [
         {
             "_id": "49eea8f2-4034-45df-9e50-7c2d27da12d6",
-            "name": "alunos",
+            "name": "Alunos",
             "containerId": "",
             "created": "2024-03-30T19:33:48.378Z",
             "sortNum": 10000
@@ -33,11 +33,18 @@
             "sortNum": 40000
         },
         {
-            "_id": "87c78178-878f-4016-b1c3-9b04cc9f89bd",
-            "name": "Produtos",
+            "_id": "49dc379e-d1b8-4c2d-a556-ac0cf5ca43fd",
+            "name": "Doação dinheiro",
             "containerId": "",
-            "created": "2024-04-15T13:02:07.197Z",
+            "created": "2024-04-16T23:21:32.359Z",
             "sortNum": 50000
+        },
+        {
+            "_id": "33e1c3e0-76c2-4295-8b6d-9166b97b2e04",
+            "name": "Doação armario",
+            "containerId": "",
+            "created": "2024-04-17T01:12:28.498Z",
+            "sortNum": 60000
         }
     ],
     "requests": [
@@ -50,7 +57,7 @@
             "method": "POST",
             "sortNum": 10000,
             "created": "2024-03-30T19:34:09.345Z",
-            "modified": "2024-04-10T00:02:17.043Z",
+            "modified": "2024-04-18T16:08:25.822Z",
             "headers": [
                 {
                     "name": "token",
@@ -61,7 +68,6 @@
                     "value": ""
                 }
             ],
-            "params": [],
             "body": {
                 "type": "formdata",
                 "raw": "",
@@ -73,7 +79,40 @@
                     }
                 ]
             },
-            "tests": []
+            "auth": {
+                "type": "bearer",
+                "bearer": "NECESSARIO TOKEN"
+            }
+        },
+        {
+            "_id": "8ea2ee1a-2863-40d4-9eed-fecff2e5cbd8",
+            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
+            "containerId": "8d0a9014-abbf-4a72-8294-a52e982515cb",
+            "name": "Cadastro",
+            "url": "http://{{baseUrl}}:{{Port}}/produto/cadastro",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-04-15T13:02:13.068Z",
+            "modified": "2024-04-18T16:07:51.794Z",
+            "headers": [
+                {
+                    "name": "token",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtYXJjb3NAc2VuYWlzcC5lZHUuYnIiLCJuYW1lIjoiTUFSQ09PT1UiLCJpYXQiOjE3MTMxODYwMDAsImV4cCI6MTcxMzIyOTIwMH0.LvPWZH5Mw221zY788fywEaUH3KdNA8bCRMPx3QrYOXU"
+                },
+                {
+                    "name": "nif",
+                    "value": "000111999224"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{ \"nome\": \"camiseta\",\n    \"cores\": [\"branco\", \"vermelho\"],\n    \"tamanhos\": [\"G\", \"GG\", \"P\", \"PP\"],\n    \"fotos\": {\n        \"branco\": {\n            \"link\": \"link branco\"\n        },\n        \"vermelho\": {\n            \"link\": \"link vermelho\"\n        }\n    },\n    \"valor\": 40,\n    \"descricao\": \"Sim é a descrição\",\n    \"brinde\": true}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "NECESSARIO TOKEN"
+            }
         },
         {
             "_id": "4063fe43-b505-47ec-a434-50287e7b8b30",
@@ -84,15 +123,17 @@
             "method": "POST",
             "sortNum": 20000,
             "created": "2024-04-02T07:23:23.512Z",
-            "modified": "2024-04-02T08:45:30.623Z",
+            "modified": "2024-04-18T16:08:29.414Z",
             "headers": [],
-            "params": [],
             "body": {
                 "type": "json",
                 "raw": "{\n  \"CPF\":\"1234567901\",\n  \"nome\":\"Teste Unico\",\n  \"email\":\"testeUnico@gmail.com\",\n  \"socioAapm\":true\n}",
                 "form": []
             },
-            "tests": []
+            "auth": {
+                "type": "bearer",
+                "bearer": "NECESSARIO TOKEN"
+            }
         },
         {
             "_id": "376fa7b1-0555-40f1-be92-cee5d8fc6261",
@@ -103,15 +144,17 @@
             "method": "PATCH",
             "sortNum": 30000,
             "created": "2024-04-02T07:28:28.938Z",
-            "modified": "2024-04-02T07:33:56.934Z",
+            "modified": "2024-04-18T16:08:34.813Z",
             "headers": [],
-            "params": [],
             "body": {
                 "type": "json",
                 "raw": "{\n  \"CPF\":\"12345678901\",\n  \"email\":\"\",\n  \"dados\":{\n    \"nome\":\"Teste Atualizado\"\n  }\n}",
                 "form": []
             },
-            "tests": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "NECESSARIO TOKEN"
+            },
             "preReq": {
                 "runRequests": [
                     {
@@ -132,7 +175,7 @@
             "method": "GET",
             "sortNum": 40000,
             "created": "2024-04-02T07:35:05.523Z",
-            "modified": "2024-04-05T19:07:43.187Z",
+            "modified": "2024-04-18T16:08:37.595Z",
             "headers": [
                 {
                     "name": "nif",
@@ -143,13 +186,15 @@
                     "value": "teste"
                 }
             ],
-            "params": [],
             "body": {
                 "type": "json",
                 "raw": "{\n  \"CPF\":\"15180738884\",\n  \"email\":\"\"\n}",
                 "form": []
             },
-            "tests": []
+            "auth": {
+                "type": "bearer",
+                "bearer": "NECESSARIO TOKEN"
+            }
         },
         {
             "_id": "fe47d092-2fa1-47b8-883f-89a6c28a29d3",
@@ -160,7 +205,7 @@
             "method": "GET",
             "sortNum": 50000,
             "created": "2024-04-02T07:37:11.125Z",
-            "modified": "2024-04-12T01:35:58.765Z",
+            "modified": "2024-04-18T16:08:40.357Z",
             "headers": [
                 {
                     "name": "token",
@@ -171,8 +216,10 @@
                     "value": "000111999223"
                 }
             ],
-            "params": [],
-            "tests": []
+            "auth": {
+                "type": "bearer",
+                "bearer": "NECESSARIO TOKEN"
+            }
         },
         {
             "_id": "09cdceeb-6125-422f-8693-29078712f9f8",
@@ -183,15 +230,17 @@
             "method": "PATCH",
             "sortNum": 70000,
             "created": "2024-04-02T07:45:49.646Z",
-            "modified": "2024-04-02T07:47:37.786Z",
-            "headers": [],
-            "params": [],
-            "body": {
-                "type": "json",
-                "raw": "{\n  \"numeroArmario\":\"1\",\n  \"CPF\":\"12345678901\",\n  \"statusArmario\":\"Ocupado\"\n}",
-                "form": []
+            "modified": "2024-04-18T16:08:03.994Z",
+            "headers": [
+                {
+                    "name": "nif",
+                    "value": "000111999224"
+                }
+            ],
+            "auth": {
+                "type": "bearer",
+                "bearer": "NECESSARIO TOKEN"
             },
-            "tests": [],
             "preReq": {
                 "runRequests": [
                     {
@@ -212,10 +261,21 @@
             "method": "GET",
             "sortNum": 80000,
             "created": "2024-04-02T07:48:12.305Z",
-            "modified": "2024-04-02T07:48:29.095Z",
-            "headers": [],
-            "params": [],
-            "tests": []
+            "modified": "2024-04-18T16:08:08.163Z",
+            "headers": [
+                {
+                    "name": "nif",
+                    "value": "000111999224"
+                },
+                {
+                    "name": "token",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtYXJjb3NAc2VuYWlzcC5lZHUuYnIiLCJuYW1lIjoiTUFSQ09PT1UiLCJpYXQiOjE3MTMyNjM1MTAsImV4cCI6MTcxMzMwNjcxMH0.HE64zJ4G7HneLHjv0iZ2HWlSmZqQnGpXSHMXceJQBH8"
+                }
+            ],
+            "auth": {
+                "type": "bearer",
+                "bearer": "NECESSARIO TOKEN"
+            }
         },
         {
             "_id": "dfb0a620-1ebd-48ff-b8c0-68faf0508b3a",
@@ -226,15 +286,22 @@
             "method": "GET",
             "sortNum": 90000,
             "created": "2024-04-02T07:49:00.038Z",
-            "modified": "2024-04-02T07:52:41.123Z",
-            "headers": [],
-            "params": [],
+            "modified": "2024-04-18T16:08:17.449Z",
+            "headers": [
+                {
+                    "name": "nif",
+                    "value": "000111999224"
+                }
+            ],
             "body": {
                 "type": "json",
                 "raw": "{\n  \"statusArmario\":\"Ocupado\"\n}",
                 "form": []
             },
-            "tests": []
+            "auth": {
+                "type": "bearer",
+                "bearer": "NECESSARIO TOKEN"
+            }
         },
         {
             "_id": "81dfd826-a892-43e1-abbe-6e895fcde8e8",
@@ -245,15 +312,17 @@
             "method": "POST",
             "sortNum": 100000,
             "created": "2024-04-15T12:34:02.091Z",
-            "modified": "2024-04-15T12:43:22.883Z",
+            "modified": "2024-04-18T16:06:43.219Z",
             "headers": [],
-            "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"email\":\"marcos@senaisp.edu.br\",\n  \"senha\":\"teste\"\n}",
+                "raw": "{\n  \"email\":\"backend@senaisp.edu.br\",\n  \"senha\":\"teste\"\n}",
                 "form": []
             },
-            "tests": []
+            "auth": {
+                "type": "bearer",
+                "bearer": "NECESSARIO TOKEN"
+            }
         },
         {
             "_id": "5b4193cc-b0c8-40be-8651-a6e9efbb0f78",
@@ -264,19 +333,17 @@
             "method": "POST",
             "sortNum": 110000,
             "created": "2024-04-15T12:34:07.282Z",
-            "modified": "2024-04-15T12:52:14.070Z",
+            "modified": "2024-04-18T16:06:49.897Z",
             "headers": [
                 {
                     "name": "nif",
                     "value": "000111999224"
-                },
-                {
-                    "name": "token",
-                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtYXJjb3NAc2VuYWlzcC5lZHUuYnIiLCJuYW1lIjoiTUFSQ09PT1UiLCJpYXQiOjE3MTMxODU1MjEsImV4cCI6MTcxMzIyODcyMX0.D6IHu4rhUaDykHeTt9Tc0FTtrHZo8fXstL2TstwHaiM"
                 }
             ],
-            "params": [],
-            "tests": []
+            "auth": {
+                "type": "bearer",
+                "bearer": "NECESSARIO TOKEN"
+            }
         },
         {
             "_id": "37ac2109-2d12-44c2-a575-043072b1582a",
@@ -287,24 +354,47 @@
             "method": "PUT",
             "sortNum": 115000,
             "created": "2024-04-15T12:35:29.801Z",
-            "modified": "2024-04-15T13:01:44.068Z",
-            "headers": [],
-            "params": [],
-            "tests": []
+            "modified": "2024-04-18T16:07:02.193Z",
+            "headers": [
+                {
+                    "name": "nif",
+                    "value": ""
+                }
+            ],
+            "auth": {
+                "type": "bearer",
+                "bearer": "NECESSARIO TOKEN"
+            }
         },
         {
             "_id": "ddabac12-ce40-4447-8194-728c91c03dd0",
             "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
             "containerId": "31b685d1-2707-4b83-a1f8-d01c3b7c3f81",
             "name": "Cadastro",
-            "url": "",
+            "url": "http://{{baseUrl}}:{{Port}}/funcionario/",
             "method": "POST",
             "sortNum": 120000,
             "created": "2024-04-15T12:34:13.634Z",
-            "modified": "2024-04-15T13:01:56.875Z",
-            "headers": [],
-            "params": [],
-            "tests": []
+            "modified": "2024-04-18T16:07:47.058Z",
+            "headers": [
+                {
+                    "name": "token",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM0NTQ5MTQsImV4cCI6MTcxMzQ5ODExNH0.S6LsPRsk1R-DPnohT7h6Yr-8DEfab0BZO21gib2MxPA"
+                },
+                {
+                    "name": "nif",
+                    "value": "000111999225"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"NIF\":\"928347123\",\n  \"nome\":\"kaue\",\n  \"email\":\"kaue@senaisp.edu.br\",\n  \"nivel_acesso\": 3\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "NECESSARIO TOKEN"
+            }
         },
         {
             "_id": "d5e21922-8e50-4102-bb7a-03d8feadee9f",
@@ -315,7 +405,7 @@
             "method": "GET",
             "sortNum": 130000,
             "created": "2024-04-15T12:34:44.914Z",
-            "modified": "2024-04-15T13:00:21.767Z",
+            "modified": "2024-04-18T16:07:17.186Z",
             "headers": [
                 {
                     "name": "nif",
@@ -326,8 +416,10 @@
                     "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtYXJjb3NAc2VuYWlzcC5lZHUuYnIiLCJuYW1lIjoiTUFSQ09PT1UiLCJpYXQiOjE3MTMxODYwMDAsImV4cCI6MTcxMzIyOTIwMH0.LvPWZH5Mw221zY788fywEaUH3KdNA8bCRMPx3QrYOXU"
                 }
             ],
-            "params": [],
-            "tests": []
+            "auth": {
+                "type": "bearer",
+                "bearer": "NECESSARIO TOKEN"
+            }
         },
         {
             "_id": "f16f0b2d-3d61-4cd9-8f06-f392815eda16",
@@ -338,7 +430,7 @@
             "method": "GET",
             "sortNum": 150000,
             "created": "2024-04-15T12:35:49.282Z",
-            "modified": "2024-04-15T12:57:25.851Z",
+            "modified": "2024-04-18T16:07:20.988Z",
             "headers": [
                 {
                     "name": "token",
@@ -349,36 +441,62 @@
                     "value": "000111999224"
                 }
             ],
-            "params": [],
-            "tests": []
+            "auth": {
+                "type": "bearer",
+                "bearer": "NECESSARIO TOKEN"
+            }
         },
         {
-            "_id": "8ea2ee1a-2863-40d4-9eed-fecff2e5cbd8",
+            "_id": "cb7ec57d-4da0-4b52-a29e-d9deb36a8a99",
             "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
-            "containerId": "87c78178-878f-4016-b1c3-9b04cc9f89bd",
-            "name": "Cadastro",
-            "url": "http://{{baseUrl}}:{{Port}}/produto/cadastro",
+            "containerId": "49dc379e-d1b8-4c2d-a556-ac0cf5ca43fd",
+            "name": "Nova doação dinheiro",
+            "url": "http://{{baseUrl}}:{{Port}}/doacaoDinheiro/cadastro",
             "method": "POST",
-            "sortNum": 160000,
-            "created": "2024-04-15T13:02:13.068Z",
-            "modified": "2024-04-15T13:18:36.016Z",
+            "sortNum": 170000,
+            "created": "2024-04-16T23:23:51.143Z",
+            "modified": "2024-04-18T16:07:30.453Z",
+            "headers": [
+                {
+                    "name": "nif",
+                    "value": "000111999225"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"valorDoado\":\"20\",\n  \"idAluno\":\"1\",\n  \"auxilio\":\"1\",\n  \"data\":\"Tue Apr 16 2024 20:55:24 GMT-0300 (Horário Padrão de Brasília)\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "NECESSARIO TOKEN"
+            }
+        },
+        {
+            "_id": "5c9c64d3-3289-4c78-9b67-2b00cb79797e",
+            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
+            "containerId": "33e1c3e0-76c2-4295-8b6d-9166b97b2e04",
+            "name": "Nova doação armario",
+            "url": "http://{{baseUrl}}:{{Port}}/doacaoArmario/cadastro",
+            "method": "POST",
+            "sortNum": 170000,
+            "created": "2024-04-17T01:12:28.498Z",
+            "modified": "2024-04-18T16:07:38.674Z",
             "headers": [
                 {
                     "name": "token",
-                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtYXJjb3NAc2VuYWlzcC5lZHUuYnIiLCJuYW1lIjoiTUFSQ09PT1UiLCJpYXQiOjE3MTMxODYwMDAsImV4cCI6MTcxMzIyOTIwMH0.LvPWZH5Mw221zY788fywEaUH3KdNA8bCRMPx3QrYOXU"
-                },
-                {
-                    "name": "nif",
-                    "value": "000111999224"
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTMzMTE1NzYsImV4cCI6MTcxMzM1NDc3Nn0.4skhKNIeRkt715dl14oE8kqBjOLfAiVEqLg9Bw6Q8-k"
                 }
             ],
-            "params": [],
             "body": {
                 "type": "json",
-                "raw": "{ \"nome\": \"camiseta\",\r\n    \"cores\": [\"branco\", \"vermelho\"],\r\n    \"tamanhos\": [\"G\", \"GG\", \"P\", \"PP\"],\r\n    \"fotos\": {\r\n        \"branco\": {\r\n            \"link\": \"link branco\"\r\n        },\r\n        \"vermelho\": {\r\n            \"link\": \"link vermelho\"\r\n        }\r\n    },\r\n    \"valor\": 40,\r\n    \"descricao\": \"Sim é a descrição\",\r\n    \"brinde\": true}",
+                "raw": "{\n  \"numeroArmario\":\"21\",\n  \"idAluno\":\"1\",\n  \"data\":\"Tue Apr 16 2024 20:55:24 GMT-0300 (Horário Padrão de Brasília)\"\n}",
                 "form": []
             },
-            "tests": []
+            "auth": {
+                "type": "bearer",
+                "bearer": "NECESSARIO TOKEN"
+            }
         }
     ]
 }
