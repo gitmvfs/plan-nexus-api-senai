@@ -32,7 +32,7 @@ router.get("/todos", async (req, res) => {
         let response = await pesquisarTodosArmario(req.sequelize)
 
         response = response[0]
-        res.status(200).json({ "statusCode": 200, response   })
+        res.status(200).json({ "statusCode": 200, "response": response   })
     }
     catch (err) {
         const erroTratado = await tratarMensagensDeErro(err)
@@ -47,7 +47,7 @@ router.get("/status", async (req, res) => {
     try {
         statusArmario = definirStatusArmario(statusArmario)
         const response = await pesquisarArmarioPorStatus(statusArmario, req.sequelize)
-        res.status(200).json({ "statusCode": 200,...response })
+        res.status(200).json({ "statusCode": 200, "response": response })
     }
     catch (err) {
         const erroTratado = await tratarMensagensDeErro(err)

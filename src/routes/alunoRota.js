@@ -15,11 +15,10 @@ router.post("/cadastro/multiplos", uploadArquivoAlunos.single("alunosFile"), asy
         const listaALunos = await excelToJson(req.file.path) // pega o arquivo do excel e devolve os alunos em json
         await cadastroDeTurmas(listaALunos, req.sequelize) // pega o json dos alunos e cadastra as turmas
         const resultadoCadastro = await cadastroMultiplosAlunos(listaALunos, req.sequelize)
-        res.status(200).json({ msg: "Operação realizada", "statusCode": "200", response: resultadoCadastro })
+        res.status(200).json({ msg: "Operação realizada", "statusCode": "200", "response": resultadoCadastro })
     }
     catch (err) {
         const erroTratado = await tratarMensagensDeErro(err)
-        console.log(err)
         res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
     }
 })
@@ -42,7 +41,7 @@ router.post("/cadastro/unico", async (req, res) => {
 
         const response = await cadastroUnicoAluno(alunoValidado, req.sequelize)
 
-        res.status(201).json({ "msg": "cadastrado com sucesso", "statusCode": 201, ...response })
+        res.status(201).json({ "msg": "cadastrado com sucesso", "statusCode": 201, "response":response })
 
     }
     catch (err) {
@@ -75,7 +74,7 @@ router.get("/unico", async (req, res) => {
 
     try {
         await pesquisaUnicoAluno(CPF, email, req.sequelize)
-            .then((response) => res.status(200).json({ msg: "Consulta realizada com sucesso", "statusCode": 200, ...response }))
+            .then((response) => res.status(200).json({ msg: "Consulta realizada com sucesso", "statusCode": 200, "response": response }))
             .catch((e) => res.status(400).json({ msg: "Erro ao realizar consulta", "statusCode": 400, errMsg: e }))
     }
     catch (err) {
@@ -90,7 +89,7 @@ router.get("/todos", async (req, res) => {
 
     try {
         await pesquisaTodosAlunos(req.sequelize)
-            .then((response) => res.status(200).json({ msg: "Consulta realizada com sucesso", "statusCode": 200, ...response }))
+            .then((response) => res.status(200).json({ msg: "Consulta realizada com sucesso", "statusCode": 200, "response": response }))
             .catch((e) => res.status(400).json({ msg: "Erro ao realizar consulta", "statusCode": 400, errMsg: e }))
     }
     catch (err) {
