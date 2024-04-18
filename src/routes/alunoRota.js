@@ -1,5 +1,6 @@
 const router = require("express").Router()
 const { cadastroMultiplosAlunos, atualizarAluno, cadastroUnicoAluno, pesquisaUnicoAluno, pesquisaTodosAlunos } = require("../controllers/alunoController")
+const { cadastroMultiplosTelefones } = require("../controllers/contatoController")
 const { cadastroDeTurmas } = require("../controllers/cursoController")
 const authMiddleware = require("../middleware/auth")
 const { tratarMensagensDeErro } = require("../utils/errorMsg")
@@ -14,10 +15,13 @@ router.post("/cadastro/multiplos", uploadArquivoAlunos.single("alunosFile"), asy
     try {
         const listaALunos = await excelToJson(req.file.path) // pega o arquivo do excel e devolve os alunos em json
         await cadastroDeTurmas(listaALunos, req.sequelize) // pega o json dos alunos e cadastra as turmas
-        const resultadoCadastro = await cadastroMultiplosAlunos(listaALunos, req.sequelize)
-        res.status(200).json({ msg: "Operação realizada", "statusCode": "200", "response": resultadoCadastro })
+        const resultadoCadastroAlunos = await cadastroMultiplosAlunos(listaALunos, req.sequelize)
+        const errosAoCadastrarContato = await cadastroMultiplosTelefones(resultadoCadastroAlunos, req.sequelize)
+        resultadoCadastroAlunos.erroCadastroContato = errosAoCadastrarContato
+        res.status(201).json({ msg: "Operação realizada", "statusCode": "201", "response": resultadoCadastroAlunos})
     }
     catch (err) {
+        console.log(err)
         const erroTratado = await tratarMensagensDeErro(err)
         res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
     }
@@ -41,7 +45,7 @@ router.post("/cadastro/unico", async (req, res) => {
 
         const response = await cadastroUnicoAluno(alunoValidado, req.sequelize)
 
-        res.status(201).json({ "msg": "cadastrado com sucesso", "statusCode": 201, "response":response })
+        res.status(201).json({ "msg": "cadastrado com sucesso", "statusCode": 201, "response": response })
 
     }
     catch (err) {
