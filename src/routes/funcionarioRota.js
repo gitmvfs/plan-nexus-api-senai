@@ -1,6 +1,6 @@
 const router = require("express").Router()
 const { cadastrarFuncionario, pesquisarTodosFuncionarios, pesquisarUnicoFuncionario, editarFuncionario, loginFuncionario, deslogarFuncionario } = require("../controllers/funcionarioController")
-
+const {tratarMensagensDeErro} = require("../utils/errorMsg")
 const { object, string, number } = require('zod')
 const authMiddleware = require("../middleware/auth")
 
@@ -40,13 +40,13 @@ router.post("/token", (req,res) =>{
 })
 
 router.post('/', async (req, res) => {
-    const { NIF, nome, email, fk_nivel_acesso } = req.body
+    const { NIF, nome, email, nivel_acesso } = req.body
 
     const funcionario = {
         NIF,
         nome,
         email,
-        nivel_acesso: fk_nivel_acesso
+        nivel_acesso
     }
 
     try {

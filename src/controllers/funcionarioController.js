@@ -14,19 +14,14 @@ async function emailExiste(email, sequelize) {
 function cadastrarFuncionario(funcionario, sequelize) {
     return new Promise(async (resolve, reject) => {
         try {
-            const emailJaExiste = await emailExiste(funcionario.email)
-            if (emailJaExiste) {
-                reject("Email já existe no banco de dados.")
-                return;
-            }
+            const {NIF,nome,email,nivel_acesso} = funcionario
 
-            await funcionarioModel(sequelize).create({
-                NIF: funcionario.NIF,
-                nome: funcionario.nome,
-                email: funcionario.email,
-                fk_nivel_acesso: funcionario.nivel_acesso
-            });
-            resolve("Funcionário cadastrado com sucesso.")
+            sequelize.query("call cadastrar_funcionario(?,?,?,?)", {
+                replacements: [ NIF, nome, email, nivel_acesso],
+                type: sequelize.QueryTypes.INSERT
+            })
+            .then((r)=> resolve(r))
+            .catch((e)=> reject(e))
         } catch (err) {
             reject(err)
         }
