@@ -133,7 +133,7 @@ function pesquisarTodosFuncionarios(sequelize) {
         try {
 
            await sequelize.query("select * from todos_funcionarios order by nome;")
-            .then((r) => resolve(r))
+            .then((r) => resolve(r[0]))
             .catch((e)=>reject(e))
         
         } catch (error) {
