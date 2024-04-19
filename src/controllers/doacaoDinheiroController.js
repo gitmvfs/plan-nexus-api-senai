@@ -3,17 +3,14 @@ function cadastroDoacaoDinheiro(doacaoDinheiro, sequelize) {
     return new Promise((resolve, reject) => {
 
         try {
-
             const { valorDoado, idAluno, auxilio, data } = doacaoDinheiro
 
             sequelize.query("call doar_dinheiro(?,?,?,?)", {
-                replacements: [ idAluno, valorDoado, auxilio, data],
+                replacements: [idAluno, valorDoado, auxilio, data],
                 type: sequelize.QueryTypes.INSERT
             })
                 .then(r => resolve(r))
                 .catch(e => reject(e));
-
-
         }
         catch (err) {
             reject(err)
@@ -21,4 +18,21 @@ function cadastroDoacaoDinheiro(doacaoDinheiro, sequelize) {
     })
 }
 
-module.exports = {cadastroDoacaoDinheiro}
+
+function visualizarTodasDoacoesDinheiro(sequelize) {
+
+    return new Promise((resolve, reject) => {
+        try {
+            sequelize.query("select * from doacoes_dinheiro order by data;", {
+                type: sequelize.QueryTypes.SELECT
+            })
+                .then(r => resolve(r))
+                .catch(e => reject(e));
+        }
+        catch (err) {
+            reject(err)
+        }
+    })
+}
+
+module.exports = { cadastroDoacaoDinheiro, visualizarTodasDoacoesDinheiro }
