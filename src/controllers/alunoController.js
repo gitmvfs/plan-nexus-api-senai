@@ -105,13 +105,18 @@ function cadastroUnicoAluno(aluno, sequelize) {
 
     return new Promise(async (resolve, reject) => {
         try {
+            const CPF = retirarFormatacao(aluno.CPF)
+
             await alunoModel(sequelize).create({
-                CPF: aluno.CPF,
+                CPF,
                 nome: aluno.nome,
                 email: aluno.email,
                 fk_curso: aluno.fk_curso
             })
-                .then((r) => resolve(r))
+                .then((r) => {
+                    aluno.idAluno = r.dataValues.id_aluno
+                    resolve(aluno)
+                })
                 .catch((e) => {
                     reject(e)
                 })

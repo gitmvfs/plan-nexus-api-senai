@@ -1,6 +1,6 @@
 const router = require("express").Router()
 const { cadastroMultiplosAlunos, atualizarAluno, cadastroUnicoAluno, pesquisaUnicoAluno, pesquisaTodosAlunos } = require("../controllers/alunoController")
-const { cadastroMultiplosTelefones } = require("../controllers/contatoController")
+const { cadastroMultiplosTelefones, cadastroUnicoTelefone } = require("../controllers/contatoController")
 const { cadastroDeTurmas } = require("../controllers/cursoController")
 const authMiddleware = require("../middleware/auth")
 const { tratarMensagensDeErro } = require("../utils/errorMsg")
@@ -18,7 +18,7 @@ router.post("/cadastro/multiplos", uploadArquivoAlunos.single("alunosFile"), asy
         const resultadoCadastroAlunos = await cadastroMultiplosAlunos(listaALunos, req.sequelize)
         const errosAoCadastrarContato = await cadastroMultiplosTelefones(resultadoCadastroAlunos, req.sequelize)
         resultadoCadastroAlunos.erroCadastroContato = errosAoCadastrarContato
-        res.status(201).json({ msg: "Operação realizada", "statusCode": "201", "response": resultadoCadastroAlunos})
+        res.status(201).json({ msg: "Operação realizada", "statusCode": "201", "response": resultadoCadastroAlunos })
     }
     catch (err) {
         console.log(err)
@@ -29,7 +29,7 @@ router.post("/cadastro/multiplos", uploadArquivoAlunos.single("alunosFile"), asy
 
 router.post("/cadastro/unico", async (req, res) => {
 
-    const { CPF, nome, email, fk_curso, socioAapm } = req.body
+    const { CPF, nome, email, fk_curso, socioAapm, telefone, celular } = req.body
 
     //Dados que chegam da rota
     const aluno = {
@@ -37,14 +37,16 @@ router.post("/cadastro/unico", async (req, res) => {
         nome,
         email,
         fk_curso,
-        socioAapm
+        socioAapm,
+        telefone,
+        celular
     }
 
     try {
         const alunoValidado = alunoUnicoValidacao.parse(aluno)
-
         const response = await cadastroUnicoAluno(alunoValidado, req.sequelize)
-
+        const errosAoCadastrarContato = await cadastroUnicoTelefone(response, req.sequelize)
+        response.erroCadastroContato = errosAoCadastrarContato
         res.status(201).json({ "msg": "cadastrado com sucesso", "statusCode": 201, "response": response })
 
     }
