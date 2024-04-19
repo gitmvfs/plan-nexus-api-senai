@@ -84,7 +84,6 @@ function calcularDuracaoSemestresCursos(listaTurmasUnicas) {
         if (dataAtual > fechamentoPrimeiroSemestre) {
             semestreInicio = 2
         }
-        // console.log(turma)
 
         listaTurmasDefinidas.push({
             // CodigoTurma: turma.codigoTurma,
@@ -100,10 +99,11 @@ function calcularDuracaoSemestresCursos(listaTurmasUnicas) {
     return listaTurmasDefinidas
 
 }
+
 async function enviarTurmasParaDB(turmasDefinidas,sequelize) {
     // Mapeia as promessas de inserção de turmas
     const insercoesTurmas = turmasDefinidas.map(async (turma) => {
-        const listaTurmasCadastradas = await cursoModel(sequelize).find({
+        const listaTurmasCadastradas = await cursoModel(sequelize).findOne({
             where: {
                 nome: turma.nome,
                 modalidade: turma.modalidade,
@@ -113,7 +113,7 @@ async function enviarTurmasParaDB(turmasDefinidas,sequelize) {
             }
         });
         // Se não houver registro, cadastra a turma no banco
-        if (listaTurmasCadastradas.length === 0) {
+        if (!!listaTurmasCadastradas == false) {
             return cursoModel(sequelize).create(turma);
         } else {
             return null; // Retorna null para indicar que a turma já está cadastrada

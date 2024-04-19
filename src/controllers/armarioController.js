@@ -1,14 +1,14 @@
 const armarioModel = require("../models/armarioModel")
 const { definirStatusArmario } = require("../utils/converterString")
 
-function atualizarArmario(numeroArmario, cpf, statusArmario, sequelize) {
+function atualizarArmario(numeroArmario, idAluno, statusArmario, sequelize) {
 
     return new Promise(async (resolve, reject) => {
 
         try {
             await armarioModel(sequelize).update(
                 {
-                    fk_CPF: cpf,
+                    fk_aluno: idAluno,
                     status: statusArmario
                 },
                 {
@@ -33,12 +33,8 @@ function pesquisarTodosArmario(sequelize) {
     return new Promise(async (resolve, reject) => {
 
         try {
-            await armarioModel(sequelize).findAll()
-                .then((r) => {
-                    const listaArmarios = []
-                    r.map((armario) => listaArmarios.push(armario.dataValues))
-                    resolve(listaArmarios)
-                })
+            sequelize.query("select * from todos_armarios order by numero;")
+                .then((r) => resolve(r))
                 .catch((e) => reject(e))
         }
         catch (err) {
@@ -52,24 +48,16 @@ function pesquisarArmarioPorStatus(status, sequelize) {
     return new Promise(async (resolve, reject) => {
 
         try {
-
-            await armarioModel(sequelize).findAll({
-                where: {
-                    status: status
-                }
+            sequelize.query("SELECT * FROM todos_armarios WHERE status = ? ORDER BY numero", {
+                replacements: [status],
+                type: sequelize.QueryTypes.SELECT
             })
-                .then((r) => {
-                    const listaArmarios = []
-                    r.map((armario) => listaArmarios.push(armario.dataValues))
-                    resolve(listaArmarios)
-                })
-                .catch((e) => reject(e))
+                .then(r => resolve(r))
+                .catch(e => reject(e));
         }
         catch (err) {
             reject(err)
         }
-
-
     })
 
 

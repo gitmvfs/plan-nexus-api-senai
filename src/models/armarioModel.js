@@ -1,5 +1,5 @@
 module.exports = (sequelize) => {
-  const { DataTypes } = require('sequelize');
+  const { DataTypes } = require("sequelize");
   const alunoModel = require("./alunoModel")(sequelize)
   const statusArmarioModel = require("./statusArmario")(sequelize)
   
@@ -12,12 +12,12 @@ module.exports = (sequelize) => {
       primaryKey: true,
       autoIncrement: true
     },
-    fk_CPF: {
-      type: DataTypes.CHAR(11),
+    fk_aluno: {
+      type: DataTypes.INTEGER,
       allowNull: true,
       references: {
         model: alunoModel,
-        key: 'CPF'
+        key: 'id_aluno'
       }
     },
     status: {

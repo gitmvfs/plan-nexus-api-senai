@@ -1,5 +1,5 @@
 module.exports = (sequelize) => {
-    const { DataTypes } = require('sequelize');
+    const { DataTypes } = require("sequelize");
 
     const statusArmarioModel = sequelize.define('status', {
         id_status: {

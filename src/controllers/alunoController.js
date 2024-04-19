@@ -1,17 +1,17 @@
 const cursoModel = require("../models/cursoModel")
 const alunoModel = require("../models/alunoModel")
-const { definirGraduacao } = require("../utils/converterString")
+const { definirGraduacao, retirarFormatacao } = require("../utils/converterString")
+const { tratarMensagensDeErro } = require("../utils/errorMsg")
 
 async function cadastroMultiplosAlunos(listaAluno, sequelize) {
-
     // Pega o id da turma do aluno e coloca no fk_curso
-    const alunosSeparadosPorTurmas = await separarAlunosNasTurmas(listaAluno)
-    const resultado = await mandarAlunosDb(alunosSeparadosPorTurmas , sequelize)
+    const alunosSeparadosPorTurmas = await separarAlunosNasTurmas(listaAluno, sequelize)
+    const resultado = await mandarAlunosDb(alunosSeparadosPorTurmas, sequelize)
     return resultado
 
 }
 
-async function separarAlunosNasTurmas(listaAlunos) {
+async function separarAlunosNasTurmas(listaAlunos, sequelize) {
     const dataAtual = new Date();
     const anoAtual = new Date().getFullYear();
     const fechamentoPrimeiroSemestre = new Date(`${anoAtual}-06-01`);
@@ -27,7 +27,7 @@ async function separarAlunosNasTurmas(listaAlunos) {
             semestreInicio = 2;
         }
 
-        const turma = await cursoModel.findAll({
+        const turma = await cursoModel(sequelize).findAll({
             where: {
                 nome: aluno.NomeCurso,
                 modalidade: aluno.Tipo,
@@ -36,10 +36,14 @@ async function separarAlunosNasTurmas(listaAlunos) {
             }
         });
 
+        const cpfSemFormatacao = retirarFormatacao(aluno.Cpf) // remove a formatação antes de mandar para o banco
+
         listaAlunosNasTurmas.push({
-            CPF: aluno.Cpf,
+            CPF: cpfSemFormatacao,
             nome: aluno.Nome,
             email: aluno.Email,
+            telefone: aluno.Telefone,
+            celular: aluno.Celular,
             fk_curso: turma[0].dataValues.id_curso
         });
     }
@@ -55,13 +59,21 @@ async function mandarAlunosDb(listaAlunos, sequelize) {
     try {
         const promisesCriacaoAlunos = listaAlunos.map(async (aluno) => {
             try {
-                await alunoModel(seque).create(aluno);
-
-                return { aluno, status: 'cadastrado' };
+                const alunoBanco = await alunoModel(sequelize).create(aluno);
+                const alunoData = alunoBanco.dataValues
+                const response = {
+                    idAluno: alunoData.id_aluno,
+                    nome: alunoData.nome,
+                    email: alunoData.email,
+                    telefone: aluno.telefone,
+                    celular: aluno.celular,
+                    id_curso: alunoData.fk_curso
+                }
+                return { aluno: response, status: 'cadastrado' };
             } catch (error) {
                 // Se ocorrer um erro durante a criação do aluno, retornamos o aluno com status 'erro'
-                console.log(error)
-                return { aluno, status: 'erro', erro: error.message };
+                const erroTratado = await tratarMensagensDeErro(error)
+                return { aluno, status: 'erro', erro: erroTratado.message };
             }
         });
 
@@ -76,6 +88,7 @@ async function mandarAlunosDb(listaAlunos, sequelize) {
             if (resultado.status === 'fulfilled' && resultado.value.status === 'cadastrado') {
                 alunosCadastrados.push(resultado.value.aluno);
             } else if (resultado.status === 'rejected' || (resultado.status === 'fulfilled' && resultado.value.status === 'erro')) {
+                resultado.value.aluno.msgErro = resultado.value.erro
                 alunosComErro.push(resultado.value.aluno);
             }
         });
@@ -88,25 +101,28 @@ async function mandarAlunosDb(listaAlunos, sequelize) {
 
 }
 
-function cadastroUnicoAluno(aluno,sequelize) {
+function cadastroUnicoAluno(aluno, sequelize) {
 
     return new Promise(async (resolve, reject) => {
         try {
-            console.log("Chegou")
-            console.log(aluno)
+            const CPF = retirarFormatacao(aluno.CPF)
+
             await alunoModel(sequelize).create({
-                CPF: aluno.CPF,
+                CPF,
                 nome: aluno.nome,
                 email: aluno.email,
                 fk_curso: aluno.fk_curso
             })
-                .then((r) => resolve(r))
+                .then((r) => {
+                    aluno.idAluno = r.dataValues.id_aluno
+                    resolve(aluno)
+                })
                 .catch((e) => {
                     reject(e)
                 })
         }
         catch (e) {
-            
+
             reject(e)
         }
     })
@@ -171,8 +187,8 @@ function pesquisaTodosAlunos(sequelize) {
         try {
             //Verifica se o filtro está vazio e passa um json vazio caso contrario passa o proprio filtro
             sequelize.query("select * from todos_alunos order by nome;")
-            .then((r) => resolve(r))
-            .catch((e) => resolve(e))
+                .then((r) => resolve(r[0]))
+                .catch((e) => resolve(e))
         }
         catch (err) {
             reject(err)

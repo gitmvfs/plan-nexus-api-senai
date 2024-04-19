@@ -1,6 +1,6 @@
 const router = require("express").Router()
 const { cadastrarFuncionario, pesquisarTodosFuncionarios, pesquisarUnicoFuncionario, editarFuncionario, loginFuncionario, deslogarFuncionario } = require("../controllers/funcionarioController")
-
+const {tratarMensagensDeErro} = require("../utils/errorMsg")
 const { object, string, number } = require('zod')
 const authMiddleware = require("../middleware/auth")
 
@@ -21,7 +21,7 @@ router.post("/login",async(req,res) => {
         
         const response = await loginFuncionario(funcionario)
         !!response == true
-        ?res.status(200).json(response)
+        ?res.status(200).json({"statusCode": "200", "msg": "Logado com sucesso" , "response": response})
         :res.status(400).json("Usuario ou senha inválidos")
     }
     catch(err){
@@ -40,21 +40,21 @@ router.post("/token", (req,res) =>{
 })
 
 router.post('/', async (req, res) => {
-    const { NIF, nome, email, fk_nivel_acesso } = req.body
+    const { NIF, nome, email, nivel_acesso } = req.body
 
     const funcionario = {
         NIF,
         nome,
         email,
-        nivel_acesso: fk_nivel_acesso
+        nivel_acesso
     }
 
     try {
         const funcionarioValidado = funcionarioValidacao.parse(funcionario)
 
-        await cadastrarFuncionario(funcionarioValidado)
+        await cadastrarFuncionario(funcionarioValidado, req.sequelize)
 
-        res.send('Funcionário cadastrado com sucesso.')
+        res.status(201).send({"msg": "Funcionario cadastrado com sucesso" , "statusCode": "201"})
     }
     catch (err) {
         const erroTratado = await tratarMensagensDeErro(err)
@@ -66,7 +66,7 @@ router.post('/', async (req, res) => {
 router.get('/todos', async (req, res) => {
     try {
         await pesquisarTodosFuncionarios(req.sequelize)
-            .then((response) => res.status(200).json({ msg: "Consulta realizada com sucesso", "statusCode": 200, ...response }))
+            .then((response) => res.status(200).json({ msg: "Consulta realizada com sucesso", "statusCode": "200", "response":response }))
             .catch((e) => console.log(e))
     }
     catch (err) {
@@ -83,8 +83,8 @@ router.post("/deslogar", async(req,res)=>{
 
         const response = await deslogarFuncionario(nif,token, req.sequelize)
     
-        response[0] == 1? res.json({msg: "Usuario deslogado com sucesso", "statusCode": 200})
-        : res.status(500).json({msg: "Erro ao deslogar usuario", "statusCode": 500})
+        response[0] == 1? res.json({msg: "Usuario deslogado com sucesso", "statusCode": "200"})
+        : res.status(500).json({msg: "Erro ao deslogar usuario", "statusCode": "500"})
     
     }
     catch(err){
@@ -99,7 +99,7 @@ router.get('/:NIF', async (req, res) => {
     try {
         await pesquisarUnicoFuncionario(NIF,req.sequelize)
             .then((response) => {
-                res.status(200).json({ msg: "Consulta realizada com sucesso", "statusCode": 200, ...response });
+                res.status(200).json({ msg: "Consulta realizada com sucesso", "statusCode": 200, "response":response });
             })
             .catch((e) => res.status(400).json({ msg: "Erro ao realizar consulta", "statusCode": 400, errMsg: e }));
     } catch (err) {

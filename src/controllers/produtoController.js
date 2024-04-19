@@ -24,10 +24,8 @@ function criarProdutosParaCadastro(produto) {
 
 
             listaCores.map((cores) => {
-                // console.log(cores)
 
                 listaTamanho.map((tamanho) => {
-                    // console.log(tamanho)
 
                     //Cria o modelo do produto para o banco
                     const produtoModeloBanco = {
@@ -46,7 +44,6 @@ function criarProdutosParaCadastro(produto) {
             })
             resolve(listaProdutos)
 
-            console.log(listaProdutos)
 
         }
         catch (err) {

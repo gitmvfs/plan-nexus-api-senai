@@ -93,8 +93,9 @@ const authMiddleware = (req, res, next) => {
     return new Promise(async (resolve, reject) => {
 
         try {
-            const { nif, token } = req.headers
-
+            const { nif } = req.headers
+            const token = req.headers.authorization.split(" ")[1]
+            
             if (!!nif == false || !!token == false) {
                 novoErro("Usuario ou token inválidos, permissão negada", 403)
             }
