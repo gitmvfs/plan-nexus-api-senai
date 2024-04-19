@@ -36,4 +36,27 @@ function visualizarTodasDoacoesArmario(sequelize) {
     })
 }
 
-module.exports = { cadastroDoacaoArmario, visualizarTodasDoacoesArmario }
+function editarDoacaoArmario(dadosDoacao, sequelize) {
+
+    return new Promise((resolve, reject) => {
+
+        try {
+            const { idDoacao, idAluno, numeroArmario, data } = dadosDoacao
+
+            // Verificar se o idDoacao existe, se o idAluno é válido, e se o numero do armário está entre 1 e 280
+
+            sequelize.query("call editar_doacao_armario(?,?,?,?)", {
+                replacements: [idDoacao, idAluno, numeroArmario, data],
+                type: sequelize.QueryTypes.UPDATE
+            })
+                .then((r) => resolve(200))
+                .catch((e) => reject(400));
+        }
+        catch (err) {
+            reject(err)
+        }
+    })
+
+}
+
+module.exports = { cadastroDoacaoArmario, visualizarTodasDoacoesArmario, editarDoacaoArmario }
