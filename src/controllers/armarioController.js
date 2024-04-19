@@ -48,7 +48,6 @@ function pesquisarArmarioPorStatus(status, sequelize) {
     return new Promise(async (resolve, reject) => {
 
         try {
-
             sequelize.query("SELECT * FROM todos_armarios WHERE status = ? ORDER BY numero", {
                 replacements: [status],
                 type: sequelize.QueryTypes.SELECT

@@ -45,7 +45,7 @@ router.patch("/atualizar", async (req, res) => {
         const dadosDoacao = { idDoacao, idAluno, numeroArmario, data }
         console.log(dadosDoacao)
         const response = await editarDoacaoArmario(dadosDoacao, req.sequelize)
-        
+
         response == 200
             ? res.status(200).json({ "msg": "Atualizado com sucesso", "statusCode": 200 })
             : res.status(400).json({ "msg": "Erro ao atualizar doação de armários, verifique os campos.", "statusCode": 400 })
@@ -55,9 +55,6 @@ router.patch("/atualizar", async (req, res) => {
         const erroTratado = await tratarMensagensDeErro(err)
         res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
     }
-
-
-
 })
 
 module.exports = router

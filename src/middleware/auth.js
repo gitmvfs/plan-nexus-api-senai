@@ -95,7 +95,6 @@ const authMiddleware = (req, res, next) => {
         try {
             const { nif } = req.headers
             const token = req.headers.authorization.split(" ")[1]
-            console.log(token)
             
             if (!!nif == false || !!token == false) {
                 novoErro("Usuario ou token inválidos, permissão negada", 403)
