@@ -1,8 +1,9 @@
 {
-    "client": "Thunder Client",
+    "clientName": "Thunder Client",
     "collectionName": "Senai-gestao",
-    "dateExported": "2024-04-18T16:10:27.273Z",
-    "version": "1.1",
+    "collectionId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
+    "dateExported": "2024-04-20T20:37:51.144Z",
+    "version": "1.2",
     "folders": [
         {
             "_id": "49eea8f2-4034-45df-9e50-7c2d27da12d6",
@@ -45,6 +46,13 @@
             "containerId": "",
             "created": "2024-04-17T01:12:28.498Z",
             "sortNum": 60000
+        },
+        {
+            "_id": "35ba9286-1a71-48a3-873b-31bba35eeba0",
+            "name": "Reservas",
+            "containerId": "",
+            "created": "2024-04-20T20:24:22.034Z",
+            "sortNum": 70000
         }
     ],
     "requests": [
@@ -57,15 +65,11 @@
             "method": "POST",
             "sortNum": 10000,
             "created": "2024-03-30T19:34:09.345Z",
-            "modified": "2024-04-18T16:08:25.822Z",
+            "modified": "2024-04-20T01:39:55.206Z",
             "headers": [
                 {
-                    "name": "token",
-                    "value": ""
-                },
-                {
                     "name": "nif",
-                    "value": ""
+                    "value": "000111999225"
                 }
             ],
             "body": {
@@ -75,13 +79,13 @@
                 "files": [
                     {
                         "name": "alunosFile",
-                        "value": "c:\\Users\\Blood3\\Documents\\dadosMockados.xlsx"
+                        "value": "c:\\Users\\Blood3\\Downloads\\dadosMockados.xlsx"
                     }
                 ]
             },
             "auth": {
                 "type": "bearer",
-                "bearer": "NECESSARIO TOKEN"
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM1NzcwOTcsImV4cCI6MTcxMzYyMDI5N30.0huZfwdBd8CbjGknFiCWuLGlDwIcyUSYgVt7BrHLIpg"
             }
         },
         {
@@ -123,16 +127,21 @@
             "method": "POST",
             "sortNum": 20000,
             "created": "2024-04-02T07:23:23.512Z",
-            "modified": "2024-04-18T16:08:29.414Z",
-            "headers": [],
+            "modified": "2024-04-19T12:53:00.601Z",
+            "headers": [
+                {
+                    "name": "nif",
+                    "value": "000111999225"
+                }
+            ],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"CPF\":\"1234567901\",\n  \"nome\":\"Teste Unico\",\n  \"email\":\"testeUnico@gmail.com\",\n  \"socioAapm\":true\n}",
+                "raw": "{\n  \"CPF\":\"12345678911\",\n  \"nome\":\"Teste Unico11\",\n  \"email\":\"testeUnico11@gmail.com\",\n  \"fk_curso\":\"206\",\n  \"socioAapm\":true,\n  \"telefone\":\"\",\n  \"celular\":\"(11)992533382\"\n}",
                 "form": []
             },
             "auth": {
                 "type": "bearer",
-                "bearer": "NECESSARIO TOKEN"
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM1Mjk5NjksImV4cCI6MTcxMzU3MzE2OX0.8PB_wZdBg08WpU1tlBe6YrZwhlgXgP84k6U8S0n3BAc"
             }
         },
         {
@@ -205,20 +214,16 @@
             "method": "GET",
             "sortNum": 50000,
             "created": "2024-04-02T07:37:11.125Z",
-            "modified": "2024-04-18T16:08:40.357Z",
+            "modified": "2024-04-20T20:26:06.420Z",
             "headers": [
                 {
-                    "name": "token",
-                    "value": "123"
-                },
-                {
                     "name": "nif",
-                    "value": "000111999223"
+                    "value": "123123"
                 }
             ],
             "auth": {
                 "type": "bearer",
-                "bearer": "NECESSARIO TOKEN"
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsYWl6YUBzZW5haXNwLmVkdS5iciIsIm5hbWUiOiJsYWl6YSIsImlhdCI6MTcxMzY0NDc0MywiZXhwIjoxNzEzNjg3OTQzfQ.M1E8c57ooyl9TYIRbEMaVo3UemEZkJdjpw2gq7dfyTE"
             }
         },
         {
@@ -278,6 +283,32 @@
             }
         },
         {
+            "_id": "786a3c9d-cdb5-47e6-9131-43cc9bd9c231",
+            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
+            "containerId": "49dc379e-d1b8-4c2d-a556-ac0cf5ca43fd",
+            "name": "Todas as doações dinheiro",
+            "url": "http://{{baseUrl}}:{{Port}}/doacaoDinheiro/todos",
+            "method": "GET",
+            "sortNum": 85000,
+            "created": "2024-04-19T12:17:00.135Z",
+            "modified": "2024-04-19T12:17:44.465Z",
+            "headers": [
+                {
+                    "name": "nif",
+                    "value": "000111999225"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"numeroArmario\":\"21\",\n  \"idAluno\":\"1\",\n  \"data\":\"Tue Apr 16 2024 20:55:24 GMT-0300 (Horário Padrão de Brasília)\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM1MjkwNTEsImV4cCI6MTcxMzU3MjI1MX0.8PJpEpps6qSRNvDygVFlKw0c3ZQZbA7_P7uExCPRdxU"
+            }
+        },
+        {
             "_id": "dfb0a620-1ebd-48ff-b8c0-68faf0508b3a",
             "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
             "containerId": "5523b788-6455-43cf-a66f-fd1c4d9bba7c",
@@ -312,11 +343,11 @@
             "method": "POST",
             "sortNum": 100000,
             "created": "2024-04-15T12:34:02.091Z",
-            "modified": "2024-04-18T16:06:43.219Z",
+            "modified": "2024-04-20T16:01:02.666Z",
             "headers": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"email\":\"backend@senaisp.edu.br\",\n  \"senha\":\"teste\"\n}",
+                "raw": "{\n  \"email\":\"laiza@senaisp.edu.br\",\n  \"senha\":\"teste\"\n}",
                 "form": []
             },
             "auth": {
@@ -333,16 +364,16 @@
             "method": "POST",
             "sortNum": 110000,
             "created": "2024-04-15T12:34:07.282Z",
-            "modified": "2024-04-18T16:06:49.897Z",
+            "modified": "2024-04-20T16:05:15.409Z",
             "headers": [
                 {
                     "name": "nif",
-                    "value": "000111999224"
+                    "value": "123123"
                 }
             ],
             "auth": {
                 "type": "bearer",
-                "bearer": "NECESSARIO TOKEN"
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsYWl6YUBzZW5haXNwLmVkdS5iciIsIm5hbWUiOiJsYWl6YSIsImlhdCI6MTcxMzYyOTA3OCwiZXhwIjoxNzEzNjcyMjc4fQ.sKhCHpD-ioZU0ixwHRFTLvwAlT5GhGwDDHBIs8lstUU"
             }
         },
         {
@@ -426,11 +457,11 @@
             "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
             "containerId": "31b685d1-2707-4b83-a1f8-d01c3b7c3f81",
             "name": "Pesquisar todos os funcionarios",
-            "url": "http://{{baseUrl}}:{{Port}}/funcionario/todos",
+            "url": "http://{{baseUrl}}:{{Port}}/aluno/todos",
             "method": "GET",
             "sortNum": 150000,
             "created": "2024-04-15T12:35:49.282Z",
-            "modified": "2024-04-18T16:07:20.988Z",
+            "modified": "2024-04-18T16:21:06.800Z",
             "headers": [
                 {
                     "name": "token",
@@ -438,12 +469,12 @@
                 },
                 {
                     "name": "nif",
-                    "value": "000111999224"
+                    "value": "000111999225"
                 }
             ],
             "auth": {
                 "type": "bearer",
-                "bearer": "NECESSARIO TOKEN"
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM0NTY5MTEsImV4cCI6MTcxMzUwMDExMX0.oX8F4RAHYOmzgeyAax1nhFg12sr3K9AoOT7mdAYO6M8"
             }
         },
         {
@@ -497,6 +528,111 @@
                 "type": "bearer",
                 "bearer": "NECESSARIO TOKEN"
             }
+        },
+        {
+            "_id": "1876ac69-6c1d-4ab8-b30b-5d1594a9cb99",
+            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
+            "containerId": "33e1c3e0-76c2-4295-8b6d-9166b97b2e04",
+            "name": "Atualizar doação armario",
+            "url": "http://{{baseUrl}}:{{Port}}/doacaoArmario/atualizar",
+            "method": "PATCH",
+            "sortNum": 175000,
+            "created": "2024-04-19T11:53:42.006Z",
+            "modified": "2024-04-19T12:07:13.397Z",
+            "headers": [
+                {
+                    "name": "nif",
+                    "value": "000111999225"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"idDoacao\": \"1\",\n  \"numeroArmario\":\"23\",\n  \"idAluno\":\"2\",\n  \"data\":\"Tue Apr 16 2024 20:55:24 GMT-0300 (Horário Padrão de Brasília)\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM1Mjc2ODEsImV4cCI6MTcxMzU3MDg4MX0.68vMtVHE7gy40xdlyp3-I3uGaoKrBbiM_G63WCpzzxQ"
+            }
+        },
+        {
+            "_id": "8fe0ed76-5eb2-4d20-a6f9-4217daa0ef5b",
+            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
+            "containerId": "33e1c3e0-76c2-4295-8b6d-9166b97b2e04",
+            "name": "Todas as doações armario",
+            "url": "http://{{baseUrl}}:{{Port}}/doacaoArmario/todos",
+            "method": "GET",
+            "sortNum": 180000,
+            "created": "2024-04-19T01:14:58.940Z",
+            "modified": "2024-04-19T01:17:05.389Z",
+            "headers": [
+                {
+                    "name": "nif",
+                    "value": "000111999225"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"numeroArmario\":\"21\",\n  \"idAluno\":\"1\",\n  \"data\":\"Tue Apr 16 2024 20:55:24 GMT-0300 (Horário Padrão de Brasília)\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "NECESSARIO TOKEN"
+            }
+        },
+        {
+            "_id": "581ec00b-d01d-4349-891d-314fa754f3fb",
+            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
+            "containerId": "49dc379e-d1b8-4c2d-a556-ac0cf5ca43fd",
+            "name": "editar doação dinheiro",
+            "url": "http://{{baseUrl}}:{{Port}}/doacaoDinheiro/atualizar",
+            "method": "PATCH",
+            "sortNum": 180000,
+            "created": "2024-04-19T12:25:00.991Z",
+            "modified": "2024-04-19T12:26:54.561Z",
+            "headers": [
+                {
+                    "name": "nif",
+                    "value": "000111999225"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"idDoacao\":\"6\",\n  \"valorDoado\":\"200\",\n  \"idAluno\":\"26\",\n  \"auxilio\":\"0\",\n  \"data\":\"Tue Apr 20 2024 20:55:24 GMT-0300 (Horário Padrão de Brasília)\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM1MjkwNTEsImV4cCI6MTcxMzU3MjI1MX0.8PJpEpps6qSRNvDygVFlKw0c3ZQZbA7_P7uExCPRdxU"
+            }
+        },
+        {
+            "_id": "d10e529b-0ff2-4996-adc9-fec8c83fe86e",
+            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
+            "containerId": "35ba9286-1a71-48a3-873b-31bba35eeba0",
+            "name": "Nova reserva",
+            "url": "http://{{baseUrl}}:{{Port}}/reserva/criar",
+            "method": "POST",
+            "sortNum": 190000,
+            "created": "2024-04-20T20:24:28.640Z",
+            "modified": "2024-04-20T20:34:25.530Z",
+            "headers": [
+                {
+                    "name": "nif",
+                    "value": "123123"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"fk_aluno\": \"127\",\n  \"fk_produto\":\"1\",\n  \"quantidade\":\"2\",\n  \"retirada\":\"Tue Apr 21 2024 17:25:24 GMT-0300 (Horário Padrão de Brasília)\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsYWl6YUBzZW5haXNwLmVkdS5iciIsIm5hbWUiOiJsYWl6YSIsImlhdCI6MTcxMzY0NDc0MywiZXhwIjoxNzEzNjg3OTQzfQ.M1E8c57ooyl9TYIRbEMaVo3UemEZkJdjpw2gq7dfyTE"
+            }
         }
-    ]
+    ],
+    "ref": "SWyRzPcc1QEl0uJBXocCBtCKA6maV7Yd8A6sQjXLW9TAM3lpOzLCZAAChTp5hm2mfRScb9TXPiXCTtHtaAHqVg"
 }
