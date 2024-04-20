@@ -10,7 +10,7 @@ router.use(authMiddleware)
 
 router.post("/criar", async(req, res) => {
     
-    const {fk_aluno, fk_produto, quantidade, retirada} = req.body
+    const {fk_aluno, fk_produto, quantidade} = req.body
     const dataRetirada = new Date(req.body.retirada)
     const reserva = {fk_aluno, fk_produto, quantidade, dataRetirada}
     try {
@@ -20,10 +20,8 @@ router.post("/criar", async(req, res) => {
 
 
     } catch (err) {
-        console.log(dataRetirada)
-        console.log(err)
     }
-    console.log(reserva)
+    // console.log(reserva)
 })
 
 router.get("/reservas", async (req, res) =>{
