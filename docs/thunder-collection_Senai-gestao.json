@@ -1,75 +1,79 @@
 {
     "clientName": "Thunder Client",
     "collectionName": "Senai-gestao",
-    "collectionId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
-    "dateExported": "2024-04-20T20:37:51.144Z",
+    "collectionId": "6abc33ec-8ffe-4e05-a191-93e3fd729e1c",
+    "dateExported": "2024-04-21T15:40:21.592Z",
     "version": "1.2",
     "folders": [
         {
-            "_id": "49eea8f2-4034-45df-9e50-7c2d27da12d6",
+            "_id": "d90008b1-5554-4328-9efe-ee1fb519e1dd",
             "name": "Alunos",
             "containerId": "",
-            "created": "2024-03-30T19:33:48.378Z",
+            "created": "2024-04-20T01:17:26.371Z",
             "sortNum": 10000
         },
         {
-            "_id": "5523b788-6455-43cf-a66f-fd1c4d9bba7c",
+            "_id": "977ee82c-71cb-42bb-b755-6c986194a080",
             "name": "Armarios",
             "containerId": "",
-            "created": "2024-04-02T07:41:29.158Z",
+            "created": "2024-04-20T01:17:26.372Z",
             "sortNum": 20000
         },
         {
-            "_id": "8d0a9014-abbf-4a72-8294-a52e982515cb",
+            "_id": "84cdd6eb-211e-4b94-9cbd-fd70d588ffa2",
             "name": "Produto",
             "containerId": "",
-            "created": "2024-04-15T12:16:53.666Z",
+            "created": "2024-04-20T01:17:26.373Z",
             "sortNum": 30000
         },
         {
-            "_id": "31b685d1-2707-4b83-a1f8-d01c3b7c3f81",
+            "_id": "c669c44d-a2ad-4cf4-8f14-e5c512dc893d",
             "name": "Funcionarios",
             "containerId": "",
-            "created": "2024-04-15T12:33:56.667Z",
+            "created": "2024-04-20T01:17:26.374Z",
             "sortNum": 40000
         },
         {
-            "_id": "49dc379e-d1b8-4c2d-a556-ac0cf5ca43fd",
+            "_id": "48daf674-6389-41ac-8556-450924366592",
             "name": "Doação dinheiro",
             "containerId": "",
-            "created": "2024-04-16T23:21:32.359Z",
+            "created": "2024-04-20T01:17:26.375Z",
             "sortNum": 50000
         },
         {
-            "_id": "33e1c3e0-76c2-4295-8b6d-9166b97b2e04",
+            "_id": "c539817d-0b85-43d4-896c-2701c2370a1b",
             "name": "Doação armario",
             "containerId": "",
-            "created": "2024-04-17T01:12:28.498Z",
+            "created": "2024-04-20T01:17:26.376Z",
             "sortNum": 60000
         },
         {
-            "_id": "35ba9286-1a71-48a3-873b-31bba35eeba0",
-            "name": "Reservas",
+            "_id": "129c6da4-4011-42ea-ad73-20bdc38ca23f",
+            "name": "reserva",
             "containerId": "",
-            "created": "2024-04-20T20:24:22.034Z",
-            "sortNum": 70000
+            "created": "2024-04-20T16:05:42.944Z",
+            "sortNum": 80000
         }
     ],
     "requests": [
         {
-            "_id": "1b4ea8ff-85e0-40b8-9ab2-476841cddf43",
-            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
-            "containerId": "49eea8f2-4034-45df-9e50-7c2d27da12d6",
+            "_id": "82077cc8-669f-45ae-bb88-6d0acb05be53",
+            "colId": "6abc33ec-8ffe-4e05-a191-93e3fd729e1c",
+            "containerId": "d90008b1-5554-4328-9efe-ee1fb519e1dd",
             "name": "Cadastro Multiplos",
             "url": "http://{{baseUrl}}:{{Port}}/aluno/cadastro/multiplos",
             "method": "POST",
             "sortNum": 10000,
-            "created": "2024-03-30T19:34:09.345Z",
-            "modified": "2024-04-20T01:39:55.206Z",
+            "created": "2024-04-20T01:17:26.371Z",
+            "modified": "2024-04-20T01:17:26.371Z",
             "headers": [
                 {
+                    "name": "token",
+                    "value": ""
+                },
+                {
                     "name": "nif",
-                    "value": "000111999225"
+                    "value": ""
                 }
             ],
             "body": {
@@ -79,25 +83,25 @@
                 "files": [
                     {
                         "name": "alunosFile",
-                        "value": "c:\\Users\\Blood3\\Downloads\\dadosMockados.xlsx"
+                        "value": "c:\\Users\\Blood3\\Documents\\dadosMockados.xlsx"
                     }
                 ]
             },
             "auth": {
                 "type": "bearer",
-                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM1NzcwOTcsImV4cCI6MTcxMzYyMDI5N30.0huZfwdBd8CbjGknFiCWuLGlDwIcyUSYgVt7BrHLIpg"
+                "bearer": "NECESSARIO TOKEN"
             }
         },
         {
-            "_id": "8ea2ee1a-2863-40d4-9eed-fecff2e5cbd8",
-            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
-            "containerId": "8d0a9014-abbf-4a72-8294-a52e982515cb",
+            "_id": "0fa9531a-6079-45d2-a116-d188da193c73",
+            "colId": "6abc33ec-8ffe-4e05-a191-93e3fd729e1c",
+            "containerId": "84cdd6eb-211e-4b94-9cbd-fd70d588ffa2",
             "name": "Cadastro",
             "url": "http://{{baseUrl}}:{{Port}}/produto/cadastro",
             "method": "POST",
             "sortNum": 10000,
-            "created": "2024-04-15T13:02:13.068Z",
-            "modified": "2024-04-18T16:07:51.794Z",
+            "created": "2024-04-20T01:17:26.389Z",
+            "modified": "2024-04-20T16:14:43.727Z",
             "headers": [
                 {
                     "name": "token",
@@ -105,7 +109,7 @@
                 },
                 {
                     "name": "nif",
-                    "value": "000111999224"
+                    "value": "000111999225"
                 }
             ],
             "body": {
@@ -115,45 +119,40 @@
             },
             "auth": {
                 "type": "bearer",
-                "bearer": "NECESSARIO TOKEN"
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM2MjkzODUsImV4cCI6MTcxMzY3MjU4NX0.m-fMn3hZb1AMjES93lzZKiWGC4s_Wt9vZ11wlPjSjV4"
             }
         },
         {
-            "_id": "4063fe43-b505-47ec-a434-50287e7b8b30",
-            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
-            "containerId": "49eea8f2-4034-45df-9e50-7c2d27da12d6",
+            "_id": "832c6b0a-2152-422e-a96a-696e5034c415",
+            "colId": "6abc33ec-8ffe-4e05-a191-93e3fd729e1c",
+            "containerId": "d90008b1-5554-4328-9efe-ee1fb519e1dd",
             "name": "Cadastro Unico",
             "url": "http://{{baseUrl}}:{{Port}}/aluno/cadastro/unico",
             "method": "POST",
             "sortNum": 20000,
-            "created": "2024-04-02T07:23:23.512Z",
-            "modified": "2024-04-19T12:53:00.601Z",
-            "headers": [
-                {
-                    "name": "nif",
-                    "value": "000111999225"
-                }
-            ],
+            "created": "2024-04-20T01:17:26.373Z",
+            "modified": "2024-04-20T01:17:26.373Z",
+            "headers": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"CPF\":\"12345678911\",\n  \"nome\":\"Teste Unico11\",\n  \"email\":\"testeUnico11@gmail.com\",\n  \"fk_curso\":\"206\",\n  \"socioAapm\":true,\n  \"telefone\":\"\",\n  \"celular\":\"(11)992533382\"\n}",
+                "raw": "{\n  \"CPF\":\"1234567901\",\n  \"nome\":\"Teste Unico\",\n  \"email\":\"testeUnico@gmail.com\",\n  \"socioAapm\":true\n}",
                 "form": []
             },
             "auth": {
                 "type": "bearer",
-                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM1Mjk5NjksImV4cCI6MTcxMzU3MzE2OX0.8PB_wZdBg08WpU1tlBe6YrZwhlgXgP84k6U8S0n3BAc"
+                "bearer": "NECESSARIO TOKEN"
             }
         },
         {
-            "_id": "376fa7b1-0555-40f1-be92-cee5d8fc6261",
-            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
-            "containerId": "49eea8f2-4034-45df-9e50-7c2d27da12d6",
+            "_id": "778e66e0-2937-4f52-a05a-726ca8e49732",
+            "colId": "6abc33ec-8ffe-4e05-a191-93e3fd729e1c",
+            "containerId": "d90008b1-5554-4328-9efe-ee1fb519e1dd",
             "name": "Atualizar Aluno",
             "url": "http://{{baseUrl}}:{{Port}}/aluno/atualizar",
             "method": "PATCH",
             "sortNum": 30000,
-            "created": "2024-04-02T07:28:28.938Z",
-            "modified": "2024-04-18T16:08:34.813Z",
+            "created": "2024-04-20T01:17:26.374Z",
+            "modified": "2024-04-20T01:17:26.374Z",
             "headers": [],
             "body": {
                 "type": "json",
@@ -167,8 +166,8 @@
             "preReq": {
                 "runRequests": [
                     {
-                        "reqId": "4063fe43-b505-47ec-a434-50287e7b8b30",
-                        "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
+                        "reqId": "832c6b0a-2152-422e-a96a-696e5034c415",
+                        "colId": "6abc33ec-8ffe-4e05-a191-93e3fd729e1c",
                         "triggerCondition": "run-always",
                         "triggerValue": ""
                     }
@@ -176,23 +175,23 @@
             }
         },
         {
-            "_id": "bf42d5cd-c635-4117-b9d4-66c2df005193",
-            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
-            "containerId": "49eea8f2-4034-45df-9e50-7c2d27da12d6",
+            "_id": "a593e316-a7b6-4e6d-92af-931b23f0d892",
+            "colId": "6abc33ec-8ffe-4e05-a191-93e3fd729e1c",
+            "containerId": "d90008b1-5554-4328-9efe-ee1fb519e1dd",
             "name": "Pesquisar Um Aluno",
             "url": "http://{{baseUrl}}:{{Port}}/aluno/unico",
             "method": "GET",
             "sortNum": 40000,
-            "created": "2024-04-02T07:35:05.523Z",
-            "modified": "2024-04-18T16:08:37.595Z",
+            "created": "2024-04-20T01:17:26.375Z",
+            "modified": "2024-04-20T15:05:46.113Z",
             "headers": [
                 {
                     "name": "nif",
-                    "value": "000111999223"
+                    "value": "123123"
                 },
                 {
                     "name": "token",
-                    "value": "teste"
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsYWl6YUBzZW5haXNwLmVkdS5iciIsIm5hbWUiOiJsYWl6YSIsImlhdCI6MTcxMzYyNTUwMCwiZXhwIjoxNzEzNjY4NzAwfQ.D1wIPgrNRLFMHu0wukmS3h78Qu-KviUz8U_P7uqS8Y0"
                 }
             ],
             "body": {
@@ -206,36 +205,36 @@
             }
         },
         {
-            "_id": "fe47d092-2fa1-47b8-883f-89a6c28a29d3",
-            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
-            "containerId": "49eea8f2-4034-45df-9e50-7c2d27da12d6",
+            "_id": "c9026b2b-67cd-42ea-8db7-eed75d899de0",
+            "colId": "6abc33ec-8ffe-4e05-a191-93e3fd729e1c",
+            "containerId": "d90008b1-5554-4328-9efe-ee1fb519e1dd",
             "name": "Pesquisar varios alunos",
             "url": "http://{{baseUrl}}:{{Port}}/aluno/todos",
             "method": "GET",
             "sortNum": 50000,
-            "created": "2024-04-02T07:37:11.125Z",
-            "modified": "2024-04-20T20:26:06.420Z",
+            "created": "2024-04-20T01:17:26.376Z",
+            "modified": "2024-04-20T23:47:57.021Z",
             "headers": [
                 {
                     "name": "nif",
-                    "value": "123123"
+                    "value": "000111999225"
                 }
             ],
             "auth": {
                 "type": "bearer",
-                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsYWl6YUBzZW5haXNwLmVkdS5iciIsIm5hbWUiOiJsYWl6YSIsImlhdCI6MTcxMzY0NDc0MywiZXhwIjoxNzEzNjg3OTQzfQ.M1E8c57ooyl9TYIRbEMaVo3UemEZkJdjpw2gq7dfyTE"
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM2NTY3MzIsImV4cCI6MTcxMzY5OTkzMn0.ZHqxGvMyWOjaq5ivSC2etlaYeeegFkqpBz9GQvfpqU4"
             }
         },
         {
-            "_id": "09cdceeb-6125-422f-8693-29078712f9f8",
-            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
-            "containerId": "5523b788-6455-43cf-a66f-fd1c4d9bba7c",
+            "_id": "dcc15b2c-c481-4438-a822-444a22ad5be0",
+            "colId": "6abc33ec-8ffe-4e05-a191-93e3fd729e1c",
+            "containerId": "977ee82c-71cb-42bb-b755-6c986194a080",
             "name": "Atualizar Armario",
             "url": "http://{{baseUrl}}:{{Port}}/armario/atualizar",
             "method": "PATCH",
             "sortNum": 70000,
-            "created": "2024-04-02T07:45:49.646Z",
-            "modified": "2024-04-18T16:08:03.994Z",
+            "created": "2024-04-20T01:17:26.377Z",
+            "modified": "2024-04-20T01:17:26.377Z",
             "headers": [
                 {
                     "name": "nif",
@@ -249,8 +248,8 @@
             "preReq": {
                 "runRequests": [
                     {
-                        "reqId": "4063fe43-b505-47ec-a434-50287e7b8b30",
-                        "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
+                        "reqId": "832c6b0a-2152-422e-a96a-696e5034c415",
+                        "colId": "6abc33ec-8ffe-4e05-a191-93e3fd729e1c",
                         "triggerCondition": "run-always",
                         "triggerValue": ""
                     }
@@ -258,15 +257,15 @@
             }
         },
         {
-            "_id": "14952ba4-14bf-4c25-9693-bcb7b7f2b5e3",
-            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
-            "containerId": "5523b788-6455-43cf-a66f-fd1c4d9bba7c",
+            "_id": "785ac7bb-47f2-4028-866f-f1d735036b6a",
+            "colId": "6abc33ec-8ffe-4e05-a191-93e3fd729e1c",
+            "containerId": "977ee82c-71cb-42bb-b755-6c986194a080",
             "name": "Pesquisar todos Armarios",
             "url": "http://{{baseUrl}}:{{Port}}/armario/todos",
             "method": "GET",
             "sortNum": 80000,
-            "created": "2024-04-02T07:48:12.305Z",
-            "modified": "2024-04-18T16:08:08.163Z",
+            "created": "2024-04-20T01:17:26.378Z",
+            "modified": "2024-04-20T01:17:26.378Z",
             "headers": [
                 {
                     "name": "nif",
@@ -283,41 +282,15 @@
             }
         },
         {
-            "_id": "786a3c9d-cdb5-47e6-9131-43cc9bd9c231",
-            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
-            "containerId": "49dc379e-d1b8-4c2d-a556-ac0cf5ca43fd",
-            "name": "Todas as doações dinheiro",
-            "url": "http://{{baseUrl}}:{{Port}}/doacaoDinheiro/todos",
-            "method": "GET",
-            "sortNum": 85000,
-            "created": "2024-04-19T12:17:00.135Z",
-            "modified": "2024-04-19T12:17:44.465Z",
-            "headers": [
-                {
-                    "name": "nif",
-                    "value": "000111999225"
-                }
-            ],
-            "body": {
-                "type": "json",
-                "raw": "{\n  \"numeroArmario\":\"21\",\n  \"idAluno\":\"1\",\n  \"data\":\"Tue Apr 16 2024 20:55:24 GMT-0300 (Horário Padrão de Brasília)\"\n}",
-                "form": []
-            },
-            "auth": {
-                "type": "bearer",
-                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM1MjkwNTEsImV4cCI6MTcxMzU3MjI1MX0.8PJpEpps6qSRNvDygVFlKw0c3ZQZbA7_P7uExCPRdxU"
-            }
-        },
-        {
-            "_id": "dfb0a620-1ebd-48ff-b8c0-68faf0508b3a",
-            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
-            "containerId": "5523b788-6455-43cf-a66f-fd1c4d9bba7c",
+            "_id": "da17c12c-f7a9-4183-b0f0-760199245599",
+            "colId": "6abc33ec-8ffe-4e05-a191-93e3fd729e1c",
+            "containerId": "977ee82c-71cb-42bb-b755-6c986194a080",
             "name": "Pesquisar Por Status",
             "url": "http://{{baseUrl}}:{{Port}}/armario/status",
             "method": "GET",
             "sortNum": 90000,
-            "created": "2024-04-02T07:49:00.038Z",
-            "modified": "2024-04-18T16:08:17.449Z",
+            "created": "2024-04-20T01:17:26.379Z",
+            "modified": "2024-04-20T01:17:26.379Z",
             "headers": [
                 {
                     "name": "nif",
@@ -335,36 +308,36 @@
             }
         },
         {
-            "_id": "81dfd826-a892-43e1-abbe-6e895fcde8e8",
-            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
-            "containerId": "31b685d1-2707-4b83-a1f8-d01c3b7c3f81",
+            "_id": "3eeb9a05-585b-487b-a1fe-7a3c1b274079",
+            "colId": "6abc33ec-8ffe-4e05-a191-93e3fd729e1c",
+            "containerId": "c669c44d-a2ad-4cf4-8f14-e5c512dc893d",
             "name": "Login",
             "url": "http://{{baseUrl}}:{{Port}}/funcionario/login",
             "method": "POST",
             "sortNum": 100000,
-            "created": "2024-04-15T12:34:02.091Z",
-            "modified": "2024-04-20T16:01:02.666Z",
+            "created": "2024-04-20T01:17:26.380Z",
+            "modified": "2024-04-20T23:43:22.061Z",
             "headers": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"email\":\"laiza@senaisp.edu.br\",\n  \"senha\":\"teste\"\n}",
+                "raw": "{\n  \"email\":\"backend@senaisp.edu.br\",\n  \"senha\":\"teste\"\n}",
                 "form": []
             },
             "auth": {
                 "type": "bearer",
-                "bearer": "NECESSARIO TOKEN"
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM2NTYyNjQsImV4cCI6MTcxMzY5OTQ2NH0.YsjDxLSelqOwZg87X1BzUbH_pIulXOL0pv8LhM0Nun4"
             }
         },
         {
-            "_id": "5b4193cc-b0c8-40be-8651-a6e9efbb0f78",
-            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
-            "containerId": "31b685d1-2707-4b83-a1f8-d01c3b7c3f81",
+            "_id": "d09fd0e0-a682-4492-8a8d-ade41cae502a",
+            "colId": "6abc33ec-8ffe-4e05-a191-93e3fd729e1c",
+            "containerId": "c669c44d-a2ad-4cf4-8f14-e5c512dc893d",
             "name": "Logout",
             "url": "http://{{baseUrl}}:{{Port}}/funcionario/deslogar",
             "method": "POST",
             "sortNum": 110000,
-            "created": "2024-04-15T12:34:07.282Z",
-            "modified": "2024-04-20T16:05:15.409Z",
+            "created": "2024-04-20T01:17:26.381Z",
+            "modified": "2024-04-20T15:49:59.525Z",
             "headers": [
                 {
                     "name": "nif",
@@ -373,19 +346,19 @@
             ],
             "auth": {
                 "type": "bearer",
-                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsYWl6YUBzZW5haXNwLmVkdS5iciIsIm5hbWUiOiJsYWl6YSIsImlhdCI6MTcxMzYyOTA3OCwiZXhwIjoxNzEzNjcyMjc4fQ.sKhCHpD-ioZU0ixwHRFTLvwAlT5GhGwDDHBIs8lstUU"
+                "bearer": "NECESSARIO TOKEN"
             }
         },
         {
-            "_id": "37ac2109-2d12-44c2-a575-043072b1582a",
-            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
-            "containerId": "31b685d1-2707-4b83-a1f8-d01c3b7c3f81",
+            "_id": "adf27a7a-69ec-4178-8f58-bdc9b7182edf",
+            "colId": "6abc33ec-8ffe-4e05-a191-93e3fd729e1c",
+            "containerId": "c669c44d-a2ad-4cf4-8f14-e5c512dc893d",
             "name": "Atualizar por NIF",
             "url": "",
             "method": "PUT",
             "sortNum": 115000,
-            "created": "2024-04-15T12:35:29.801Z",
-            "modified": "2024-04-18T16:07:02.193Z",
+            "created": "2024-04-20T01:17:26.386Z",
+            "modified": "2024-04-20T01:17:26.386Z",
             "headers": [
                 {
                     "name": "nif",
@@ -398,15 +371,15 @@
             }
         },
         {
-            "_id": "ddabac12-ce40-4447-8194-728c91c03dd0",
-            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
-            "containerId": "31b685d1-2707-4b83-a1f8-d01c3b7c3f81",
+            "_id": "ac5d9bce-8525-42bd-9b19-a03a10397dc4",
+            "colId": "6abc33ec-8ffe-4e05-a191-93e3fd729e1c",
+            "containerId": "c669c44d-a2ad-4cf4-8f14-e5c512dc893d",
             "name": "Cadastro",
             "url": "http://{{baseUrl}}:{{Port}}/funcionario/",
             "method": "POST",
             "sortNum": 120000,
-            "created": "2024-04-15T12:34:13.634Z",
-            "modified": "2024-04-18T16:07:47.058Z",
+            "created": "2024-04-20T01:17:26.384Z",
+            "modified": "2024-04-20T01:17:26.384Z",
             "headers": [
                 {
                     "name": "token",
@@ -428,15 +401,15 @@
             }
         },
         {
-            "_id": "d5e21922-8e50-4102-bb7a-03d8feadee9f",
-            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
-            "containerId": "31b685d1-2707-4b83-a1f8-d01c3b7c3f81",
+            "_id": "0121d9aa-29f7-4fd4-83d6-337df52dc7a6",
+            "colId": "6abc33ec-8ffe-4e05-a191-93e3fd729e1c",
+            "containerId": "c669c44d-a2ad-4cf4-8f14-e5c512dc893d",
             "name": "Pesquisar por NIF",
             "url": "http://{{baseUrl}}:{{Port}}/funcionario/000111999224",
             "method": "GET",
             "sortNum": 130000,
-            "created": "2024-04-15T12:34:44.914Z",
-            "modified": "2024-04-18T16:07:17.186Z",
+            "created": "2024-04-20T01:17:26.385Z",
+            "modified": "2024-04-20T01:17:26.385Z",
             "headers": [
                 {
                     "name": "nif",
@@ -453,40 +426,40 @@
             }
         },
         {
-            "_id": "f16f0b2d-3d61-4cd9-8f06-f392815eda16",
-            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
-            "containerId": "31b685d1-2707-4b83-a1f8-d01c3b7c3f81",
+            "_id": "cd2fbb50-df3f-4c20-b289-54ce2a54e2be",
+            "colId": "6abc33ec-8ffe-4e05-a191-93e3fd729e1c",
+            "containerId": "c669c44d-a2ad-4cf4-8f14-e5c512dc893d",
             "name": "Pesquisar todos os funcionarios",
-            "url": "http://{{baseUrl}}:{{Port}}/aluno/todos",
+            "url": "http://{{baseUrl}}:{{Port}}/funcionario/todos",
             "method": "GET",
             "sortNum": 150000,
-            "created": "2024-04-15T12:35:49.282Z",
-            "modified": "2024-04-18T16:21:06.800Z",
+            "created": "2024-04-20T01:17:26.388Z",
+            "modified": "2024-04-20T23:47:15.184Z",
             "headers": [
                 {
                     "name": "token",
-                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtYXJjb3NAc2VuYWlzcC5lZHUuYnIiLCJuYW1lIjoiTUFSQ09PT1UiLCJpYXQiOjE3MTMxODU1NTIsImV4cCI6MTcxMzIyODc1Mn0.ENQdZju4XAEhginTG3yOVV4P9cMCY3x1gf-kJACkXg8"
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsYWl6YUBzZW5haXNwLmVkdS5iciIsIm5hbWUiOiJsYWl6YSIsImlhdCI6MTcxMzYyNTc3OCwiZXhwIjoxNzEzNjY4OTc4fQ.OYzNiQMVE34z3aOVEtXPQ3ZRVO5leS_ADts6_oKFczU"
                 },
                 {
                     "name": "nif",
-                    "value": "000111999225"
+                    "value": "123123"
                 }
             ],
             "auth": {
                 "type": "bearer",
-                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM0NTY5MTEsImV4cCI6MTcxMzUwMDExMX0.oX8F4RAHYOmzgeyAax1nhFg12sr3K9AoOT7mdAYO6M8"
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM2NTY3MzIsImV4cCI6MTcxMzY5OTkzMn0.ZHqxGvMyWOjaq5ivSC2etlaYeeegFkqpBz9GQvfpqU4"
             }
         },
         {
-            "_id": "cb7ec57d-4da0-4b52-a29e-d9deb36a8a99",
-            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
-            "containerId": "49dc379e-d1b8-4c2d-a556-ac0cf5ca43fd",
+            "_id": "d7b62dca-31cd-40b7-acb4-e0e4f72a2383",
+            "colId": "6abc33ec-8ffe-4e05-a191-93e3fd729e1c",
+            "containerId": "48daf674-6389-41ac-8556-450924366592",
             "name": "Nova doação dinheiro",
             "url": "http://{{baseUrl}}:{{Port}}/doacaoDinheiro/cadastro",
             "method": "POST",
             "sortNum": 170000,
-            "created": "2024-04-16T23:23:51.143Z",
-            "modified": "2024-04-18T16:07:30.453Z",
+            "created": "2024-04-20T01:17:26.390Z",
+            "modified": "2024-04-20T01:17:26.390Z",
             "headers": [
                 {
                     "name": "nif",
@@ -504,15 +477,15 @@
             }
         },
         {
-            "_id": "5c9c64d3-3289-4c78-9b67-2b00cb79797e",
-            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
-            "containerId": "33e1c3e0-76c2-4295-8b6d-9166b97b2e04",
+            "_id": "1b4cd4fb-c4a4-4fe9-9549-dcd670d74dd3",
+            "colId": "6abc33ec-8ffe-4e05-a191-93e3fd729e1c",
+            "containerId": "c539817d-0b85-43d4-896c-2701c2370a1b",
             "name": "Nova doação armario",
             "url": "http://{{baseUrl}}:{{Port}}/doacaoArmario/cadastro",
             "method": "POST",
             "sortNum": 170000,
-            "created": "2024-04-17T01:12:28.498Z",
-            "modified": "2024-04-18T16:07:38.674Z",
+            "created": "2024-04-20T01:17:26.391Z",
+            "modified": "2024-04-20T01:17:26.391Z",
             "headers": [
                 {
                     "name": "token",
@@ -530,109 +503,94 @@
             }
         },
         {
-            "_id": "1876ac69-6c1d-4ab8-b30b-5d1594a9cb99",
-            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
-            "containerId": "33e1c3e0-76c2-4295-8b6d-9166b97b2e04",
-            "name": "Atualizar doação armario",
-            "url": "http://{{baseUrl}}:{{Port}}/doacaoArmario/atualizar",
-            "method": "PATCH",
-            "sortNum": 175000,
-            "created": "2024-04-19T11:53:42.006Z",
-            "modified": "2024-04-19T12:07:13.397Z",
-            "headers": [
-                {
-                    "name": "nif",
-                    "value": "000111999225"
-                }
-            ],
-            "body": {
-                "type": "json",
-                "raw": "{\n  \"idDoacao\": \"1\",\n  \"numeroArmario\":\"23\",\n  \"idAluno\":\"2\",\n  \"data\":\"Tue Apr 16 2024 20:55:24 GMT-0300 (Horário Padrão de Brasília)\"\n}",
-                "form": []
-            },
-            "auth": {
-                "type": "bearer",
-                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM1Mjc2ODEsImV4cCI6MTcxMzU3MDg4MX0.68vMtVHE7gy40xdlyp3-I3uGaoKrBbiM_G63WCpzzxQ"
-            }
-        },
-        {
-            "_id": "8fe0ed76-5eb2-4d20-a6f9-4217daa0ef5b",
-            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
-            "containerId": "33e1c3e0-76c2-4295-8b6d-9166b97b2e04",
-            "name": "Todas as doações armario",
-            "url": "http://{{baseUrl}}:{{Port}}/doacaoArmario/todos",
-            "method": "GET",
-            "sortNum": 180000,
-            "created": "2024-04-19T01:14:58.940Z",
-            "modified": "2024-04-19T01:17:05.389Z",
-            "headers": [
-                {
-                    "name": "nif",
-                    "value": "000111999225"
-                }
-            ],
-            "body": {
-                "type": "json",
-                "raw": "{\n  \"numeroArmario\":\"21\",\n  \"idAluno\":\"1\",\n  \"data\":\"Tue Apr 16 2024 20:55:24 GMT-0300 (Horário Padrão de Brasília)\"\n}",
-                "form": []
-            },
-            "auth": {
-                "type": "bearer",
-                "bearer": "NECESSARIO TOKEN"
-            }
-        },
-        {
-            "_id": "581ec00b-d01d-4349-891d-314fa754f3fb",
-            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
-            "containerId": "49dc379e-d1b8-4c2d-a556-ac0cf5ca43fd",
-            "name": "editar doação dinheiro",
-            "url": "http://{{baseUrl}}:{{Port}}/doacaoDinheiro/atualizar",
-            "method": "PATCH",
-            "sortNum": 180000,
-            "created": "2024-04-19T12:25:00.991Z",
-            "modified": "2024-04-19T12:26:54.561Z",
-            "headers": [
-                {
-                    "name": "nif",
-                    "value": "000111999225"
-                }
-            ],
-            "body": {
-                "type": "json",
-                "raw": "{\n  \"idDoacao\":\"6\",\n  \"valorDoado\":\"200\",\n  \"idAluno\":\"26\",\n  \"auxilio\":\"0\",\n  \"data\":\"Tue Apr 20 2024 20:55:24 GMT-0300 (Horário Padrão de Brasília)\"\n}",
-                "form": []
-            },
-            "auth": {
-                "type": "bearer",
-                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM1MjkwNTEsImV4cCI6MTcxMzU3MjI1MX0.8PJpEpps6qSRNvDygVFlKw0c3ZQZbA7_P7uExCPRdxU"
-            }
-        },
-        {
-            "_id": "d10e529b-0ff2-4996-adc9-fec8c83fe86e",
-            "colId": "4dd94dfc-7ad8-4476-82e4-a79d3b785957",
-            "containerId": "35ba9286-1a71-48a3-873b-31bba35eeba0",
-            "name": "Nova reserva",
+            "_id": "9a7e55c5-b220-4274-8512-616ddfa8050d",
+            "colId": "6abc33ec-8ffe-4e05-a191-93e3fd729e1c",
+            "containerId": "129c6da4-4011-42ea-ad73-20bdc38ca23f",
+            "name": "criar reserva",
             "url": "http://{{baseUrl}}:{{Port}}/reserva/criar",
             "method": "POST",
-            "sortNum": 190000,
-            "created": "2024-04-20T20:24:28.640Z",
-            "modified": "2024-04-20T20:34:25.530Z",
+            "sortNum": 180000,
+            "created": "2024-04-20T16:06:16.609Z",
+            "modified": "2024-04-20T23:46:51.027Z",
             "headers": [
                 {
                     "name": "nif",
-                    "value": "123123"
+                    "value": "000111999225"
                 }
             ],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"fk_aluno\": \"127\",\n  \"fk_produto\":\"1\",\n  \"quantidade\":\"2\",\n  \"retirada\":\"Tue Apr 21 2024 17:25:24 GMT-0300 (Horário Padrão de Brasília)\"\n}",
+                "raw": "{\n  \"fk_aluno\": 127, \n  \"fk_produto\": 10, \n  \"quantidade\": 2, \n  \"retirada\":\"2024-04-23T09:00:00Z\",\n  \"status\" : 1\n}",
                 "form": []
             },
             "auth": {
                 "type": "bearer",
-                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsYWl6YUBzZW5haXNwLmVkdS5iciIsIm5hbWUiOiJsYWl6YSIsImlhdCI6MTcxMzY0NDc0MywiZXhwIjoxNzEzNjg3OTQzfQ.M1E8c57ooyl9TYIRbEMaVo3UemEZkJdjpw2gq7dfyTE"
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM2NTY3MzIsImV4cCI6MTcxMzY5OTkzMn0.ZHqxGvMyWOjaq5ivSC2etlaYeeegFkqpBz9GQvfpqU4"
+            }
+        },
+        {
+            "_id": "40622668-0176-44a3-ac5d-fb210daa83e8",
+            "colId": "6abc33ec-8ffe-4e05-a191-93e3fd729e1c",
+            "containerId": "129c6da4-4011-42ea-ad73-20bdc38ca23f",
+            "name": "ver uma reserva",
+            "url": "http://{{baseUrl}}:{{Port}}/reserva/4",
+            "method": "GET",
+            "sortNum": 190000,
+            "created": "2024-04-20T22:34:11.815Z",
+            "modified": "2024-04-21T00:52:15.975Z",
+            "headers": [
+                {
+                    "name": "nif",
+                    "value": "000111999225"
+                }
+            ],
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM2NjA2NTQsImV4cCI6MTcxMzcwMzg1NH0.qS0q2zp4EZrMq_nPxFSgm9Gr72TVrN2TcieJlT1w9XY"
+            }
+        },
+        {
+            "_id": "1acb32b8-8cff-493c-b041-d92d62f44c00",
+            "colId": "6abc33ec-8ffe-4e05-a191-93e3fd729e1c",
+            "containerId": "129c6da4-4011-42ea-ad73-20bdc38ca23f",
+            "name": "todas as reservas",
+            "url": "http://{{baseUrl}}:{{Port}}/reserva/todas",
+            "method": "GET",
+            "sortNum": 210000,
+            "created": "2024-04-20T23:37:20.304Z",
+            "modified": "2024-04-21T00:52:37.968Z",
+            "headers": [
+                {
+                    "name": "nif",
+                    "value": "000111999225"
+                }
+            ],
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM2NjA2NTQsImV4cCI6MTcxMzcwMzg1NH0.qS0q2zp4EZrMq_nPxFSgm9Gr72TVrN2TcieJlT1w9XY"
+            }
+        },
+        {
+            "_id": "f9a402a2-8576-4ea2-9b9b-dc12395fab12",
+            "colId": "6abc33ec-8ffe-4e05-a191-93e3fd729e1c",
+            "containerId": "129c6da4-4011-42ea-ad73-20bdc38ca23f",
+            "name": "cancelar reserva",
+            "url": "http://{{baseUrl}}:{{Port}}/reserva/5",
+            "method": "PATCH",
+            "sortNum": 220000,
+            "created": "2024-04-20T23:53:15.247Z",
+            "modified": "2024-04-21T01:00:54.643Z",
+            "headers": [
+                {
+                    "name": "nif",
+                    "value": "000111999225"
+                }
+            ],
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM2NjEyNDMsImV4cCI6MTcxMzcwNDQ0M30.L-oX2HUk_vnTWRDhD53KISVNFw7Og-G30i_RczM18C8"
             }
         }
     ],
-    "ref": "SWyRzPcc1QEl0uJBXocCBtCKA6maV7Yd8A6sQjXLW9TAM3lpOzLCZAAChTp5hm2mfRScb9TXPiXCTtHtaAHqVg"
+    "ref": "QmAgBunOfUA35tbGiQ-9gJfxLK0h_LUNJxiQm4JKWtDVn6793mU0HlErX48cSTjXupSXXqKfa5Qko0GbPOIO9Q"
 }
