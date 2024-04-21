@@ -10,10 +10,8 @@ const reservaModel = require('../models/reservaModel')
 function visualizarTodasReservas(sequelize) {
     return new Promise((resolve, reject) => {
         try {
-            sequelize.query("select * from todas_reservas order by data;", {
-                type: sequelize.QueryTypes.SELECT
-            })
-                .then(r => resolve(r))
+            sequelize.query("select * from todas_reservas order by retirada;")
+                .then(r => resolve(r[0]))
                 .catch(e => reject(e))
         }
         catch (err) {
@@ -22,29 +20,36 @@ function visualizarTodasReservas(sequelize) {
     })
 }
 
-function atualizarStatus(status, sequelize) {
-    return new Promise((resolve, reject) => {
+function cancelarReserva(id_reserva, sequelize) {
+    return new Promise(async(resolve, reject) => {
+        
         try {
-            sequelize.update("call efetuar_reserva")
-                .then((r) => resolve(r))
-                .catch((e) => reject(e))
-        } catch (error) {
+                    await reservaModel(sequelize).update("call cancelar_reserva", {where: {id_reserva : id_reserva}})
+                    .then((r) => resolve(r))
+                    .catch((e) => reject(e))
+        } catch (err) {
             reject(err)
         }
     })
 }
 
+function confirmarReserva(id_reserva, status, sequelize) {
+    return new Promise(async(resolve, reject) => {
+        
+        try {
 
-/* select a.nome FROM aluno a WHERE 
-(a.id_aluno IN 
-(SELECT r.fk_aluno FROM reserva r 
-    WHERE a.id_aluno = r.fk_aluno)
-)
- */
+                    await reservaModel(sequelize).update("call efetuar_reserva", {where: {id_reserva : id_reserva}})
+                    .then((r) => resolve(r))
+                    .catch((e) => reject(e))
+        } catch (err) {
+            reject(err)
+        }
+    })
+}
 
 function criarReserva(reserva, sequelize) {
 
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
         try {
             const { fk_aluno, fk_produto, quantidade, dataRetirada:retirada } = reserva
 
@@ -62,25 +67,22 @@ function criarReserva(reserva, sequelize) {
 }
 
 
-function pesquisarUmaReserva(id_reserva, fk_aluno) {
+function pesquisarUmaReserva(id_reserva, sequelize) {
     return new Promise(async (resolve, reject) => {
         try {
 
             const reserva = await reservaModel(sequelize).findOne({
-                attributes: ['nome'],
-                where: { fk_aluno: sequelize.literal("select a.nome FROM aluno a WHERE (a.id_aluno IN (SELECT r.fk_aluno FROM reserva r WHERE a.id_aluno = r.fk_aluno))") }
+                where: { id_reserva }
             })
-
-
 
             reserva == null
                 ? reject("reserva não encontrada.")
                 : resolve(reserva.dataValues)
-        } catch (error) {
+        } catch (err) {
             console.log(err)
             reject(err)
         }
     })
 }
 
-module.exports = { criarReserva }
+module.exports = { criarReserva, pesquisarUmaReserva, cancelarReserva, visualizarTodasReservas }
