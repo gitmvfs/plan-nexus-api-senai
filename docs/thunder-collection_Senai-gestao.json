@@ -601,7 +601,7 @@
             "colId": "51d005e3-6955-476d-b671-c0922fddaf54",
             "containerId": "584df137-1e62-40f2-b763-f90048a1a2f0",
             "name": "confirmar reserva",
-            "url": "http://{{baseUrl}}:{{Port}}/reserva/confirmar/9",
+            "url": "http://{{baseUrl}}:{{Port}}/reserva/confirmar",
             "method": "PATCH",
             "sortNum": 230000,
             "created": "2024-04-22T18:34:50.854Z",
