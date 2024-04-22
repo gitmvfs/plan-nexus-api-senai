@@ -2,7 +2,7 @@ const router = require("express").Router()
 const authMiddleware = require("../middleware/auth")
 const reservaModel = require("../models/reservaModel")
 const {tratarMensagensDeErro} = require("../utils/errorMsg")
-const {criarReserva, pesquisarUmaReserva, cancelarReserva, visualizarTodasReservas} = require("./../controllers/reservaController")
+const {criarReserva, pesquisarUmaReserva, cancelarReserva, confirmarReserva, visualizarTodasReservas} = require("./../controllers/reservaController")
 const sequelize = require("sequelize")
 
 router.use(authMiddleware)
@@ -15,7 +15,7 @@ router.post("/criar", async(req, res) => {
 
     try {
         const response = await criarReserva(reserva, req.sequelize)
-        res.status(201).json({ "msg": `reserva criada: ${reserva}`, "statusCode": 201, "response": response })
+        res.status(201).json({ "msg": `reserva criada: ${response}`, "statusCode": 201, "response": response })
     } catch (err) {
         const erroTratado = await tratarMensagensDeErro(err)
         res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
@@ -54,15 +54,13 @@ router.get("/:id_reserva", async (req, res) =>{
 
 
 // cancelar reserva
-router.patch("/:id_reserva", async (req, res) => {
-    const {id_reserva} = req.params
-
+router.patch("/cancelar", async (req, res) => {
+    const {id_reserva} = req.body
 
     try {
         const response = await cancelarReserva(id_reserva, req.sequelize)
-        response == false
-        ?  res.status(400).json({ msg: "não é possível cancelar a reserva", "statusCode": 400, "response": response })
-        :  res.status(200).json({ msg: "reserva cancelada com sucesso", "statusCode": 200, "response": response })
+        ?  res.status(400).json({ msg: "não é possível cancelar a reserva", "statusCode": 400})
+        :  res.status(200).json({ msg: "reserva cancelada com sucesso", "statusCode": 200})
         
     } catch (err) {
         const erroTratado = await tratarMensagensDeErro(err)
@@ -71,17 +69,15 @@ router.patch("/:id_reserva", async (req, res) => {
 })
 
 // efetuar reserva
-router.patch("/:id_reserva", async (req, res) => {
-    const {id_reserva} = req.params
+router.patch("/confirmar", async (req, res) => {
+    const {id_reserva} = req.body
 
     try {
-        const response = await confirmarReserva(id_reserva, req.sequelize)
-        .then((response) => {
-            res.status(200).json({ msg: "reserva entregue", "statusCode": 200, "response": response });
-        })
-        .catch((e) => console.log(e));
+        await confirmarReserva(id_reserva, req.sequelize)
+        ?  res.status(400).json({ msg: "não é possível confirmar a reserva", "statusCode": 400})
+        :  res.status(200).json({ msg: "reserva entregue", "statusCode": 200})
 
-    } catch (error) {
+    } catch (err) {
         const erroTratado = await tratarMensagensDeErro(err)
         res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
     }
