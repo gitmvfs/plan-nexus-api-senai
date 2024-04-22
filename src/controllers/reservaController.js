@@ -3,7 +3,6 @@ const alunoModel = require('../models/alunoModel')
 const produtoModel = require('../models/produtoModel')
 const reservaModel = require('../models/reservaModel')
 
-
 // editar reserva
 // ver reservas
 
@@ -23,10 +22,17 @@ function visualizarTodasReservas(sequelize) {
 function cancelarReserva(id_reserva, sequelize) {
     return new Promise(async(resolve, reject) => {
         
+        
         try {
-                    await reservaModel(sequelize).update("call cancelar_reserva", {where: {id_reserva : id_reserva}})
-                    .then((r) => resolve(r))
-                    .catch((e) => reject(e))
+            const reservaExiste = await pesquisarUmaReserva(id_reserva, sequelize)
+            if(!reservaExiste){
+                return res.status(404).send('reserva não encontrada.')
+            }
+                await reservaModel(sequelize).update("call cancelar_reserva", {where: {id_reserva : id_reserva},
+            })
+                .then((r) => resolve(r))
+                .catch((e) => reject(e))
+            
         } catch (err) {
             reject(err)
         }
@@ -66,18 +72,18 @@ function criarReserva(reserva, sequelize) {
     })
 }
 
-
 function pesquisarUmaReserva(id_reserva, sequelize) {
     return new Promise(async (resolve, reject) => {
         try {
 
-            const reserva = await reservaModel(sequelize).findOne({
-                where: { id_reserva }
+            await sequelize.query('SELECT * FROM todas_reservas WHERE id_reserva = ?', {
+                replacements: [id_reserva],
+                type: sequelize.QueryTypes.SELECT,
             })
+            .then((r) => {resolve(r)})
+            .catch((e) => {reject(e)})
+            
 
-            reserva == null
-                ? reject("reserva não encontrada.")
-                : resolve(reserva.dataValues)
         } catch (err) {
             console.log(err)
             reject(err)
@@ -85,4 +91,4 @@ function pesquisarUmaReserva(id_reserva, sequelize) {
     })
 }
 
-module.exports = { criarReserva, pesquisarUmaReserva, cancelarReserva, visualizarTodasReservas }
+module.exports = { criarReserva, pesquisarUmaReserva, cancelarReserva, confirmarReserva, visualizarTodasReservas }
