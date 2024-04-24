@@ -12,6 +12,7 @@ const funcionarioRota = require("./routes/funcionarioRota")
 const produtoRota = require("./routes/produtoRota")
 const doacaoDinheiroRota = require("./routes/doacaoDinheiroRota")
 const doacaoArmarioRota = require("./routes/doacaoArmarioRota")
+const reservaRota = require("./routes/reservaRota")
 // Config dotenv
 dotenv.config({ path: resolve("../", ".env") })
 const serverPort = process.env.PORT || 3333
@@ -29,5 +30,6 @@ app.use("/armario", armarioRota)
 app.use("/produto", produtoRota)
 app.use("/doacaoDinheiro", doacaoDinheiroRota)
 app.use("/doacaoArmario", doacaoArmarioRota)
+app.use("/reserva", reservaRota)
 
 app.listen(serverPort, () => console.log(`HTTP RUNNING AT: http://localhost:${serverPort}`))
