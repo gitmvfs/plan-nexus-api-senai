@@ -123,7 +123,7 @@ router.put('/:NIF', async (req, res) => {
     try {
         const funcionarioValidado = funcionarioValidacao.parse(novosDados)
 
-        await editarFuncionario(NIF, funcionarioValidado)
+        await editarFuncionario(NIF, funcionarioValidado, req.sequelize)
         res.send('Informações do funcionário atualizadas com sucesso.')
     } catch (err) {
         const erroTratado = await tratarMensagensDeErro(err)
