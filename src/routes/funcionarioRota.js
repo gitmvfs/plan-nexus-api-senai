@@ -109,7 +109,7 @@ router.get('/:NIF', async (req, res) => {
     }
 });
 
-router.put('/:NIF', async (req, res) => {
+router.patch('/:NIF', async (req, res) => {
     const { NIF } = req.params
     const { nome, email, fk_nivel_acesso } = req.body
 
