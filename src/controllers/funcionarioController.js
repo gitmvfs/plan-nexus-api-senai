@@ -59,7 +59,7 @@ async function editarFuncionario(NIF, novosDados, sequelize) {
                 return res.status(404).send('Funcionário não encontrado.')
             }
 
-            await funcionarioModel.update(sequelize)(novosDados, { where: { NIF: NIF } });
+            await funcionarioModel(sequelize).update(novosDados, { where: { NIF: NIF } });
 
             resolve("Funcionário atualizado com sucesso.");
         } catch (err) {
