@@ -269,11 +269,7 @@
             "headers": [
                 {
                     "name": "nif",
-                    "value": "000111999224"
-                },
-                {
-                    "name": "token",
-                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtYXJjb3NAc2VuYWlzcC5lZHUuYnIiLCJuYW1lIjoiTUFSQ09PT1UiLCJpYXQiOjE3MTMyNjM1MTAsImV4cCI6MTcxMzMwNjcxMH0.HE64zJ4G7HneLHjv0iZ2HWlSmZqQnGpXSHMXceJQBH8"
+                    "value": "1234567"
                 }
             ],
             "auth": {
@@ -294,7 +290,7 @@
             "headers": [
                 {
                     "name": "nif",
-                    "value": "000111999224"
+                    "value": "1234567"
                 }
             ],
             "body": {
@@ -325,7 +321,7 @@
             },
             "auth": {
                 "type": "bearer",
-                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM2NTYyNjQsImV4cCI6MTcxMzY5OTQ2NH0.YsjDxLSelqOwZg87X1BzUbH_pIulXOL0pv8LhM0Nun4"
+                "bearer": "NECESSARIO TOKEN"
             }
         },
         {
@@ -372,7 +368,7 @@
             },
             "auth": {
                 "type": "bearer",
-                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0ZUB0ZXN0ZS5jb20iLCJuYW1lIjoiVGVzdGUgZGEgU2lsdmEiLCJpYXQiOjE3MTM5NzkzOTYsImV4cCI6MTcxNDAyMjU5Nn0.UJDuRdPhBcYL6mr1wvtfrBaDq4M0ctnpIC6ZPzGh5eE"
+                "bearer": "NECESSARIO TOKEN"
             }
         },
         {
@@ -406,7 +402,7 @@
             "colId": "51d005e3-6955-476d-b671-c0922fddaf54",
             "containerId": "5ee8c398-629a-4d5a-aeb4-d60345e915ba",
             "name": "Pesquisar por NIF",
-            "url": "http://{{baseUrl}}:{{Port}}/funcionario/000111999224",
+            "url": "http://{{baseUrl}}:{{Port}}/funcionario/1234567",
             "method": "GET",
             "sortNum": 130000,
             "created": "2024-04-22T17:37:30.058Z",
@@ -414,11 +410,7 @@
             "headers": [
                 {
                     "name": "nif",
-                    "value": "000111999224"
-                },
-                {
-                    "name": "token",
-                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtYXJjb3NAc2VuYWlzcC5lZHUuYnIiLCJuYW1lIjoiTUFSQ09PT1UiLCJpYXQiOjE3MTMxODYwMDAsImV4cCI6MTcxMzIyOTIwMH0.LvPWZH5Mw221zY788fywEaUH3KdNA8bCRMPx3QrYOXU"
+                    "value": "1234567"
                 }
             ],
             "auth": {
@@ -438,17 +430,13 @@
             "modified": "2024-04-22T17:37:30.060Z",
             "headers": [
                 {
-                    "name": "token",
-                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsYWl6YUBzZW5haXNwLmVkdS5iciIsIm5hbWUiOiJsYWl6YSIsImlhdCI6MTcxMzYyNTc3OCwiZXhwIjoxNzEzNjY4OTc4fQ.OYzNiQMVE34z3aOVEtXPQ3ZRVO5leS_ADts6_oKFczU"
-                },
-                {
                     "name": "nif",
                     "value": "123123"
                 }
             ],
             "auth": {
                 "type": "bearer",
-                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM2NTY3MzIsImV4cCI6MTcxMzY5OTkzMn0.ZHqxGvMyWOjaq5ivSC2etlaYeeegFkqpBz9GQvfpqU4"
+                "bearer": "NECESSARIO TOKEN"
             }
         },
         {
@@ -464,7 +452,7 @@
             "headers": [
                 {
                     "name": "nif",
-                    "value": "000111999225"
+                    "value": "1234567"
                 }
             ],
             "body": {
@@ -489,8 +477,8 @@
             "modified": "2024-04-22T17:37:30.063Z",
             "headers": [
                 {
-                    "name": "token",
-                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTMzMTE1NzYsImV4cCI6MTcxMzM1NDc3Nn0.4skhKNIeRkt715dl14oE8kqBjOLfAiVEqLg9Bw6Q8-k"
+                    "name": "nif",
+                    "value": "1234567"
                 }
             ],
             "body": {
@@ -516,7 +504,7 @@
             "headers": [
                 {
                     "name": "nif",
-                    "value": "000111999225"
+                    "value": "1234567"
                 }
             ],
             "body": {
@@ -526,7 +514,7 @@
             },
             "auth": {
                 "type": "bearer",
-                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM4MTM2MzcsImV4cCI6MTcxMzg1NjgzN30.vbuXY32eWKfY_kLCG2vKDsARJcYC_V-cHl03ohUtzBg"
+                "bearer": "NECESSARIO TOKEN"
             }
         },
         {
@@ -542,12 +530,12 @@
             "headers": [
                 {
                     "name": "nif",
-                    "value": "000111999225"
+                    "value": "1234567"
                 }
             ],
             "auth": {
                 "type": "bearer",
-                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM2NjA2NTQsImV4cCI6MTcxMzcwMzg1NH0.qS0q2zp4EZrMq_nPxFSgm9Gr72TVrN2TcieJlT1w9XY"
+                "bearer": "NECESSARIO TOKEN"
             }
         },
         {
@@ -563,12 +551,12 @@
             "headers": [
                 {
                     "name": "nif",
-                    "value": "000111999225"
+                    "value": "1234567"
                 }
             ],
             "auth": {
                 "type": "bearer",
-                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM4MTIyNzcsImV4cCI6MTcxMzg1NTQ3N30.pJAnYMiqottWjIobCu4RchgZ6WKTH8-1OFCmKN9OxXQ"
+                "bearer": "NECESSARIO TOKEN"
             }
         },
         {
@@ -584,7 +572,7 @@
             "headers": [
                 {
                     "name": "nif",
-                    "value": "000111999225"
+                    "value": "1234567"
                 }
             ],
             "body": {
@@ -594,7 +582,7 @@
             },
             "auth": {
                 "type": "bearer",
-                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM4MTM2MzcsImV4cCI6MTcxMzg1NjgzN30.vbuXY32eWKfY_kLCG2vKDsARJcYC_V-cHl03ohUtzBg"
+                "bearer": "NECESSARIO TOKEN"
             }
         },
         {
@@ -602,7 +590,7 @@
             "colId": "51d005e3-6955-476d-b671-c0922fddaf54",
             "containerId": "584df137-1e62-40f2-b763-f90048a1a2f0",
             "name": "confirmar reserva",
-            "url": "http://{{baseUrl}}:{{Port}}/reserva/confirmar/9",
+            "url": "http://{{baseUrl}}:{{Port}}/reserva/confirmar",
             "method": "PATCH",
             "sortNum": 230000,
             "created": "2024-04-22T18:34:50.854Z",
@@ -610,12 +598,12 @@
             "headers": [
                 {
                     "name": "nif",
-                    "value": "000111999225"
+                    "value": "1234567"
                 }
             ],
             "auth": {
                 "type": "bearer",
-                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM4MTMyNTgsImV4cCI6MTcxMzg1NjQ1OH0.WAalCHC_ntHGCA2qLevMB1mvGf9DmgMFrkPkFJX9oY8"
+                "bearer": "NECESSARIO TOKEN"
             }
         },
         {
