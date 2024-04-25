@@ -22,7 +22,6 @@ const produtoValidacao = z.object({
     nome: z.string().min(1, "O nome não pode estar vazio"),
     cores: z.array(z.string()).min(1, "As cores não podem estar vazias"),
     tamanhos: z.array(z.string()).min(1, "Os tamanhos não podem estar vazios"),
-    fotos: z.record(z.unknown()),
     valor: z.number().min(1, "O valor não pode estar vazio"),
     descricao: z.string().max(150).nullable(),
     brinde: z.boolean(),
