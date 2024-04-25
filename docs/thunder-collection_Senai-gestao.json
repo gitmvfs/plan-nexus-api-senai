@@ -2,7 +2,7 @@
     "clientName": "Thunder Client",
     "collectionName": "Senai-gestao",
     "collectionId": "51d005e3-6955-476d-b671-c0922fddaf54",
-    "dateExported": "2024-04-22T19:23:02.050Z",
+    "dateExported": "2024-04-24T17:24:01.641Z",
     "version": "1.2",
     "folders": [
         {
@@ -269,11 +269,7 @@
             "headers": [
                 {
                     "name": "nif",
-                    "value": "000111999224"
-                },
-                {
-                    "name": "token",
-                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtYXJjb3NAc2VuYWlzcC5lZHUuYnIiLCJuYW1lIjoiTUFSQ09PT1UiLCJpYXQiOjE3MTMyNjM1MTAsImV4cCI6MTcxMzMwNjcxMH0.HE64zJ4G7HneLHjv0iZ2HWlSmZqQnGpXSHMXceJQBH8"
+                    "value": "1234567"
                 }
             ],
             "auth": {
@@ -294,7 +290,7 @@
             "headers": [
                 {
                     "name": "nif",
-                    "value": "000111999224"
+                    "value": "1234567"
                 }
             ],
             "body": {
@@ -316,16 +312,16 @@
             "method": "POST",
             "sortNum": 100000,
             "created": "2024-04-22T17:37:30.055Z",
-            "modified": "2024-04-22T17:37:30.055Z",
+            "modified": "2024-04-24T17:09:07.824Z",
             "headers": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"email\":\"backend@senaisp.edu.br\",\n  \"senha\":\"teste\"\n}",
+                "raw": "{\n  \"email\":\"teste@teste.com\",\n  \"senha\":\"teste\"\n}",
                 "form": []
             },
             "auth": {
                 "type": "bearer",
-                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM2NTYyNjQsImV4cCI6MTcxMzY5OTQ2NH0.YsjDxLSelqOwZg87X1BzUbH_pIulXOL0pv8LhM0Nun4"
+                "bearer": "NECESSARIO TOKEN"
             }
         },
         {
@@ -354,17 +350,22 @@
             "colId": "51d005e3-6955-476d-b671-c0922fddaf54",
             "containerId": "5ee8c398-629a-4d5a-aeb4-d60345e915ba",
             "name": "Atualizar por NIF",
-            "url": "",
-            "method": "PUT",
+            "url": "http://{{baseUrl}}:{{Port}}/funcionario/323232",
+            "method": "PATCH",
             "sortNum": 115000,
             "created": "2024-04-22T17:37:30.059Z",
-            "modified": "2024-04-22T17:37:30.059Z",
+            "modified": "2024-04-24T17:23:41.415Z",
             "headers": [
                 {
                     "name": "nif",
-                    "value": ""
+                    "value": "1234567"
                 }
             ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"nome\": \"laiza?\",\n    \"email\": \"laiza@senaisp.edu.br\",\n    \"fk_nivel_acesso\": 3\n}",
+                "form": []
+            },
             "auth": {
                 "type": "bearer",
                 "bearer": "NECESSARIO TOKEN"
@@ -379,20 +380,16 @@
             "method": "POST",
             "sortNum": 120000,
             "created": "2024-04-22T17:37:30.057Z",
-            "modified": "2024-04-22T17:37:30.057Z",
+            "modified": "2024-04-24T17:22:27.813Z",
             "headers": [
                 {
-                    "name": "token",
-                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM0NTQ5MTQsImV4cCI6MTcxMzQ5ODExNH0.S6LsPRsk1R-DPnohT7h6Yr-8DEfab0BZO21gib2MxPA"
-                },
-                {
                     "name": "nif",
-                    "value": "000111999225"
+                    "value": "1234567"
                 }
             ],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"NIF\":\"928347123\",\n  \"nome\":\"kaue\",\n  \"email\":\"kaue@senaisp.edu.br\",\n  \"nivel_acesso\": 3\n}",
+                "raw": "{\n  \"NIF\":\"9283471\",\n  \"nome\":\"kaue\",\n  \"email\":\"kaue@senaisp.edu.br\",\n  \"nivel_acesso\": 3\n}",
                 "form": []
             },
             "auth": {
@@ -405,7 +402,7 @@
             "colId": "51d005e3-6955-476d-b671-c0922fddaf54",
             "containerId": "5ee8c398-629a-4d5a-aeb4-d60345e915ba",
             "name": "Pesquisar por NIF",
-            "url": "http://{{baseUrl}}:{{Port}}/funcionario/000111999224",
+            "url": "http://{{baseUrl}}:{{Port}}/funcionario/1234567",
             "method": "GET",
             "sortNum": 130000,
             "created": "2024-04-22T17:37:30.058Z",
@@ -413,11 +410,7 @@
             "headers": [
                 {
                     "name": "nif",
-                    "value": "000111999224"
-                },
-                {
-                    "name": "token",
-                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtYXJjb3NAc2VuYWlzcC5lZHUuYnIiLCJuYW1lIjoiTUFSQ09PT1UiLCJpYXQiOjE3MTMxODYwMDAsImV4cCI6MTcxMzIyOTIwMH0.LvPWZH5Mw221zY788fywEaUH3KdNA8bCRMPx3QrYOXU"
+                    "value": "1234567"
                 }
             ],
             "auth": {
@@ -437,17 +430,13 @@
             "modified": "2024-04-22T17:37:30.060Z",
             "headers": [
                 {
-                    "name": "token",
-                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsYWl6YUBzZW5haXNwLmVkdS5iciIsIm5hbWUiOiJsYWl6YSIsImlhdCI6MTcxMzYyNTc3OCwiZXhwIjoxNzEzNjY4OTc4fQ.OYzNiQMVE34z3aOVEtXPQ3ZRVO5leS_ADts6_oKFczU"
-                },
-                {
                     "name": "nif",
                     "value": "123123"
                 }
             ],
             "auth": {
                 "type": "bearer",
-                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM2NTY3MzIsImV4cCI6MTcxMzY5OTkzMn0.ZHqxGvMyWOjaq5ivSC2etlaYeeegFkqpBz9GQvfpqU4"
+                "bearer": "NECESSARIO TOKEN"
             }
         },
         {
@@ -463,7 +452,7 @@
             "headers": [
                 {
                     "name": "nif",
-                    "value": "000111999225"
+                    "value": "1234567"
                 }
             ],
             "body": {
@@ -488,8 +477,8 @@
             "modified": "2024-04-22T17:37:30.063Z",
             "headers": [
                 {
-                    "name": "token",
-                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTMzMTE1NzYsImV4cCI6MTcxMzM1NDc3Nn0.4skhKNIeRkt715dl14oE8kqBjOLfAiVEqLg9Bw6Q8-k"
+                    "name": "nif",
+                    "value": "1234567"
                 }
             ],
             "body": {
@@ -515,7 +504,7 @@
             "headers": [
                 {
                     "name": "nif",
-                    "value": "000111999225"
+                    "value": "1234567"
                 }
             ],
             "body": {
@@ -525,7 +514,7 @@
             },
             "auth": {
                 "type": "bearer",
-                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM4MTM2MzcsImV4cCI6MTcxMzg1NjgzN30.vbuXY32eWKfY_kLCG2vKDsARJcYC_V-cHl03ohUtzBg"
+                "bearer": "NECESSARIO TOKEN"
             }
         },
         {
@@ -541,12 +530,12 @@
             "headers": [
                 {
                     "name": "nif",
-                    "value": "000111999225"
+                    "value": "1234567"
                 }
             ],
             "auth": {
                 "type": "bearer",
-                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM2NjA2NTQsImV4cCI6MTcxMzcwMzg1NH0.qS0q2zp4EZrMq_nPxFSgm9Gr72TVrN2TcieJlT1w9XY"
+                "bearer": "NECESSARIO TOKEN"
             }
         },
         {
@@ -562,12 +551,12 @@
             "headers": [
                 {
                     "name": "nif",
-                    "value": "000111999225"
+                    "value": "1234567"
                 }
             ],
             "auth": {
                 "type": "bearer",
-                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM4MTIyNzcsImV4cCI6MTcxMzg1NTQ3N30.pJAnYMiqottWjIobCu4RchgZ6WKTH8-1OFCmKN9OxXQ"
+                "bearer": "NECESSARIO TOKEN"
             }
         },
         {
@@ -583,7 +572,7 @@
             "headers": [
                 {
                     "name": "nif",
-                    "value": "000111999225"
+                    "value": "1234567"
                 }
             ],
             "body": {
@@ -593,7 +582,7 @@
             },
             "auth": {
                 "type": "bearer",
-                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM4MTM2MzcsImV4cCI6MTcxMzg1NjgzN30.vbuXY32eWKfY_kLCG2vKDsARJcYC_V-cHl03ohUtzBg"
+                "bearer": "NECESSARIO TOKEN"
             }
         },
         {
@@ -609,14 +598,35 @@
             "headers": [
                 {
                     "name": "nif",
-                    "value": "000111999225"
+                    "value": "1234567"
                 }
             ],
             "auth": {
                 "type": "bearer",
-                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYWNrZW5kQHNlbmFpc3AuZWR1LmJyIiwibmFtZSI6ImJhY2tlbmQiLCJpYXQiOjE3MTM4MTMyNTgsImV4cCI6MTcxMzg1NjQ1OH0.WAalCHC_ntHGCA2qLevMB1mvGf9DmgMFrkPkFJX9oY8"
+                "bearer": "NECESSARIO TOKEN"
+            }
+        },
+        {
+            "_id": "aca797ba-8411-4af8-8dcc-dd46c7690006",
+            "colId": "51d005e3-6955-476d-b671-c0922fddaf54",
+            "containerId": "5ee8c398-629a-4d5a-aeb4-d60345e915ba",
+            "name": "token",
+            "url": "http://{{baseUrl}}:{{Port}}/funcionario/token",
+            "method": "POST",
+            "sortNum": 240000,
+            "created": "2024-04-24T17:21:28.711Z",
+            "modified": "2024-04-24T17:21:59.032Z",
+            "headers": [
+                {
+                    "name": "nif",
+                    "value": "1234567"
+                }
+            ],
+            "auth": {
+                "type": "bearer",
+                "bearer": "NECESSARIO TOKEN"
             }
         }
     ],
-    "ref": "ptpLOhLqFnBKlU_HfWx6_WJg8RbVgXPUxIfSjcGUwcbXHOGG38Kb17vD0CAr9K99sXydbyi6RK2ZeMxsw0dxag"
+    "ref": "ptpLOhLqFnBKlU_HfWx6_ezGIfNCya8Q1JCWqGPNxTcLYaYvfKRbUrZLN1zY96UdZ6998eBV7aEPAcRU2JgddQ"
 }

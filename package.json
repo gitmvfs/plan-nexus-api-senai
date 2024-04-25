@@ -16,7 +16,8 @@
     "zod": "^3.22.4"
   },
   "scripts": {
-    "dev": "node ./src/server.js"
+    "dev": "node ./src/server.js",
+    "start": "node ./src/server.js"
   },
   "keywords": [],
   "author": "",
