@@ -1,12 +1,13 @@
 const { tratarMensagensDeErro } = require("../utils/errorMsg")
 const authMiddleware = require("../middleware/auth")
 const { cadastroDoacaoArmario, visualizarTodasDoacoesArmario, editarDoacaoArmario } = require("../controllers/doacaoArmarioController")
+const auditoriaMiddleware = require("../middleware/auditoriaMiddleware")
 
 const router = require("express").Router()
 
 router.use(authMiddleware)
 
-router.post("/cadastro", async (req, res) => {
+router.post("/cadastro", async (req, res, next) => {
 
     try {
         const { numeroArmario, idAluno } = req.body
@@ -14,7 +15,17 @@ router.post("/cadastro", async (req, res) => {
         const doacaoArmario = { numeroArmario, idAluno, data }
 
         await cadastroDoacaoArmario(doacaoArmario, req.sequelize)
-        res.status(201).json({ "msg": "Doação de armario criado com sucesso", "statusCode": "201" })
+        
+        const dadosAuditoria = {
+            fk_funcionario: req.funcionario.NIF,
+            descricao: "doação de armário realizado com sucesso",
+            operacao: "doação de armário",
+            resultado: 200,
+            data : Date.now(),
+            response : doacaoArmario
+        }
+
+        auditoriaMiddleware(req, res, next, dadosAuditoria)
     }
     catch (err) {
         const erroTratado = await tratarMensagensDeErro(err)
@@ -22,13 +33,22 @@ router.post("/cadastro", async (req, res) => {
     }
 })
 
-router.get("/todos", async (req, res) => {
+router.get("/todos", async (req, res, next) => {
 
 
     try {
         const response = await visualizarTodasDoacoesArmario(req.sequelize)
-        res.status(200).json({ "msg": "Consulta realizada com sucesso", "statusCode": "200", "response": response })
+        
+        const dadosAuditoria = {
+            fk_funcionario: req.funcionario.NIF,
+            descricao: "consulta realizada com sucesso",
+            operacao: "ver todos os armários",
+            resultado: 200,
+            data : Date.now(),
+            response : response
+        }
 
+        auditoriaMiddleware(req, res, next, dadosAuditoria)
     }
     catch (err) {
         const erroTratado = await tratarMensagensDeErro(err)
@@ -37,7 +57,7 @@ router.get("/todos", async (req, res) => {
 
 })
 
-router.patch("/atualizar", async (req, res) => {
+router.patch("/atualizar", async (req, res, next) => {
 
     try {
         const { idDoacao, idAluno, numeroArmario } = req.body
@@ -46,9 +66,16 @@ router.patch("/atualizar", async (req, res) => {
         console.log(dadosDoacao)
         const response = await editarDoacaoArmario(dadosDoacao, req.sequelize)
 
-        response == 200
-            ? res.status(200).json({ "msg": "Atualizado com sucesso", "statusCode": 200 })
-            : res.status(400).json({ "msg": "Erro ao atualizar doação de armários, verifique os campos.", "statusCode": 400 })
+        const dadosAuditoria = {
+            fk_funcionario: req.funcionario.NIF,
+            descricao: "doação de armário atualizado com sucesso",
+            operacao: "edição de armário",
+            resultado: 200,
+            data : Date.now(),
+            response : response
+        }
+
+        auditoriaMiddleware(req, res, next, dadosAuditoria)
 
     }
     catch (err) {

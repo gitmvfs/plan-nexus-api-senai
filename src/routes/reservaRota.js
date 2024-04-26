@@ -4,6 +4,7 @@ const reservaModel = require("../models/reservaModel")
 const {tratarMensagensDeErro} = require("../utils/errorMsg")
 const {criarReserva, pesquisarUmaReserva, cancelarReserva, confirmarReserva, visualizarTodasReservas} = require("./../controllers/reservaController")
 const sequelize = require("sequelize")
+const auditoriaMiddleware = require("../middleware/auditoriaMiddleware")
 
 router.use(authMiddleware)
 
@@ -23,12 +24,20 @@ router.post("/criar", async(req, res) => {
 
 })
 
-router.get("/todas", async (req, res) =>{
+router.get("/todas", async (req, res, next) =>{
     try {
 
         const response = await visualizarTodasReservas(req.sequelize)
-        .then((response) => res.status(200).json({ msg: "Consulta realizada com sucesso", "statusCode": "200", "response":response }))
-        .catch((e) => console.log(e))
+        const dadosAuditoria = {
+            fk_funcionario: req.funcionario.NIF,
+            descricao: "consulta realizada com sucesso",
+            operacao: "ver todas as reservas",
+            resultado: 200,
+            data : Date.now(),
+            response : response
+        }
+
+        auditoriaMiddleware(req, res, next, dadosAuditoria)
         
     } catch (err) {
         const erroTratado = await tratarMensagensDeErro(err)
@@ -36,14 +45,24 @@ router.get("/todas", async (req, res) =>{
     }
 })
 
-router.get("/:id_reserva", async (req, res) =>{
+router.get("/:id_reserva", async (req, res, next) =>{
     const {id_reserva} = req.params
     
     try {
-        const reserva = await pesquisarUmaReserva(id_reserva, req.sequelize)
+        const response = await pesquisarUmaReserva(id_reserva, req.sequelize)
+
+        const dadosAuditoria = {
+            fk_funcionario: req.funcionario.NIF,
+            descricao: "reserva encontrada",
+            operacao: "ver uma reserva",
+            resultado: 200,
+            data : Date.now(),
+            response : response
+        }
+
         reserva.length === 0
         ? res.status(404).json({ msg: "reserva não encontrada", "statusCode": 404, "response": reserva })
-        : res.status(200).json({ msg: "reserva encontrada", "statusCode": 200, "response": reserva })
+        : auditoriaMiddleware(req, res, next, dadosAuditoria)
         
     } catch (err) {
         const erroTratado = await tratarMensagensDeErro(err)
@@ -54,13 +73,22 @@ router.get("/:id_reserva", async (req, res) =>{
 
 
 // cancelar reserva
-router.patch("/cancelar", async (req, res) => {
+router.patch("/cancelar", async (req, res, next) => {
     const {id_reserva} = req.body
 
     try {
         const response = await cancelarReserva(id_reserva, req.sequelize)
-        ?  res.status(400).json({ msg: "não é possível cancelar a reserva", "statusCode": 400})
-        :  res.status(200).json({ msg: "reserva cancelada com sucesso", "statusCode": 200})
+        
+        const dadosAuditoria = {
+            fk_funcionario: req.funcionario.NIF,
+            descricao: "reserva cancelada com sucesso",
+            operacao: "cancelar uma reserva",
+            resultado: 200,
+            data : Date.now(),
+            response : response
+        }
+
+        auditoriaMiddleware(req, res, next, dadosAuditoria)
         
     } catch (err) {
         const erroTratado = await tratarMensagensDeErro(err)
@@ -69,13 +97,22 @@ router.patch("/cancelar", async (req, res) => {
 })
 
 // efetuar reserva
-router.patch("/confirmar", async (req, res) => {
+router.patch("/confirmar", async (req, res, next) => {
     const {id_reserva} = req.body
 
     try {
-        await confirmarReserva(id_reserva, req.sequelize)
-        ?  res.status(400).json({ msg: "não é possível confirmar a reserva", "statusCode": 400})
-        :  res.status(200).json({ msg: "reserva entregue", "statusCode": 200})
+        const response = await confirmarReserva(id_reserva, req.sequelize)
+        
+        const dadosAuditoria = {
+            fk_funcionario: req.funcionario.NIF,
+            descricao: "reserva entregue ao aluno",
+            operacao: "confirmar uma reserva",
+            resultado: 200,
+            data : Date.now(),
+            response : response
+        }
+
+        auditoriaMiddleware(req, res, next, dadosAuditoria)
 
     } catch (err) {
         const erroTratado = await tratarMensagensDeErro(err)
