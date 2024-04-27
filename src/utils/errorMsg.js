@@ -50,6 +50,14 @@ function tratarMensagensDeErro(err) {
                 }
             }
 
+            //Erros do auth
+
+            console.log(err)
+            if (mensagem == "Cannot read properties of undefined (reading 'split')"){
+                mensagem = "Token vazio."
+                status = 403
+            }
+
             const erroTratado = {
                 "message": mensagem,
                 "status": status
