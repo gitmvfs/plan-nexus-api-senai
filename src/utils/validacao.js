@@ -1,4 +1,4 @@
-const { z } = require("zod")
+const { z, string } = require("zod")
 
 const alunoUnicoValidacao = z.object({
     CPF: z.string().length(11, "O cpf precisa ter 11 digitos").min(1, "Cpf não pode estar vazio"),
@@ -10,11 +10,22 @@ const alunoUnicoValidacao = z.object({
     celular: z.string().min(1,"Número de celular obrigatório")
 })
 
+const funcionarioValidacao = z.object({
+    idFuncionario: z.string().optional(),
+    NIF: z.string().min(1).max(20),
+    nome: z.string().min(1).max(50),
+    email: z.string().email().max(100),
+    nivel_acesso: z.string().min(1).max(3),
+    foto: z.string().optional()
+});
+
+
+
 const validacoesGerais = {
     CPF: z.string().length(11, "O cpf precisa ter 11 digitos").min(1, "Cpf não pode estar vazio"),
     nome: z.string().min(1, "Nome não pode estar vazio"),
     email: z.string().email("Email inválido.").min(1, "Email não pode estar vazio"),
-    fk_curso: z.number().min(1, "Curso não pode estar vazio"),
+    fk_curso: z.string().min(1, "Curso não pode estar vazio"),
 
 }
 
@@ -28,4 +39,4 @@ const produtoValidacao = z.object({
     brinde: z.boolean(),
   });
 
-module.exports = { alunoUnicoValidacao, validacoesGerais, produtoValidacao }
+module.exports = { alunoUnicoValidacao, validacoesGerais, produtoValidacao, funcionarioValidacao }
