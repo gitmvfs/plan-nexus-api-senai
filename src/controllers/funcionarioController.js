@@ -14,14 +14,14 @@ async function emailExiste(email, sequelize) {
 function cadastrarFuncionario(funcionario, sequelize) {
     return new Promise(async (resolve, reject) => {
         try {
-            const {NIF,nome,email,nivel_acesso} = funcionario
+            const { NIF, nome, email, nivel_acesso } = funcionario
 
             sequelize.query("call cadastrar_funcionario(?,?,?,?)", {
-                replacements: [ NIF, nome, email, nivel_acesso],
+                replacements: [NIF, nome, email, nivel_acesso],
                 type: sequelize.QueryTypes.INSERT
             })
-            .then((r)=> resolve(r))
-            .catch((e)=> reject(e))
+                .then((r) => resolve(r))
+                .catch((e) => reject(e))
         } catch (err) {
             reject(err)
         }
@@ -35,14 +35,13 @@ async function encontrarFuncionarioPorNIF(NIF, sequelize) {
 function pesquisarUnicoFuncionario(NIF, sequelize) {
     return new Promise(async (resolve, reject) => {
         try {
-            const funcionario = await funcionarioModel(sequelize).findOne({ where: { NIF }, attributes: { exclude: ['senha'] } })
+            await sequelize.query("select * from todos_funcionarios where NIF = ?;", {
+                replacements: [NIF],
+                type: sequelize.QueryTypes.SELECT
+            })
+            .then((r) => resolve(r))
+            .catch((e) => reject(e))
 
-            if (!funcionario) {
-                reject("Funcionário não encontrado para o NIF fornecido.")
-                return
-            }
-
-            resolve(funcionario.dataValues)
         } catch (error) {
             reject(error)
         }
@@ -50,16 +49,30 @@ function pesquisarUnicoFuncionario(NIF, sequelize) {
 }
 
 
-async function editarFuncionario(NIF, novosDados, sequelize) {
+async function editarFuncionario(NIF, dadosFuncionario, sequelize) {
 
     return new Promise(async (resolve, reject) => {
         try {
+            
+            const { idFuncionario, NIF, nome, email, nivel_acesso } = dadosFuncionario
+            let {foto} = dadosFuncionario
+
+            // Verifica se a foto não foi enviada vazia, caso tenha sido é declarada como null para o banco
+            if (!!foto == false){ foto = null}
+
+            console.log(idFuncionario,NIF, nome, email, nivel_acesso, foto)
+
+            // Verifica se o usuario existe no banco
             const funcionarioExistente = await encontrarFuncionarioPorNIF(NIF, sequelize)
             if (!funcionarioExistente) {
                 return res.status(404).send('Funcionário não encontrado.')
             }
-
-            await funcionarioModel(sequelize).update(novosDados, { where: { NIF: NIF } });
+            sequelize.query("call editar_funcionario(?,?,?,?,?,?)", {
+                replacements: [idFuncionario, NIF, nome, email, foto, nivel_acesso],
+                type: sequelize.QueryTypes.INSERT
+            })
+                .then((r) => resolve(r))
+                .catch((e) => reject(e))
 
             resolve("Funcionário atualizado com sucesso.");
         } catch (err) {
@@ -129,13 +142,13 @@ async function loginFuncionario(funcionario) {
 
 function pesquisarTodosFuncionarios(sequelize) {
 
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
 
-           await sequelize.query("select * from todos_funcionarios order by nome;")
-            .then((r) => resolve(r[0]))
-            .catch((e)=>reject(e))
-        
+            await sequelize.query("select * from todos_funcionarios order by nome;")
+                .then((r) => resolve(r[0]))
+                .catch((e) => reject(e))
+
         } catch (error) {
             reject(error)
         }
@@ -143,25 +156,25 @@ function pesquisarTodosFuncionarios(sequelize) {
 }
 
 
-function deslogarFuncionario(nif,token,sequelize){
+function deslogarFuncionario(nif, token, sequelize) {
 
-    return new Promise((resolve,reject)=>{
+    return new Promise((resolve, reject) => {
 
         funcionarioModel(sequelize).update(
-            {token: null},
+            { token: null },
             {
-            where:{
-                NIF:nif,
-                token
-            }
-        })
-        .then((r)=> resolve(r))
-        .catch((e)=> reject(e))
-        
+                where: {
+                    NIF: nif,
+                    token
+                }
+            })
+            .then((r) => resolve(r))
+            .catch((e) => reject(e))
+
 
     })
 
 
 }
 
-module.exports = { cadastrarFuncionario, pesquisarTodosFuncionarios, pesquisarUnicoFuncionario, editarFuncionario, loginFuncionario , deslogarFuncionario};
+module.exports = { cadastrarFuncionario, pesquisarTodosFuncionarios, pesquisarUnicoFuncionario, editarFuncionario, loginFuncionario, deslogarFuncionario };
