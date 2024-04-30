@@ -34,7 +34,7 @@ function pesquisarTodosArmario(sequelize) {
 
         try {
             sequelize.query("select * from todos_armarios order by numero;")
-                .then((r) => resolve(r))
+                .then(r => resolve(paginacao(10, r[0])))
                 .catch((e) => reject(e))
         }
         catch (err) {
@@ -52,7 +52,7 @@ function pesquisarArmarioPorStatus(status, sequelize) {
                 replacements: [status],
                 type: sequelize.QueryTypes.SELECT
             })
-                .then(r => resolve(r))
+                .then((r) => resolve(r))
                 .catch(e => reject(e));
         }
         catch (err) {
@@ -62,6 +62,23 @@ function pesquisarArmarioPorStatus(status, sequelize) {
 
 
 }
+
+function paginacao(numPorPagina, listaArmarios) {
+    const numPagina = Math.ceil(listaArmarios.length / numPorPagina);
+    const listaResposta = {};
+    // console.log(listaArmarios)
+    for (let index = 0; index < listaArmarios.length; index++) {
+        const paginaAtual = Math.floor(index / numPorPagina);
+
+        if (!listaResposta[paginaAtual]) {
+            listaResposta[paginaAtual] = [];
+        }
+        listaResposta[paginaAtual].push(listaArmarios[index]);
+    }
+    console.log(listaResposta)
+    return listaResposta
+}
+
 
 module.exports = { atualizarArmario, pesquisarTodosArmario, pesquisarArmarioPorStatus }
 

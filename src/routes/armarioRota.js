@@ -29,9 +29,8 @@ router.patch("/atualizar", async (req, res) => {
 router.get("/todos", async (req, res) => {
 
     try {
-        let response = await pesquisarTodosArmario(req.sequelize)
+        const response = await pesquisarTodosArmario(req.sequelize)
 
-        response = response[0]
         res.status(200).json({ "statusCode": 200, "response": response   })
     }
     catch (err) {
