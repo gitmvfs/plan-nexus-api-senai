@@ -11,7 +11,7 @@ router.get("/todos", async (req, res) => {
     
         response.length === 0
         ? res.status(400).send("erro de consulta")
-        : res.status(200).json({errMsg: erroTratado.message, "statusCode": erroTratado.status , "response": response})
+        : res.status(200).json({msg: "Consulta realizada com sucesso", "statusCode": erroTratado.status , "response": response})
 
     } catch (error) {
         const erroTratado = await tratarMensagensDeErro(err)
