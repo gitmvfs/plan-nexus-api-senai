@@ -3,7 +3,7 @@ function verTodosCursos(sequelize){
         
         try {
             sequelize.query("select * from todos_cursos order by nome")
-            .then((r) => console.log(r))
+            .then((r) => resolve(r[0]))
             .catch((e) => reject(e))
         } catch (error) {
             reject(error)

@@ -8,12 +8,12 @@ router.use(authMiddleware)
 router.get("/todos", async (req, res) => {
     try {
         const response = await verTodosCursos(req.sequelize)
-    
-        response.length === 0
+        
+        !!response  == false
         ? res.status(400).send("erro de consulta")
-        : res.status(200).json({msg: "Consulta realizada com sucesso", "statusCode": erroTratado.status , "response": response})
+        : res.status(200).json({msg: "Consulta realizada com sucesso", "statusCode": 200 , "response": response})
 
-    } catch (error) {
+    } catch (err) {
         const erroTratado = await tratarMensagensDeErro(err)
         res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
     }
