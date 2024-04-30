@@ -1,4 +1,5 @@
 const produtoModel = require("../models/produtoModel")
+const { novoErro } = require("../utils/errorMsg")
 const { salvarImagemAzure } = require("./blobController")
 
 async function cadastrarProduto(produto, imagensAgrupadas, sequelize) {
@@ -120,5 +121,71 @@ function mandarProdutoParaBanco(listaProdutoParaBanco, sequelize) {
 
 }
 
+function pesquisarTodosProdutos(sequelize) {
 
-module.exports = { cadastrarProduto }
+    return new Promise(async (resolve, reject) => {
+
+        try {
+            //Verifica se o filtro está vazio e passa um json vazio caso contrario passa o proprio filtro
+            sequelize.query("select * from todos_produtos;")
+                .then((r) => resolve(r[0]))
+                .catch((e) => resolve(e))
+        }
+        catch (err) {
+            reject(err)
+        }
+    })
+
+}
+
+function pesquisarUnicoProduto(idProduto, sequelize) {
+
+    return new Promise(async (resolve, reject) => {
+
+        try {
+            await sequelize.query("select * from todos_produtos where id_produto = ?;", {
+                replacements: [idProduto],
+                type: sequelize.QueryTypes.SELECT
+            })
+                .then((r) => resolve(r))
+                .catch((e) => reject(e))
+        }
+        catch (err) {
+            reject(err)
+        }
+    })
+
+}
+
+function definirEstoqueProduto(id_produto,quantidade ,sequelize) {
+
+    return new Promise(async (resolve, reject) => {
+
+        const response = await pesquisarTodosProdutos(id_Produto)
+
+        if (!!response[0] == false) {
+            novoErro("Produto inválido, confira o id", 404)
+        }
+
+        try {
+            produtoModel(sequelize).update({
+                where: {
+                    id_produto
+                }
+            }, {
+                qtd_estoque : quantidade
+            })
+                .then((r) => resolve(r))
+                .catch((e) => reject(e))
+        }
+
+
+        catch (err) {
+            reject(err)
+        }
+    })
+
+
+}
+
+module.exports = { cadastrarProduto, pesquisarTodosProdutos, pesquisarUnicoProduto, definirEstoqueProduto }
