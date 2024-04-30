@@ -1,9 +1,10 @@
 const produtoModel = require("../models/produtoModel")
+const { salvarImagemAzure } = require("./blobController")
 
-async function cadastrarProduto(produto,sequelize) {
+async function cadastrarProduto(produto, imagensAgrupadas, sequelize) {
     try {
-        const listaProdutoParaBanco = await criarProdutosParaCadastro(produto)
-        const response = await mandarProdutoParaBanco(listaProdutoParaBanco,sequelize)
+        const listaProdutoParaBanco = await criarProdutosParaCadastro(produto, imagensAgrupadas)
+        const response = await mandarProdutoParaBanco(listaProdutoParaBanco, sequelize)
         return response
     }
     catch (err) {
@@ -11,50 +12,94 @@ async function cadastrarProduto(produto,sequelize) {
     }
 }
 
-function criarProdutosParaCadastro(produto) {
+function criarProdutosParaCadastro(produto, imagensAgrupadasParams) {
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
 
         try {
+
+            // PARTEE PARA FATORAR -- ENVIO DE IMAGEM PARA O BLOB
+
+            // Separa as imagens em grupos por cor (após pegar o link do blob)
+
+            const imagensAgrupadas = imagensAgrupadasParams;
+            const listaDeLinks = {}; // lista com a cor da imagem + url de resposta
+            const listaErrosImagem = [] // lista com os erros de tentar cadastrar imagem
+
+            const promessasDeSalvarImagens = imagensAgrupadas.map((imagem) => {
+                return new Promise((resolve, reject) => {
+                    salvarImagemAzure("produto", imagem)
+                        .then((imageUrl) => {
+                            resolve({ nome: imagem.fieldname, url: imageUrl });
+                        })
+                        .catch((error) => {
+                            // Se houver algum erro ao salvar a imagem, você rejeita a promessa com o erro
+                            reject(error);
+                        });
+                });
+            });
+
+            await Promise.all(promessasDeSalvarImagens)
+                .then((imagemSalvas) => {
+                    // Quando todas as imagens forem salvas com sucesso, você pode criar a lista de imagens com os links
+
+                    imagemSalvas.map((imagem) => {
+                        // Verifica se a chave existe e cria caso não exista
+                        if (`${imagem.nome}` in listaDeLinks) {
+                        } else {
+                            listaDeLinks[`${imagem.nome}`] = [];
+                        }
+
+                        listaDeLinks[`${imagem.nome}`].push(`${imagem.url}`)
+                    })
+
+                    // Aqui você pode fazer o que quiser com a lista de links, como imprimir ou retornar
+                })
+                .catch((error) => {
+                    listaErrosImagem.push(error.message)
+                });
+
+            // FATORAR ATÉ AQUI -- ENVIO DE IMAGEM BLOB 
+
             const listaProdutos = []
 
             const listaCores = produto.cores
             const listaTamanho = produto.tamanhos
-            const listaFotos = produto.fotos
-
 
             listaCores.map((cores) => {
 
                 listaTamanho.map((tamanho) => {
 
+                    let cor = cores.trim()
+
                     //Cria o modelo do produto para o banco
                     const produtoModeloBanco = {
                         nome: produto.nome,
-                        foto: listaFotos[`${cores}`],
-                        tamanho: tamanho,
+                        foto: listaDeLinks[`${cor}`],
+                        tamanho: tamanho.trim(),
                         valor: produto.valor,
-                        cor: cores,
+                        cor: cor,
                         descricao: produto.descricao,
                         brinde: produto.brinde
                     }
 
                     listaProdutos.push(produtoModeloBanco)
-
                 })
             })
+
             resolve(listaProdutos)
 
 
         }
         catch (err) {
-
+            console.log(err.message)
         }
 
     })
 
 }
 
-function mandarProdutoParaBanco(listaProdutoParaBanco,sequelize) {
+function mandarProdutoParaBanco(listaProdutoParaBanco, sequelize) {
 
 
 
@@ -76,4 +121,4 @@ function mandarProdutoParaBanco(listaProdutoParaBanco,sequelize) {
 }
 
 
-module.exports = {cadastrarProduto}
+module.exports = { cadastrarProduto }

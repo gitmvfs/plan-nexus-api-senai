@@ -5,7 +5,7 @@ const { cadastroDeTurmas } = require("../controllers/cursoController")
 const authMiddleware = require("../middleware/auth")
 const { tratarMensagensDeErro } = require("../utils/errorMsg")
 const excelToJson = require("../utils/excelParseJson")
-const { uploadArquivoAlunos } = require("../utils/salvarExcel")
+const { uploadArquivoAlunos } = require("../utils/multer")
 const { alunoUnicoValidacao } = require("../utils/validacao")
 
 // ROTAS PROTEGIDAS
