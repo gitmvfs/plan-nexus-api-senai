@@ -18,8 +18,7 @@ router.post("/cadastro",uploadImagem.any() ,async (req, res) => {
         const valor =  Number(req.body.valor)
         const brinde = Boolean(req.body.brinde)
 
-        const imagensAgrupadas = uploadImagem
-        console.log(req.files)
+        const imagensAgrupadas = req.files
 
         // console.log(uploadImagem)
         const produto = {
@@ -33,7 +32,7 @@ router.post("/cadastro",uploadImagem.any() ,async (req, res) => {
 
         // console.log(produto)
         const produtoValidado = produtoValidacao.parse(produto)
-        // const response = await cadastrarProduto(produtoValidado, req.sequelize)
+        const response = await cadastrarProduto(produtoValidado, imagensAgrupadas,  req.sequelize)
         res.json({"statusCode": 201, "msg": "Produto cadastrado com sucesso" })
     }
     catch (err) {
