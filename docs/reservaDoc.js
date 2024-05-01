@@ -13,6 +13,13 @@
 *         type: string
 
 
+*   confirmarReserva:
+*     type: object
+*     properties:
+*       id_reserva:
+*         type: string
+
+
 * /reserva/todas:
 *   get:
 *     security:
@@ -25,8 +32,8 @@
 *         type: string 
 *     tags:
 *       - Reserva
-*     summary: Pesquisa por todas as turmas.    
-*     description: Retorna as turmas do banco de dados
+*     summary: Pesquisa por todas as reservas.    
+*     description: Retorna as reservas do banco de dados
 *     responses:
 *       200:
 *         description: Consulta realizada com sucesso.
@@ -45,13 +52,13 @@
 *         type: string
 *       - name: id_reserva
 *         in: path   
-*         description: Nif do funcionario que está logado
+*         description: id da reserva a ser encontrada
 *         required: true
 *         type: string 
 *     tags:
 *       - Reserva
-*     summary: Pesquisa por todas as turmas.    
-*     description: Retorna as turmas do banco de dados
+*     summary: Pesquisa por uma reserva específica.    
+*     description: Retorna uma reserva com base no id
 *     responses:
 *       200:
 *         description: reserva encontrada
@@ -76,8 +83,8 @@
 *             $ref: '#/definitions/cancelarReserva'  
 *     tags:
 *       - Reserva
-*     summary: Pesquisa por todas as turmas.    
-*     description: Retorna as turmas do banco de dados
+*     summary: cancelar uma reserva.    
+*     description: atualiza o status de uma reserva para cancelada com base no id
 *     responses:
 *       200:
 *         description: reserva cancelada com sucesso
@@ -101,11 +108,11 @@
 *       content:
 *         application/json:
 *           schema:
-*             $ref: '#/definitions/cancelarReserva'  
+*             $ref: '#/definitions/confirmarReserva'  
 *     tags:
 *       - Reserva
-*     summary: Pesquisa por todas as turmas.    
-*     description: Retorna as turmas do banco de dados
+*     summary: confirmar uma reserva.    
+*     description: atualiza o status de uma reserva para entregue
 *     responses:
 *       200:
 *         description: reserva entregue
