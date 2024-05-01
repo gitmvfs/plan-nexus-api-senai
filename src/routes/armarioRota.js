@@ -40,8 +40,9 @@ router.get("/todos", async (req, res) => {
 
 })
 
-router.get("/status", async (req, res) => {
-    let statusArmario = req.body.statusArmario
+router.get("/:statusArmario", async (req, res) => {
+    let {statusArmario} = req.params
+    console.log(statusArmario)
 
     try {
         statusArmario = definirStatusArmario(statusArmario)
