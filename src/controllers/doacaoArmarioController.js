@@ -3,10 +3,10 @@ function cadastroDoacaoArmario(doacaoArmario, sequelize) {
     return new Promise((resolve, reject) => {
 
         try {
-            const { numeroArmario, idAluno, data } = doacaoArmario
+            const { numeroArmario, idAluno, contrato, data } = doacaoArmario
 
-            sequelize.query("call doar_armario(?,?,?)", {
-                replacements: [idAluno, numeroArmario, data],
+            sequelize.query("call doar_armario(?,?,?,?)", {
+                replacements: [idAluno, numeroArmario, contrato, data],
                 type: sequelize.QueryTypes.INSERT
             })
                 .then(r => resolve(r))
@@ -41,7 +41,7 @@ function editarDoacaoArmario(dadosDoacao, sequelize) {
     return new Promise((resolve, reject) => {
 
         try {
-            const { idDoacao, idAluno, numeroArmario, data } = dadosDoacao
+            const { idDoacao, idAluno, numeroArmario, contrato, data } = dadosDoacao
 
             // Verificar se o idDoacao existe, se o idAluno é válido, e se o numero do armário está entre 1 e 280
 

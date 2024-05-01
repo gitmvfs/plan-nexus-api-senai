@@ -3,10 +3,10 @@ function cadastroDoacaoDinheiro(doacaoDinheiro, sequelize) {
     return new Promise((resolve, reject) => {
 
         try {
-            const { valorDoado, idAluno, auxilio, data } = doacaoDinheiro
+            const { valorDoado, idAluno, auxilio, contrato, data } = doacaoDinheiro
 
-            sequelize.query("call doar_dinheiro(?,?,?,?)", {
-                replacements: [idAluno, valorDoado, auxilio, data],
+            sequelize.query("call doar_dinheiro(?,?,?,?,?)", {
+                replacements: [idAluno, valorDoado, auxilio, contrato, data],
                 type: sequelize.QueryTypes.INSERT
             })
                 .then(r => resolve(r))
