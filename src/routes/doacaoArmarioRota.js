@@ -9,9 +9,9 @@ router.use(authMiddleware)
 router.post("/cadastro", async (req, res) => {
 
     try {
-        const { numeroArmario, idAluno } = req.body
+        const { numeroArmario, idAluno, contrato } = req.body
         const data = new Date(req.body.data)
-        const doacaoArmario = { numeroArmario, idAluno, data }
+        const doacaoArmario = { numeroArmario, idAluno, contrato, data }
 
         await cadastroDoacaoArmario(doacaoArmario, req.sequelize)
         res.status(201).json({ "msg": "Doação de armario criado com sucesso", "statusCode": "201" })

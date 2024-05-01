@@ -9,9 +9,9 @@ router.use(authMiddleware)
 router.post("/cadastro", async (req, res) => {
 
     try {
-        const { valorDoado, idAluno, auxilio } = req.body
+        const { valorDoado, idAluno, auxilio, contrato } = req.body
         const data = new Date(req.body.data)
-        const doacaoDinheiro = { valorDoado, idAluno, auxilio, data }
+        const doacaoDinheiro = { valorDoado, idAluno, auxilio, contrato, data }
 
         await cadastroDoacaoDinheiro(doacaoDinheiro, req.sequelize)
         res.status(201).json({ "msg": "Doação de dinheiro criado com sucesso", "statusCode": "201" })
@@ -46,7 +46,7 @@ router.patch("/atualizar", async (req, res) => {
 
         response == 200
             ? res.status(200).json({ "msg": "Atualizado com sucesso", "statusCode": 200 })
-            : res.status(400).json({ "msg": "Erro ao atualizar doação de armários, verifique os campos.", "statusCode": 400 })
+            : res.status(400).json({ "msg": "Erro ao atualizar doação monetária, verifique os campos.", "statusCode": 400 })
 
     }
     catch (err) {
