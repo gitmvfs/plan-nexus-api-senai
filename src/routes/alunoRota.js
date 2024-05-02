@@ -1,6 +1,7 @@
 const router = require("express").Router()
-const { cadastroMultiplosAlunos, atualizarAluno, cadastroUnicoAluno, pesquisaUnicoAluno, pesquisaTodosAlunos } = require("../controllers/alunoController")
-const { cadastroMultiplosTelefones, cadastroUnicoTelefone } = require("../controllers/contatoController")
+const { response } = require("express")
+const { cadastroMultiplosAlunos, atualizarAluno, cadastroUnicoAluno, pesquisaAluno, pesquisaTodosAlunos } = require("../controllers/alunoController")
+const { cadastroMultiplosTelefones, cadastroUnicoTelefone, atualizarUnicoTelefone } = require("../controllers/contatoController")
 const { cadastroDeTurmas } = require("../controllers/cursoController")
 const authMiddleware = require("../middleware/auth")
 const { tratarMensagensDeErro } = require("../utils/errorMsg")
@@ -58,12 +59,29 @@ router.post("/cadastro/unico", async (req, res) => {
 
 router.patch("/atualizar", async (req, res) => {
 
-    const { CPF, email, dados } = req.body
 
     try {
-        const response = await atualizarAluno(CPF, email, dados)
+        const { idAluno,CPF, nome,foto, email,socioAapm, fk_curso, telefone, celular } = req.body
 
-        response[0] == 1
+        //Dados que chegam da rota
+        const aluno = {
+            idAluno,
+            CPF,
+            nome,
+            foto,
+            socioAapm,
+            email,
+            fk_curso,
+            telefone,
+            celular
+        }
+
+        const alunoValidado = alunoUnicoValidacao.parse(aluno)
+        const response = await atualizarAluno(alunoValidado,req.sequelize)
+        const responseContato = await atualizarUnicoTelefone(alunoValidado,req.sequelize)
+        response.erroCadastroContato = responseContato
+        
+        response[0] == 1    
             ? res.status(200).json({ "msg": "Atualizado com sucesso", "statusCode": 200 })
             : res.status(400).json({ "msg": "Erro ao atualizar aluno, verifique os campos.", "statusCode": 400 })
 
@@ -74,14 +92,15 @@ router.patch("/atualizar", async (req, res) => {
     }
 })
 
-router.get("/unico", async (req, res) => {
-
-    const { CPF, email } = req.body
+router.get("/unico/:idAluno", async (req, res) => {
 
     try {
-        await pesquisaUnicoAluno(CPF, email, req.sequelize)
-            .then((response) => res.status(200).json({ msg: "Consulta realizada com sucesso", "statusCode": 200, "response": response }))
-            .catch((e) => res.status(400).json({ msg: "Erro ao realizar consulta", "statusCode": 400, errMsg: e }))
+        const { idAluno } = req.params
+
+        const response = await pesquisaAluno(idAluno, req.sequelize)
+        console.log(response)
+        res.status(200).json({ "msg": "Consulta realizada com sucesso", "statusCode": 200, "response": response })
+
     }
     catch (err) {
         const erroTratado = await tratarMensagensDeErro(err)

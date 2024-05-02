@@ -1,7 +1,7 @@
 const cursoModel = require("../models/cursoModel")
 const alunoModel = require("../models/alunoModel")
 const { definirGraduacao, retirarFormatacao } = require("../utils/converterString")
-const { tratarMensagensDeErro } = require("../utils/errorMsg")
+const { tratarMensagensDeErro, novoErro } = require("../utils/errorMsg")
 
 async function cadastroMultiplosAlunos(listaAluno, sequelize) {
     // Pega o id da turma do aluno e coloca no fk_curso
@@ -130,24 +130,20 @@ function cadastroUnicoAluno(aluno, sequelize) {
 
 }
 
-function atualizarAluno(cpfAluno, emailAluno, dados, sequelize) {
+function atualizarAluno(aluno, sequelize) {
 
     return new Promise(async (resolve, reject) => {
 
         try {
-            let condicao = {}
 
-            //Verifica se o dado do aluno está vazio, null e etc... Se estiver ele usa como condição o email para atualizar
-            !!cpfAluno == false
-                ? condicao = { email: emailAluno } :
-                condicao = { CPF: cpfAluno }
+        const { idAluno,CPF, nome, email, foto,fk_curso} = aluno
 
-            await alunoModel(sequelize).update(
-                dados,
-                {
-                    where: condicao
-                })
-                .then((r) => resolve(r))
+
+            sequelize.query("call editar_aluno(?,?,?,?,?,?)", {
+                replacements: [idAluno, CPF, nome, email, foto, fk_curso],
+                type: sequelize.QueryTypes.INSERT
+            })
+                .then((r) => !!r[0] == false ? novoErro(`Erro ao atualizar o aluno: ${r}` , 404) : resolve(r))
                 .catch((e) => reject(e))
         }
 
@@ -157,21 +153,17 @@ function atualizarAluno(cpfAluno, emailAluno, dados, sequelize) {
     })
 }
 
-function pesquisaUnicoAluno(cpfAluno, emailAluno, sequelize) {
+// Pode pesquisar por id, cpf ou email
+function pesquisaAluno(idAluno, sequelize) {
     return new Promise(async (resolve, reject) => {
 
         try {
-
-            !!cpfAluno == false
-                ? condicao = { email: emailAluno } :
-                condicao = { CPF: cpfAluno }
-
-            const aluno = await alunoModel(sequelize).findOne({
-                where: condicao
+            await sequelize.query("select * from todos_alunos where id_aluno = ?;", {
+                replacements: [idAluno],
+                type: sequelize.QueryTypes.SELECT
             })
-            aluno == null
-                ? reject("Aluno não encontrado, verifique os dados.")
-                : resolve(aluno.dataValues)
+                .then((r) => !!r[0] == false ? novoErro("Aluno não encontrado", 404) : resolve(r))
+                .catch((e) => reject(e))
         }
         catch (err) {
             console.log(err)
@@ -180,12 +172,12 @@ function pesquisaUnicoAluno(cpfAluno, emailAluno, sequelize) {
     })
 }
 
+
 function pesquisaTodosAlunos(sequelize) {
 
     return new Promise(async (resolve, reject) => {
 
         try {
-            //Verifica se o filtro está vazio e passa um json vazio caso contrario passa o proprio filtro
             sequelize.query("select * from todos_alunos order by nome;")
                 .then((r) => resolve(r[0]))
                 .catch((e) => resolve(e))
@@ -199,4 +191,4 @@ function pesquisaTodosAlunos(sequelize) {
 }
 
 
-module.exports = { cadastroMultiplosAlunos, cadastroUnicoAluno, atualizarAluno, pesquisaUnicoAluno, pesquisaTodosAlunos }
+module.exports = { cadastroMultiplosAlunos, cadastroUnicoAluno, atualizarAluno, pesquisaAluno, pesquisaTodosAlunos }
