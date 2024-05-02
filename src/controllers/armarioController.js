@@ -34,7 +34,7 @@ function pesquisarTodosArmario(sequelize) {
 
         try {
             sequelize.query("select * from todos_armarios order by numero;")
-                .then(r => resolve(paginacao(10, r[0])))
+                .then(r => resolve(paginacao(28, r[0])))
                 .catch((e) => reject(e))
         }
         catch (err) {
