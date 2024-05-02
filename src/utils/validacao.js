@@ -38,9 +38,6 @@ const produtoValidacao = z.object({
     brinde: z.enum(["false","true"])
   });
 
-const pesquisaAlunoUnicoValidacao = z.object({
-    dado: z.enum(["CPF","id_aluno","email","nome"]),
-    valor: z.string().min("1","O valor é obrigatório.")
-})
 
-module.exports = { alunoUnicoValidacao, validacoesGerais, produtoValidacao, funcionarioValidacao,pesquisaAlunoUnicoValidacao }
+
+module.exports = { alunoUnicoValidacao, validacoesGerais, produtoValidacao, funcionarioValidacao }
