@@ -35,7 +35,7 @@ async function encontrarFuncionarioPorNIF(NIF, sequelize) {
 function pesquisarUnicoFuncionario(NIF, sequelize) {
     return new Promise(async (resolve, reject) => {
         try {
-            await sequelize.query("select * from todos_funcionarios where NIF = ?;", {
+            await sequelize.query("select * from todos_funcionarios where NIF = ? ;", {
                 replacements: [NIF],
                 type: sequelize.QueryTypes.SELECT
             })
@@ -60,7 +60,7 @@ async function editarFuncionario(NIF, dadosFuncionario, sequelize) {
             // Verifica se a foto não foi enviada vazia, caso tenha sido é declarada como null para o banco
             if (!!foto == false){ foto = null}
 
-            console.log(idFuncionario,NIF, nome, email, nivel_acesso, foto)
+            // console.log(idFuncionario,NIF, nome, email, nivel_acesso, foto)
 
             // Verifica se o usuario existe no banco
             const funcionarioExistente = await encontrarFuncionarioPorNIF(NIF, sequelize)
@@ -97,42 +97,22 @@ async function loginFuncionario(funcionario) {
 
             const { email, senha } = funcionario
 
-            // verifica se o usuario existe
-            let usuario = await funcionarioModel(sequelize_login).findOne({
-                where: {
-                    email
-                }
-            })
-
-            // Caso o usuario não exista
-            !!usuario == true
-                ? usuario = usuario.dataValues
-                : (() => { resolve(null) })()
-
-            //Confirma se o hash da senha está certo.
-            const confirmarSenha = await compararHash(funcionario.senha, usuario.senha)
-
-            if (!confirmarSenha) {
-                resolve(null)
-            }
+            const usuario = await retornarSenhaCriptografada(email,sequelize_login)
+            confirmarSenhaCriptografa(senha,usuario)
+            
+            const response = await pesquisarUnicoFuncionario(usuario.NIF,sequelize_login)
 
             // Deolve os dados do usuario sem a senha
-            let { senha: _, CPF: __, ...resposta } = usuario
+            let { senha: _, CPF: __, ...resposta } = response
 
             //Gera o token para verificar se está logado
             resposta.token = gerarToken(resposta.email, resposta.nome, "12h")
 
-            await funcionarioModel(sequelize_login).update({
                 token: resposta.token
-            },
-                {
-                    where: {
-                        email
-                    }
-                })
-
-            resolve(resposta)
-        }
+                resolve(resposta)
+           
+            }
+               
         catch (err) {
             // Se der algum erro inesperado no processo
             reject(err)
@@ -156,24 +136,62 @@ function pesquisarTodosFuncionarios(sequelize) {
 }
 
 
-function deslogarFuncionario(nif, token, sequelize) {
+function deslogarFuncionario(nif, token, req,sequelize) {
 
-    return new Promise((resolve, reject) => {
+    return new Promise( async(resolve, reject) => {
 
-        funcionarioModel(sequelize).update(
-            { token: null },
-            {
-                where: {
-                    NIF: nif,
-                    token
-                }
+        // Pesquisa se o funcionario existe
+
+        const response =  await pesquisarUnicoFuncionario(nif,sequelize)
+        !!response == false? novoErro("Funcionario não entrado", 404):""
+
+        // Valida o token do usuario para deslogar
+
+        if (token == req.funcionario.token){
+            sequelize.query("call deslogar_funcionario(?)", {
+                replacements: [response[0].id_funcionario],
+                type: sequelize.QueryTypes.UPDATE
+    
             })
-            .then((r) => resolve(r))
-            .catch((e) => reject(e))
-
-
+                .then((r) => resolve(r))
+                .catch((e) => reject(e))
+        }
+        else {
+            novoErro("Não autorizado, token inválido.", 403)
+        }
+        // remove o token do banco
+        
     })
 
+
+}
+
+function retornarSenhaCriptografada(email,sequelize_login){
+
+    return new Promise(async(resolve, reject) => {
+        const senhaCriptografada = await sequelize_login.query("select * from buscar_senhas_funcionario where email = ?", {
+            replacements:[email],
+            type: sequelize_login.QueryTypes.SELECT
+        })
+        
+        // Caso o usuario não exista
+        !!senhaCriptografada[0] == false
+            ? novoErro("Usuario ou senha inválidos", 403)
+            : ""
+        
+        resolve(senhaCriptografada[0])
+    })
+}
+
+function confirmarSenhaCriptografa(senha,senhaCriptografada){
+
+    return new Promise(async(resolve, reject) => {
+        const confirmarSenha = await compararHash(senha, senhaCriptografada.senha)
+
+        if (!confirmarSenha) {
+            novoErro("Usuario ou senha inválidos", 403)
+        }
+    })
 
 }
 
