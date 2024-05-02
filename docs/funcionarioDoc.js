@@ -208,7 +208,7 @@
 *         description: Erro ao atualizar usuario.
 
 
-* /funcionario/unico:
+* /funcionario/unico/{NIF}:
 *   get:
 *     security:
 *       - bearerAuth: []
@@ -219,7 +219,7 @@
 *         required: true
 *         type: string 
 *       - name: NIF
-*         in: query
+*         in: path
 *         description: Nif do funcionario a ser pesquisado
 *         required: true
 *         type: string 

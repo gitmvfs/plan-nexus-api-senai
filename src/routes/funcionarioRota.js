@@ -88,9 +88,9 @@ router.post("/deslogar", async (req, res) => {
     }
 })
 
-router.get('/unico', async (req, res) => {
+router.get('/unico/:NIF', async (req, res) => {
     try {
-        const { NIF } = req.query;
+        const { NIF } = req.params;
         const response = await pesquisarUnicoFuncionario(NIF, req.sequelize)
 
         !!response[0] == true
