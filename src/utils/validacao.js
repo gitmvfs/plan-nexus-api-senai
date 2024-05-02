@@ -35,7 +35,12 @@ const produtoValidacao = z.object({
     tamanhos: z.array(z.string()).min(1, "Os tamanhos não podem estar vazios"),
     valor: z.number().min(1, "O valor não pode estar vazio"),
     descricao: z.string().max(150).nullable(),
-    brinde: z.boolean(),
+    brinde: z.enum(["false","true"])
   });
 
-module.exports = { alunoUnicoValidacao, validacoesGerais, produtoValidacao, funcionarioValidacao }
+const pesquisaAlunoUnicoValidacao = z.object({
+    dado: z.enum(["CPF","id_aluno","email","nome"]),
+    valor: z.string().min("1","O valor é obrigatório.")
+})
+
+module.exports = { alunoUnicoValidacao, validacoesGerais, produtoValidacao, funcionarioValidacao,pesquisaAlunoUnicoValidacao }
