@@ -83,4 +83,32 @@ async function cadastroUnicoTelefone(aluno, sequelize) {
 
 }
 
-module.exports = { cadastroMultiplosTelefones, cadastroUnicoTelefone }
+async function atualizarUnicoTelefone(aluno, sequelize) {
+    const erros = [] // Caso tenha dado algum erro devolve a lista com os erros
+    try {
+
+        // Remove as formatações do número 
+        const telefone = retirarFormatacao(aluno.telefone)
+        const celular = retirarFormatacao(aluno.celular)
+
+        //  caso o número exista inseri na tabela
+        if (!!telefone == true) {
+            await contatoModel(sequelize).update({ numero: telefone, tipo: "telefone fixo", fk_aluno: aluno.idAluno })
+                .catch((err) => erros.push({ aluno, err }))
+        }
+
+        if (!!celular == true) {
+            await contatoModel(sequelize).update({ numero: celular, tipo: "telefone celular", fk_aluno: aluno.idAluno })
+                .catch((err) => erros.push({ aluno, err }))
+        }
+
+        //Seria bom validar e devolver um "erro" caso o aluno não tenha telefone e celular
+    }
+    catch (err) {
+        const erroTratado = tratarMensagensDeErro(err)
+        erros.push(erroTratado)
+    }
+    return erros
+}
+
+module.exports = { cadastroMultiplosTelefones, cadastroUnicoTelefone,atualizarUnicoTelefone }
