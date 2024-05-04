@@ -234,5 +234,32 @@
 *         description: Funcionario não encontrado .
 
 
+* /funcionario/inativar/{NIF}:
+*   patch:
+*     security:
+*       - bearerAuth: []
+*     parameters:
+*       - name: nif
+*         in: header
+*         description: Nif do funcionario que está logado
+*         required: true
+*         type: string 
+*       - name: NIF
+*         in: path
+*         description: Nif do funcionario a ser inativado
+*         required: true
+*         type: string 
+*     tags:
+*       - Funcionario
+*     summary: Inativar um funcionario.    
+*     description: Muda o status de um funcionario para inativo a partir de seu nif
+*     responses:
+*       200:
+*         description: Usuario inativado com sucesso.
+*       404:
+*         description: Funcionario não encontrado .
+
+
+
 
  */
