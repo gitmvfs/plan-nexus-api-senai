@@ -1,5 +1,5 @@
 const router = require("express").Router()
-const { cadastrarFuncionario, pesquisarTodosFuncionarios, pesquisarUnicoFuncionario, editarFuncionario, loginFuncionario, deslogarFuncionario } = require("../controllers/funcionarioController")
+const { cadastrarFuncionario, pesquisarTodosFuncionarios, pesquisarUnicoFuncionario, editarFuncionario, loginFuncionario, deslogarFuncionario, inativarFuncionario } = require("../controllers/funcionarioController")
 const { tratarMensagensDeErro } = require("../utils/errorMsg")
 const { object, string, number } = require('zod')
 const authMiddleware = require("../middleware/auth")
@@ -131,6 +131,19 @@ router.patch('/atualizar', async (req, res) => {
         const erroTratado = await tratarMensagensDeErro(err)
         res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
 
+    }
+})
+
+router.patch('/inativar/:NIF', async(req, res) => {
+    try {
+        const {NIF} = req.params
+        
+        const response = await inativarFuncionario(NIF, req.sequelize)
+        res.json({msg: "funcionario inativado com sucesso", "statusCode": 200, "response": response})
+
+    } catch (err) {
+        const erroTratado = await tratarMensagensDeErro(err)
+        res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
     }
 })
 
