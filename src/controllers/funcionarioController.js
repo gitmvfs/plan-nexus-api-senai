@@ -108,8 +108,15 @@ async function loginFuncionario(funcionario) {
             //Gera o token para verificar se está logado
             resposta.token = gerarToken(resposta.email, resposta.nome, "12h")
 
+            funcionarioModel(sequelize_login).update({
                 token: resposta.token
-                resolve(resposta)
+            },{
+                where:{
+                    NIF: usuario.NIF
+                }
+            })
+
+            resolve(resposta)
            
             }
                
