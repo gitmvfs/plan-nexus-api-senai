@@ -1,0 +1,35 @@
+const router = require("express").Router()
+const { verTodosAssociados, associarAluno } = require("../controllers/associadoController")
+const authMiddleware = require("../middleware/auth")
+const {tratarMensagensDeErro} = require("../utils/errorMsg")
+
+router.use(authMiddleware)
+
+router.get("/todos", async(req, res) => {
+    try {
+        const response = await verTodosAssociados(req.sequelize)
+        .then((response) => res.status(200).json({ msg: "Consulta realizada com sucesso", "statusCode": "200", "response":response }))
+        .catch((e) => console.log(e))
+    } catch (error) {
+        const erroTratado = await tratarMensagensDeErro(error)
+        res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
+    }
+})
+
+router.post("/novo", async(req, res) => {
+    const {id_aluno, brinde} = req.body
+    const dataAssociacao = new Date(req.body.data_associacao)
+    const associacao = {id_aluno, brinde, dataAssociacao}
+
+        try {
+            
+            await associarAluno(associacao, req.sequelize)
+            res.status(201).json({msg: "aluno associado com sucesso", "statusCode": 201, "response": associacao})
+
+        } catch (error) {
+            const erroTratado = await tratarMensagensDeErro(error)
+            res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
+        }
+})
+
+module.exports = router
