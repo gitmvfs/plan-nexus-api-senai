@@ -202,4 +202,22 @@ function confirmarSenhaCriptografa(senha,senhaCriptografada){
 
 }
 
-module.exports = { cadastrarFuncionario, pesquisarTodosFuncionarios, pesquisarUnicoFuncionario, editarFuncionario, loginFuncionario, deslogarFuncionario };
+function inativarFuncionario(NIF, sequelize){
+    return new Promise(async(resolve, reject) => {
+        
+        try {
+            await sequelize.query("call inativar_funcionario(?)", 
+            {
+                replacements: [NIF],
+                type: sequelize.QueryTypes.UPDATE
+            })
+            .then((r) => {resolve(r)})
+            .catch((e) => {reject(e)})
+
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
+
+module.exports = { cadastrarFuncionario, pesquisarTodosFuncionarios, pesquisarUnicoFuncionario, editarFuncionario, loginFuncionario, deslogarFuncionario, inativarFuncionario };
