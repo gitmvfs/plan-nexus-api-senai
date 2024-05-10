@@ -11,12 +11,11 @@ const alunoUnicoValidacao = z.object({
 })
 
 const funcionarioValidacao = z.object({
-    idFuncionario: z.string().optional(),
+    idFuncionario: z.string(),
     NIF: z.string().min(1).max(20),
     nome: z.string().min(1).max(50),
     email: z.string().email().max(100),
     nivel_acesso: z.string().min(1).max(3),
-    foto: z.string().optional()
 });
 
 

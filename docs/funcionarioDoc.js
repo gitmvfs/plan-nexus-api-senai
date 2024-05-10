@@ -37,24 +37,6 @@
 *         required: false
 
 
-*   editarFuncionarioModelo:
-*     type: object
-*     properties:
-*       idFuncionario:
-*         type: string
-*       NIF:
-*         type: string
-*       nome:
-*         type: string
-*       email:
-*         type: string
-*       nivel_acesso:
-*         type: number
-*         "enum": [1,2,3]
-*       foto:
-*         type: string
-*         required: false
-
 *   pesquisarFuncionario:
 *     type: object
 *     properties:
@@ -165,15 +147,32 @@
 *     parameters:
 *       - name: nif
 *         in: header
-*         description: Nif do funcionario que está logado
+*         description: NIF do funcionário que está logado
 *         required: true
-*         type: string
+*         schema:
+*           type: string
 *     requestBody:
 *       required: true
 *       content:
-*         application/json:
+*         multipart/form-data:
 *           schema:
-*             $ref: '#/definitions/editarFuncionarioModelo'  
+*             type: object
+*             properties:
+*               idFuncionario:
+*                 type: string
+*               NIF:
+*                 type: string
+*               nome:
+*                 type: string
+*               email:
+*                 type: string
+*               nivel_acesso:
+*                 type: number
+*                 enum: [1, 2, 3]
+*               fotoFuncionario:
+*                 type: string
+*                 format: binary
+
 *     tags:
 *       - Funcionario
 *     summary: Atualizar informações do usuario pelo nif.    

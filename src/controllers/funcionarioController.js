@@ -4,12 +4,9 @@ const { compararHash } = require("../utils/bcrypt")
 const { gerarToken } = require("../utils/jwt")
 const { resolve } = require("path")
 const { novoErro } = require('../utils/errorMsg')
+const { Blob } = require('buffer')
+const { salvarImagemAzure } = require('./blobController')
 const dotenv = require("dotenv").config({ path: resolve(__dirname, "../", "../", ".env") })
-
-async function emailExiste(email, sequelize) {
-    const funcionario = await funcionarioModel(sequelize).findOne({ where: { email: email } })
-    return funcionario !== null
-}
 
 function cadastrarFuncionario(funcionario, sequelize) {
     return new Promise(async (resolve, reject) => {
@@ -26,10 +23,6 @@ function cadastrarFuncionario(funcionario, sequelize) {
             reject(err)
         }
     })
-}
-
-async function encontrarFuncionarioPorNIF(NIF, sequelize) {
-    return funcionarioModel(sequelize).findOne({ where: { NIF: NIF } });
 }
 
 function pesquisarUnicoFuncionario(NIF, sequelize) {
@@ -49,26 +42,32 @@ function pesquisarUnicoFuncionario(NIF, sequelize) {
 }
 
 
-async function editarFuncionario(NIF, dadosFuncionario, sequelize) {
+async function editarFuncionario(dadosFuncionario, foto, sequelize) {
 
     return new Promise(async (resolve, reject) => {
         try {
-
+            console.log(dadosFuncionario)
             const { idFuncionario, NIF, nome, email, nivel_acesso } = dadosFuncionario
-            let { foto } = dadosFuncionario
-
-            // Verifica se a foto não foi enviada vazia, caso tenha sido é declarada como null para o banco
-            if (!!foto == false) { foto = null }
-
-            // console.log(idFuncionario,NIF, nome, email, nivel_acesso, foto)
 
             // Verifica se o usuario existe no banco
-            const funcionarioExistente = await encontrarFuncionarioPorNIF(NIF, sequelize)
-            if (!funcionarioExistente) {
-                return res.status(404).send('Funcionário não encontrado.')
+            const funcionarioExistente = await pesquisarUnicoFuncionario(NIF, sequelize)
+            console.log(funcionarioExistente)
+            if (!!funcionarioExistente[0] == false) {
+                reject(novoErro("Funcionario não encontrado",   404))
             }
+
+            let linkImagem = ""
+            if (!!foto == true) {
+                linkImagem = await salvarImagemAzure("funcionario", foto)
+                console.log("LINK FOTO:",linkImagem)
+            }
+            else {
+                linkImagem = funcionarioExistente[0].foto
+            }
+
+
             sequelize.query("call editar_funcionario(?,?,?,?,?,?)", {
-                replacements: [idFuncionario, NIF, nome, email, foto, nivel_acesso],
+                replacements: [idFuncionario, NIF, nome, email, linkImagem, nivel_acesso],
                 type: sequelize.QueryTypes.INSERT
             })
                 .then((r) => resolve(r))
@@ -98,11 +97,11 @@ async function loginFuncionario(funcionario) {
             const { email, senha } = funcionario
 
             const usuario_criptografado = await retornarSenhaCriptografada(email, sequelize)
-            
+
             confirmarSenhaCriptografa(senha, usuario_criptografado)
 
             const usuario = await pesquisarUnicoFuncionario(usuario_criptografado.NIF, sequelize)
-            
+
             // Deolve os dados do usuario sem a senha
             const { senha: _, CPF: __, ...dadosUsuario } = usuario
 

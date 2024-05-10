@@ -4,6 +4,7 @@ const { tratarMensagensDeErro } = require("../utils/errorMsg")
 const { object, string, number } = require('zod')
 const authMiddleware = require("../middleware/auth")
 const { funcionarioValidacao } = require("../utils/validacao")
+const { uploadImagem } = require("../utils/multer")
 
 router.post("/login", async (req, res) => {
 
@@ -104,13 +105,13 @@ router.get('/unico/:NIF', async (req, res) => {
     }
 });
 
-router.patch('/atualizar', async (req, res) => {
+router.patch('/atualizar',uploadImagem.single("fotoFuncionario") , async (req, res) => {
 
     try {
         const { idFuncionario, nome, email, NIF, nivel_acesso } = req.body
 
         // Verifica se o link de foto está vazio e define como undefined
-        let foto = req.body.foto || ""
+        const foto = req.file || null
 
         // Verifica se o link da foto foi passado, caso contrario foto = null
 
@@ -119,13 +120,11 @@ router.patch('/atualizar', async (req, res) => {
             NIF,
             nome,
             email,
-            foto,
             nivel_acesso
         }
 
         const funcionarioValidado = funcionarioValidacao.parse(dadosFuncionario)
-
-        await editarFuncionario(NIF, funcionarioValidado, req.sequelize)
+        await editarFuncionario(funcionarioValidado,foto, req.sequelize)
         res.json({ msg: "Atualização realizada com sucesso", "statusCode": 200 })
     } catch (err) {
         const erroTratado = await tratarMensagensDeErro(err)
@@ -134,12 +133,12 @@ router.patch('/atualizar', async (req, res) => {
     }
 })
 
-router.patch('/inativar/:NIF', async(req, res) => {
+router.patch('/inativar/:NIF', async (req, res) => {
     try {
-        const {NIF} = req.params
-        
+        const { NIF } = req.params
+
         const response = await inativarFuncionario(NIF, req.sequelize)
-        res.json({msg: "funcionario inativado com sucesso", "statusCode": 200, "response": response})
+        res.json({ msg: "funcionario inativado com sucesso", "statusCode": 200, "response": response })
 
     } catch (err) {
         const erroTratado = await tratarMensagensDeErro(err)
