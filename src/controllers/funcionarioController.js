@@ -39,8 +39,8 @@ function pesquisarUnicoFuncionario(NIF, sequelize) {
                 replacements: [NIF],
                 type: sequelize.QueryTypes.SELECT
             })
-            .then((r) => resolve(r))
-            .catch((e) => reject(e))
+                .then((r) => resolve(r))
+                .catch((e) => reject(e))
 
         } catch (error) {
             reject(error)
@@ -53,12 +53,12 @@ async function editarFuncionario(NIF, dadosFuncionario, sequelize) {
 
     return new Promise(async (resolve, reject) => {
         try {
-            
+
             const { idFuncionario, NIF, nome, email, nivel_acesso } = dadosFuncionario
-            let {foto} = dadosFuncionario
+            let { foto } = dadosFuncionario
 
             // Verifica se a foto não foi enviada vazia, caso tenha sido é declarada como null para o banco
-            if (!!foto == false){ foto = null}
+            if (!!foto == false) { foto = null }
 
             // console.log(idFuncionario,NIF, nome, email, nivel_acesso, foto)
 
@@ -87,7 +87,7 @@ async function loginFuncionario(funcionario) {
 
         try {
 
-            const sequelize_login = new Sequelize({
+            const sequelize = new Sequelize({
                 database: process.env.database_name,
                 username: process.env.database_user_root, // dps atualizar para o login funcionario
                 password: process.env.database_password_root, // dps atualizar para o senha funcionario
@@ -97,29 +97,31 @@ async function loginFuncionario(funcionario) {
 
             const { email, senha } = funcionario
 
-            const usuario = await retornarSenhaCriptografada(email,sequelize_login)
-            confirmarSenhaCriptografa(senha,usuario)
+            const usuario_criptografado = await retornarSenhaCriptografada(email, sequelize)
             
-            const response = await pesquisarUnicoFuncionario(usuario.NIF,sequelize_login)
+            confirmarSenhaCriptografa(senha, usuario_criptografado)
 
+            const usuario = await pesquisarUnicoFuncionario(usuario_criptografado.NIF, sequelize)
+            
             // Deolve os dados do usuario sem a senha
-            let { senha: _, CPF: __, ...resposta } = response
+            const { senha: _, CPF: __, ...dadosUsuario } = usuario
 
             //Gera o token para verificar se está logado
-            resposta.token = gerarToken(resposta.email, resposta.nome, "12h")
+            const token = gerarToken(dadosUsuario[0].email, dadosUsuario[0].nome, "12h")
 
-            funcionarioModel(sequelize_login).update({
-                token: resposta.token
-            },{
-                where:{
-                    NIF: usuario.NIF
-                }
-            })
+            sequelize.query("call logar_funcionario(? , ?)",
+                {
+                    replacements: [dadosUsuario[0].NIF, token],
+                    type: sequelize.QueryTypes.UPDATE
 
-            resolve(resposta[0])
-           
-            }
-               
+                })
+            // adiciona o token a resposta
+            dadosUsuario[0].token = token
+
+            resolve(dadosUsuario[0])
+
+        }
+
         catch (err) {
             // Se der algum erro inesperado no processo
             reject(err)
@@ -143,22 +145,22 @@ function pesquisarTodosFuncionarios(sequelize) {
 }
 
 
-function deslogarFuncionario(nif, token, req,sequelize) {
+function deslogarFuncionario(nif, token, req, sequelize) {
 
-    return new Promise( async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
 
         // Pesquisa se o funcionario existe
 
-        const response =  await pesquisarUnicoFuncionario(nif,sequelize)
-        !!response == false? novoErro("Funcionario não entrado", 404):""
+        const response = await pesquisarUnicoFuncionario(nif, sequelize)
+        !!response == false ? novoErro("Funcionario não entrado", 404) : ""
 
         // Valida o token do usuario para deslogar
 
-        if (token == req.funcionario.token){
+        if (token == req.funcionario.token) {
             sequelize.query("call deslogar_funcionario(?)", {
                 replacements: [response[0].id_funcionario],
                 type: sequelize.QueryTypes.UPDATE
-    
+
             })
                 .then((r) => resolve(r))
                 .catch((e) => reject(e))
@@ -167,32 +169,32 @@ function deslogarFuncionario(nif, token, req,sequelize) {
             novoErro("Não autorizado, token inválido.", 403)
         }
         // remove o token do banco
-        
+
     })
 
 
 }
 
-function retornarSenhaCriptografada(email,sequelize_login){
+function retornarSenhaCriptografada(email, sequelize_login) {
 
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         const senhaCriptografada = await sequelize_login.query("select * from buscar_senhas_funcionario where email = ?", {
-            replacements:[email],
+            replacements: [email],
             type: sequelize_login.QueryTypes.SELECT
         })
-        
+
         // Caso o usuario não exista
         !!senhaCriptografada[0] == false
             ? reject(novoErro("Usuario ou senha inválidos", 403))
             : ""
-        
+
         resolve(senhaCriptografada[0])
     })
 }
 
-function confirmarSenhaCriptografa(senha,senhaCriptografada){
+function confirmarSenhaCriptografa(senha, senhaCriptografada) {
 
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         const confirmarSenha = await compararHash(senha, senhaCriptografada.senha)
 
         if (!confirmarSenha) {
@@ -202,17 +204,17 @@ function confirmarSenhaCriptografa(senha,senhaCriptografada){
 
 }
 
-function inativarFuncionario(NIF, sequelize){
-    return new Promise(async(resolve, reject) => {
-        
+function inativarFuncionario(NIF, sequelize) {
+    return new Promise(async (resolve, reject) => {
+
         try {
-            await sequelize.query("call inativar_funcionario(?)", 
-            {
-                replacements: [NIF],
-                type: sequelize.QueryTypes.UPDATE
-            })
-            .then((r) => {resolve(r)})
-            .catch((e) => {reject(e)})
+            await sequelize.query("call inativar_funcionario(?)",
+                {
+                    replacements: [NIF],
+                    type: sequelize.QueryTypes.UPDATE
+                })
+                .then((r) => { resolve(r) })
+                .catch((e) => { reject(e) })
 
         } catch (error) {
             reject(error)
