@@ -116,7 +116,7 @@ async function loginFuncionario(funcionario) {
                 }
             })
 
-            resolve(resposta)
+            resolve(resposta[0])
            
             }
                
@@ -183,7 +183,7 @@ function retornarSenhaCriptografada(email,sequelize_login){
         
         // Caso o usuario não exista
         !!senhaCriptografada[0] == false
-            ? novoErro("Usuario ou senha inválidos", 403)
+            ? reject(novoErro("Usuario ou senha inválidos", 403))
             : ""
         
         resolve(senhaCriptografada[0])
@@ -196,7 +196,7 @@ function confirmarSenhaCriptografa(senha,senhaCriptografada){
         const confirmarSenha = await compararHash(senha, senhaCriptografada.senha)
 
         if (!confirmarSenha) {
-            novoErro("Usuario ou senha inválidos", 403)
+            reject(novoErro("Usuario ou senha inválidos", 403))
         }
     })
 

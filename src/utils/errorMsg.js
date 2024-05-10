@@ -5,7 +5,7 @@ function novoErro(msg, status) {
     const erro = new Error
     erro.message = msg
     erro.status = status
-    throw erro
+    return erro
 }
 
 function tratarMensagensDeErro(err) {
