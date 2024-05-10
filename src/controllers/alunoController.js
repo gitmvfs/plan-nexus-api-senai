@@ -143,7 +143,7 @@ function atualizarAluno(aluno, sequelize) {
                 replacements: [idAluno, CPF, nome, email, foto, fk_curso],
                 type: sequelize.QueryTypes.INSERT
             })
-                .then((r) => !!r[0] == false ? novoErro(`Erro ao atualizar o aluno: ${r}` , 404) : resolve(r))
+                .then((r) => !!r[0] == false ? reject(novoErro(`Erro ao atualizar o aluno: ${r}` , 404)) : resolve(r))
                 .catch((e) => reject(e))
         }
 
@@ -162,7 +162,7 @@ function pesquisaAluno(idAluno, sequelize) {
                 replacements: [idAluno],
                 type: sequelize.QueryTypes.SELECT
             })
-                .then((r) => !!r[0] == false ? novoErro("Aluno não encontrado", 404) : resolve(r))
+                .then((r) => !!r[0] == false ? reject(novoErro("Aluno não encontrado", 404)) : resolve(r))
                 .catch((e) => reject(e))
         }
         catch (err) {

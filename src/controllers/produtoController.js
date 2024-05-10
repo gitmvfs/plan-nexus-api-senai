@@ -164,7 +164,7 @@ function definirEstoqueProduto(id_produto,quantidade ,sequelize) {
         const response = await pesquisarTodosProdutos(id_Produto)
 
         if (!!response[0] == false) {
-            novoErro("Produto inválido, confira o id", 404)
+            reject(novoErro("Produto inválido, confira o id", 404))
         }
 
         try {

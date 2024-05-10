@@ -53,13 +53,13 @@ async function editarFuncionario(dadosFuncionario, foto, sequelize) {
             const funcionarioExistente = await pesquisarUnicoFuncionario(NIF, sequelize)
             console.log(funcionarioExistente)
             if (!!funcionarioExistente[0] == false) {
-                reject(novoErro("Funcionario não encontrado",   404))
+                reject(novoErro("Funcionario não encontrado", 404))
             }
 
             let linkImagem = ""
             if (!!foto == true) {
                 linkImagem = await salvarImagemAzure("funcionario", foto)
-                console.log("LINK FOTO:",linkImagem)
+                console.log("LINK FOTO:", linkImagem)
             }
             else {
                 linkImagem = funcionarioExistente[0].foto
@@ -151,7 +151,7 @@ function deslogarFuncionario(nif, token, req, sequelize) {
         // Pesquisa se o funcionario existe
 
         const response = await pesquisarUnicoFuncionario(nif, sequelize)
-        !!response == false ? novoErro("Funcionario não entrado", 404) : ""
+        !!response == false ? reject(novoErro("Funcionario não entrado", 404)) : ""
 
         // Valida o token do usuario para deslogar
 
@@ -165,7 +165,7 @@ function deslogarFuncionario(nif, token, req, sequelize) {
                 .catch((e) => reject(e))
         }
         else {
-            novoErro("Não autorizado, token inválido.", 403)
+            reject(novoErro("Não autorizado, token inválido.", 403))
         }
         // remove o token do banco
 

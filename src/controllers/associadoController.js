@@ -36,7 +36,7 @@ function associarAluno(associacao, sequelize){
 
             const associadoExiste = await pesquisarUmAssociado(id_aluno, sequelize)
 
-            associadoExiste ? novoErro("aluno ja e associado", 400) :
+            associadoExiste ? reject(novoErro("aluno ja e associado", 400)) :
             await sequelize.query("call associar_aluno(?,?,?)", {
                 replacements: [id_aluno, brinde, data_associacao],
                 type: sequelize.QueryTypes.INSERT
