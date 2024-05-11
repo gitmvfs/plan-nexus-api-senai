@@ -16,7 +16,14 @@ router.post("/cadastro/multiplos", uploadArquivoAlunos.single("alunosFile"), asy
         const listaALunos = await excelToJson(req.file.path) // pega o arquivo do excel e devolve os alunos em json
         await cadastroDeTurmas(listaALunos, req.sequelize) // pega o json dos alunos e cadastra as turmas
         const resultadoCadastroAlunos = await cadastroMultiplosAlunos(listaALunos, req.sequelize)
-        res.status(201).json({ msg: "Operação realizada", "statusCode": "201", "response": resultadoCadastroAlunos })
+        
+        let statusCode = 201
+        let mensagemResposta = "Operação realizada com sucesso"
+        if(!!resultadoCadastroAlunos.alunosCadastrados[0] == false){
+            statusCode = 400 // caso tenha apenas erros na hora da inserção
+            mensagemResposta = "Todos os dados já estão cadastrados, verifique se o arquivo está correto."
+        }
+        res.status(statusCode).json({ msg: `${mensagemResposta}`, "statusCode":`${statusCode}`, "response": resultadoCadastroAlunos })
     }
     catch (err) {
         const erroTratado = await tratarMensagensDeErro(err)
