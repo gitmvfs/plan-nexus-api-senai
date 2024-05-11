@@ -27,25 +27,30 @@ function validarDataToken(token) {
 
 async function encontrarFuncionarioLogin(nif, token) {
 
-    // Se conecta usando um usuario q só tem acesso a uma view de login
-    const sequelize_login = new Sequelize({
-        database: process.env.database_name,
-        username: process.env.database_user_root, // dps atualizar para o login funcionario
-        password: process.env.database_password_root, // dps atualizar para o senha funcionario
-        host: process.env.database_host,
-        dialect: 'mysql'
-    });
+    return new Promise(async (resolve, reject) => {
+        // Se conecta usando um usuario q só tem acesso a uma view de login
+        const sequelize = new Sequelize({
+            database: process.env.database_name,
+            username: process.env.database_user_root, // dps atualizar para o login funcionario
+            password: process.env.database_password_root, // dps atualizar para o senha funcionario
+            host: process.env.database_host,
+            dialect: 'mysql'
+        });
 
-    const response = await funcionarioModel(sequelize_login).findOne({
-        where: {
-            NIF: nif,
-            token
+        const response = await funcionarioModel(sequelize).findOne({
+            where: {
+                NIF: nif,
+            }
+        })
+        if (!!response == false || response.token != token) {
+            console.log(response.token != token)
+            console.log(response.token)
+            console.log(token)
+            reject(novoErro("Usuario ou token inválidos, permissão negada.", 403))
         }
+        resolve(response)
     })
-    if (!!response == false) {
-        novoErro("Usuario ou token inválidos, permissão negada.", 403)
-    }
-    return response
+
 }
 
 function definirPermissaoNoBanco(funcionario) {
@@ -55,6 +60,10 @@ function definirPermissaoNoBanco(funcionario) {
 
 
     switch (funcionario.fk_nivel_acesso) {
+        case 1:
+            usuarioBanco = process.env.database_user_diretoria
+            senhaBanco = process.env.database_password_diretoria
+            break;
         case 2:
             usuarioBanco = process.env.database_user_diretoria
             senhaBanco = process.env.database_password_diretoria
@@ -64,8 +73,8 @@ function definirPermissaoNoBanco(funcionario) {
             senhaBanco = process.env.database_password_admin
             break;
         default:
-            usuarioBanco = process.env.database_user_conselho
-            senhaBanco = process.env.database_password_conselho
+            usuarioBanco = ""
+            senhaBanco = ""
 
             break;
     }
@@ -86,7 +95,6 @@ function criarConexaoBanco(usuarioBanco, senhaBanco) {
     return sequelize
 
 }
-
 const authMiddleware = (req, res, next) => {
     // Faça a autenticação do usuário e obtenha as informações necessárias
 
@@ -94,16 +102,19 @@ const authMiddleware = (req, res, next) => {
 
         try {
             const { nif } = req.headers
-            const token = req.headers.authorization.split(" ")[1]
-            
+            const token = req.headers.authorization.split(" ")[1] || " "
+
             if (!!nif == false || !!token == false) {
                 novoErro("Usuario ou token inválidos, permissão negada", 403)
             }
 
             await validarDataToken(token)
-            .catch((e)=> novoErro("Token inválido ou expirado", 403))
+                .catch((e) => novoErro("Token inválido ou expirado", 403))
 
             const funcionario = await encontrarFuncionarioLogin(nif, token) // procura o funcionario no banco
+
+            console.log("FUNCIONARIO:", funcionario)
+
 
             const { usuarioBanco, senhaBanco } = definirPermissaoNoBanco(funcionario) // define a permissão dele de acordo com o banco
 
@@ -116,7 +127,7 @@ const authMiddleware = (req, res, next) => {
 
             // Define o req.sequelize 
             req.sequelize = sequelize
-            req.funcionario = {nif, token}
+            req.funcionario = { nif, token }
             // Prossiga para a próxima etapa da requisição
             next();
         }
