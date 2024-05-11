@@ -20,10 +20,10 @@ function tratarMensagensDeErro(err) {
             //Erros de valização do Sequelize
             if (err instanceof ValidationError) {
                 status = 400 // Como é erro de validação o status sempre vai ser de badRequest
-
                 //Código para duplicação
                 if (err.parent.errno == 1062) {
-                    mensagem = "Dados já cadastrados, verifique os campos."
+                    mensagem = `Dados já cadastrados: ${err.parent.sqlMessage.split("key")[1].split(".")[1]}` // Devolve qual campo está duplicado
+
                 }
             }
 
@@ -52,10 +52,13 @@ function tratarMensagensDeErro(err) {
 
             //Erros do auth
 
-            console.log(err)
-            if (mensagem == "Cannot read properties of undefined (reading 'split')"){
+            if (mensagem == "Cannot read properties of undefined (reading 'split')") {
                 mensagem = "Token vazio."
                 status = 403
+            }
+            else if (mensagem == "Cannot read properties of undefined (reading 'path')") {
+                mensagem = "Necessário enviar arquivo."
+                status = 400
             }
 
             const erroTratado = {
