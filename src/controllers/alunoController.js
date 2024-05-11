@@ -82,7 +82,7 @@ async function mandarAlunosDb(listaAlunos, sequelize) {
                 const { CPF, nome, email, telefone, celular, fk_curso } = aluno
 
                 await sequelize.query("call cadastrar_aluno(?,?,?,?,?,?)", {
-                    replacements: [CPF, nome, email,fk_curso ,celular,telefone],
+                    replacements: [CPF, nome, email, fk_curso, celular, telefone],
                     type: sequelize.QueryTypes.INSERT
                 })
 
@@ -113,17 +113,22 @@ async function mandarAlunosDb(listaAlunos, sequelize) {
         // Separa os alunos cadastrados dos alunos com erro
         const alunosCadastrados = [];
         const alunosComErro = [];
+        const envioEmail = []
 
-        resultados.map((resultadoCadastro) =>{
-            if(resultadoCadastro.status == "erro"){
+        resultados.map((resultadoCadastro) => {
+            if (resultadoCadastro.status == "erro") {
                 alunosComErro.push(resultadoCadastro)
             }
-            else{
+            else {
                 alunosCadastrados.push(resultadoCadastro)
+                envioEmail.push({
+                    nome: resultadoCadastro.nome,
+                    email: resultadoCadastro.email
+                })
             }
         })
 
-        return { alunosCadastrados: alunosCadastrados, alunosNaoCadastrados: alunosComErro }
+        return { alunosCadastrados: alunosCadastrados, alunosNaoCadastrados: alunosComErro, envioEmail }
 
     } catch (error) {
         return (error)
