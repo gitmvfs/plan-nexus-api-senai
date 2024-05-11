@@ -1,7 +1,6 @@
 const router = require("express").Router()
 const { response } = require("express")
 const { cadastroMultiplosAlunos, atualizarAluno, cadastroUnicoAluno, pesquisaAluno, pesquisaTodosAlunos } = require("../controllers/alunoController")
-const { cadastroMultiplosTelefones, cadastroUnicoTelefone, atualizarUnicoTelefone } = require("../controllers/contatoController")
 const { cadastroDeTurmas } = require("../controllers/cursoController")
 const authMiddleware = require("../middleware/auth")
 const { tratarMensagensDeErro } = require("../utils/errorMsg")
@@ -17,12 +16,9 @@ router.post("/cadastro/multiplos", uploadArquivoAlunos.single("alunosFile"), asy
         const listaALunos = await excelToJson(req.file.path) // pega o arquivo do excel e devolve os alunos em json
         await cadastroDeTurmas(listaALunos, req.sequelize) // pega o json dos alunos e cadastra as turmas
         const resultadoCadastroAlunos = await cadastroMultiplosAlunos(listaALunos, req.sequelize)
-        const errosAoCadastrarContato = await cadastroMultiplosTelefones(resultadoCadastroAlunos, req.sequelize)
-        resultadoCadastroAlunos.erroCadastroContato = errosAoCadastrarContato
         res.status(201).json({ msg: "Operação realizada", "statusCode": "201", "response": resultadoCadastroAlunos })
     }
     catch (err) {
-        console.log(err)
         const erroTratado = await tratarMensagensDeErro(err)
         res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
     }
@@ -46,8 +42,6 @@ router.post("/cadastro/unico", async (req, res) => {
     try {
         const alunoValidado = alunoUnicoValidacao.parse(aluno)
         const response = await cadastroUnicoAluno(alunoValidado, req.sequelize)
-        const errosAoCadastrarContato = await cadastroUnicoTelefone(response, req.sequelize)
-        response.erroCadastroContato = errosAoCadastrarContato
         res.status(201).json({ "msg": "cadastrado com sucesso", "statusCode": 201, "response": response })
 
     }

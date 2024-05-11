@@ -51,6 +51,24 @@ async function separarAlunosNasTurmas(listaAlunos, sequelize) {
     return listaAlunosNasTurmas
 }
 
+async function pesquisarAlunoPorCpf(CPF, sequelize) {
+
+    return new Promise(async (resolve, reject) => {
+
+        try {
+            await sequelize.query("select * from todos_alunos where CPF = ?;", {
+                replacements: [CPF],
+                type: sequelize.QueryTypes.SELECT
+            })
+                .then((r) => !!r[0] == false ? reject(novoErro("Aluno não encontrado", 404)) : resolve(r))
+                .catch((e) => reject(e))
+        }
+        catch (err) {
+            reject(err)
+        }
+    })
+}
+
 
 async function mandarAlunosDb(listaAlunos, sequelize) {
 
@@ -59,16 +77,28 @@ async function mandarAlunosDb(listaAlunos, sequelize) {
     try {
         const promisesCriacaoAlunos = listaAlunos.map(async (aluno) => {
             try {
-                const alunoBanco = await alunoModel(sequelize).create(aluno);
-                const alunoData = alunoBanco.dataValues
+                // inserindo o aluno no database
+
+                const { CPF, nome, email, telefone, celular, fk_curso } = aluno
+
+                await sequelize.query("call cadastrar_aluno(?,?,?,?,?,?)", {
+                    replacements: [CPF, nome, email,fk_curso ,celular,telefone],
+                    type: sequelize.QueryTypes.INSERT
+                })
+
+                const dadosAluno = await pesquisarAlunoPorCpf(CPF, sequelize)
+
                 const response = {
-                    idAluno: alunoData.id_aluno,
-                    nome: alunoData.nome,
-                    email: alunoData.email,
-                    telefone: aluno.telefone,
-                    celular: aluno.celular,
-                    id_curso: alunoData.fk_curso
+                    id_aluno: dadosAluno[0].id_aluno,
+                    CPF,
+                    nome,
+                    email,
+                    telefone,
+                    celular,
+                    curso: dadosAluno.curso,
+                    modalidade: dadosAluno.modalidade
                 }
+
                 return { aluno: response, status: 'cadastrado' };
             } catch (error) {
                 // Se ocorrer um erro durante a criação do aluno, retornamos o aluno com status 'erro'
@@ -78,20 +108,20 @@ async function mandarAlunosDb(listaAlunos, sequelize) {
         });
 
         // Executa todas as Promises de criação em paralelo
-        const resultados = await Promise.allSettled(promisesCriacaoAlunos);
+        const resultados = await Promise.all(promisesCriacaoAlunos);
 
         // Separa os alunos cadastrados dos alunos com erro
         const alunosCadastrados = [];
         const alunosComErro = [];
 
-        resultados.forEach(resultado => {
-            if (resultado.status === 'fulfilled' && resultado.value.status === 'cadastrado') {
-                alunosCadastrados.push(resultado.value.aluno);
-            } else if (resultado.status === 'rejected' || (resultado.status === 'fulfilled' && resultado.value.status === 'erro')) {
-                resultado.value.aluno.msgErro = resultado.value.erro
-                alunosComErro.push(resultado.value.aluno);
+        resultados.map((resultadoCadastro) =>{
+            if(resultadoCadastro.status == "erro"){
+                alunosComErro.push(resultadoCadastro)
             }
-        });
+            else{
+                alunosCadastrados.push(resultadoCadastro)
+            }
+        })
 
         return { alunosCadastrados: alunosCadastrados, alunosNaoCadastrados: alunosComErro }
 
@@ -136,14 +166,14 @@ function atualizarAluno(aluno, sequelize) {
 
         try {
 
-        const { idAluno,CPF, nome, email, foto,fk_curso} = aluno
+            const { idAluno, CPF, nome, email, foto, fk_curso } = aluno
 
 
             sequelize.query("call editar_aluno(?,?,?,?,?,?)", {
                 replacements: [idAluno, CPF, nome, email, foto, fk_curso],
                 type: sequelize.QueryTypes.INSERT
             })
-                .then((r) => !!r[0] == false ? reject(novoErro(`Erro ao atualizar o aluno: ${r}` , 404)) : resolve(r))
+                .then((r) => !!r[0] == false ? reject(novoErro(`Erro ao atualizar o aluno: ${r}`, 404)) : resolve(r))
                 .catch((e) => reject(e))
         }
 
@@ -166,7 +196,6 @@ function pesquisaAluno(idAluno, sequelize) {
                 .catch((e) => reject(e))
         }
         catch (err) {
-            console.log(err)
             reject(err)
         }
     })
