@@ -27,6 +27,10 @@ function criarProdutosParaCadastro(produto, imagensAgrupadasParams) {
             const listaDeLinks = {}; // lista com a cor da imagem + url de resposta
             const listaErrosImagem = [] // lista com os erros de tentar cadastrar imagem
 
+            for (let index = 0; index < imagensAgrupadas.length; index++) {
+                imagensAgrupadas[index].fieldname = imagensAgrupadas[index].fieldname.split("][")[1].split("][")[0]                
+            }
+            
             const promessasDeSalvarImagens = imagensAgrupadas.map((imagem) => {
                 return new Promise((resolve, reject) => {
                     salvarImagemAzure("produto", imagem)
