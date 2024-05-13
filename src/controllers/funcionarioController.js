@@ -42,6 +42,24 @@ function pesquisarUnicoFuncionario(NIF, sequelize) {
 }
 
 
+function pesquisarUnicoFuncionarioId(id, sequelize) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            await sequelize.query("select * from todos_funcionarios where id_funcionario = ? ;", {
+                replacements: [id],
+                type: sequelize.QueryTypes.SELECT
+            })
+                .then((r) => resolve(r))
+                .catch((e) => reject(e))
+
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
+
+
+
 async function editarFuncionario(dadosFuncionario, foto, sequelize) {
 
     return new Promise(async (resolve, reject) => {
@@ -50,8 +68,8 @@ async function editarFuncionario(dadosFuncionario, foto, sequelize) {
             const { idFuncionario, NIF, nome, email, nivel_acesso } = dadosFuncionario
 
             // Verifica se o usuario existe no banco
-            const funcionarioExistente = await pesquisarUnicoFuncionario(NIF, sequelize)
-            console.log(funcionarioExistente)
+            const funcionarioExistente = await pesquisarUnicoFuncionarioId(idFuncionario, sequelize)
+
             if (!!funcionarioExistente[0] == false) {
                 reject(novoErro("Funcionario não encontrado", 404))
             }
