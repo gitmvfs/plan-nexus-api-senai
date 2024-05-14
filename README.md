@@ -43,11 +43,24 @@
 <li><a href="https://www.npmjs.com/package/zod">Zod</a> - Validação de dados e objetos em TypeScript</li>
 </ul>
 
+--- 
+
 <h2>🏗 Arquitetura</h2>
+
+---
 
 <h2>🗃 Implementação</h2>
 
+---
+
 <h2>👨‍💻 Autores</h2>
+<ul>
+  <li><a href="https://github.com/gitmvfs">Marcos Santos</a> </li>
+  <li><a href="https://github.com/LaizaBarbosa"> Laiza Barbosa </a> </li>
+  <li><a href="https://github.com/Rodriguou"> Rodrigo Matos </a></li>
+</ul>
+
+---
 
 <h2>📃 Licença</h2>
 
