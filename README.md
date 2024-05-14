@@ -45,6 +45,8 @@
 
 <h2>🏗 Arquitetura</h2>
 
+<h2>🗃 Implementação</h2>
+
 <h2>👨‍💻 Autores</h2>
 
 <h2>📃 Licença</h2>
