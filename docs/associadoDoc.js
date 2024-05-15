@@ -105,5 +105,33 @@
 *       500:
 *         description: erro no server.
 
+* /associado/brinde:
+*   patch:
+*     security:
+*       - bearerAuth: []
+*     parameters:
+*       - name: nif
+*         in: header
+*         description: Nif do funcionario que está logado
+*         required: true
+*         type: string
+*     requestBody:
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             $ref: '#/definitions/deletarAssociado'
+*     tags:
+*       - Associado
+*     summary: Define o brinde do associado como verdadeiro   
+*     description: Define que o associado resgatou o brinde.
+*     responses:
+*       201:
+*         description: Brinde resgatado com sucesso
+*       400:
+*         description: dados invalidos.
+*       500:
+*         description: erro no server.
+
 
 */

@@ -20,7 +20,7 @@ function pesquisarUmAssociadoPeloId(fk_aluno, sequelize) {
                 replacements: [fk_aluno],
                 type: sequelize.QueryTypes.SELECT
             })
-                .then((r) => { !r[0] == true ? resolve(r[0]) : reject(novoErro("Aluno não encontrado na base de associados", 404)) })
+                .then((r) => { !!r[0] == true ? resolve(r[0]) : reject(novoErro("Aluno não encontrado na base de associados", 404)) })
                 .catch((e) => { reject(e) })
 
         } catch (error) {
@@ -72,7 +72,35 @@ function removerAssociado(idAluno, sequelize) {
         }
     })
 
+}
+
+function resgatarBrindeAssociado(idAluno, sequelize) {
+
+    return new Promise(async (resolve, reject) => {
+        try {
+            // verifica se o associado existe
+
+            const response = await pesquisarUmAssociadoPeloId(idAluno, sequelize)
+            
+            // verifica se o brinde já foi resgatado
+            if(response.brinde == 1){
+                reject(novoErro("Aluno já resgatou o brinde", 400))
+            }
+
+            // realiza a operação caso ele exista
+            await sequelize.query("call resgatar_brinde(?)", {
+                replacements: [idAluno],
+                type: sequelize.QueryTypes.UPDATE
+            })
+                .then((r) => { resolve(r) })
+                .catch((e) => { reject(e) })
+
+        }
+        catch (err) {
+            reject(err)
+        }
+    })
 
 }
 
-module.exports = { verTodosAssociados, associarAluno, pesquisarUmAssociadoPeloId, removerAssociado }
+module.exports = { verTodosAssociados, associarAluno, pesquisarUmAssociadoPeloId, removerAssociado, resgatarBrindeAssociado }

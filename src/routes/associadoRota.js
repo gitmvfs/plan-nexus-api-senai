@@ -1,5 +1,5 @@
 const router = require("express").Router()
-const { verTodosAssociados, associarAluno, removerAssociado } = require("../controllers/associadoController")
+const { verTodosAssociados, associarAluno, removerAssociado, resgatarBrindeAssociado } = require("../controllers/associadoController")
 const authMiddleware = require("../middleware/auth")
 const { tratarMensagensDeErro } = require("../utils/errorMsg")
 
@@ -43,9 +43,19 @@ router.delete("/delete", async (req, res) => {
         const erroTratado = await tratarMensagensDeErro(error)
         res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
     }
+})
 
+router.patch("/brinde", async (req, res) => {
 
-
+    try {
+        const { id_aluno } = req.body
+        await resgatarBrindeAssociado(id_aluno,req.sequelize)
+        res.status(200).json({ msg: "Brinde resgatado com sucesso", "statusCode": 200 })
+    }
+    catch (error){
+        const erroTratado = await tratarMensagensDeErro(error)
+        res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
+    }
 })
 
 module.exports = router
