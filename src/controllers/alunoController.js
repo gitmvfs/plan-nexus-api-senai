@@ -2,6 +2,8 @@ const cursoModel = require("../models/cursoModel")
 const alunoModel = require("../models/alunoModel")
 const { definirGraduacao, retirarFormatacao } = require("../utils/converterString")
 const { tratarMensagensDeErro, novoErro } = require("../utils/errorMsg")
+const { associarAluno, pesquisarUmAssociado } = require("./associadoController")
+const { resolve } = require("path")
 
 async function cadastroMultiplosAlunos(listaAluno, sequelize) {
     // Pega o id da turma do aluno e coloca no fk_curso
@@ -36,14 +38,12 @@ async function separarAlunosNasTurmas(listaAlunos, sequelize) {
             }
         });
 
-        const cpfSemFormatacao = retirarFormatacao(aluno.Cpf) // remove a formatação antes de mandar para o banco
-
         listaAlunosNasTurmas.push({
-            CPF: cpfSemFormatacao,
+            CPF: retirarFormatacao(aluno.Cpf),
             nome: aluno.Nome,
             email: aluno.Email,
-            telefone: aluno.Telefone,
-            celular: aluno.Celular,
+            telefone: retirarFormatacao(aluno.Telefone),
+            celular: retirarFormatacao(aluno.Celular),
             fk_curso: turma[0].dataValues.id_curso
         });
     }
@@ -121,14 +121,17 @@ async function mandarAlunosDb(listaAlunos, sequelize) {
             }
             else {
                 alunosCadastrados.push(resultadoCadastro)
+                console.log(resultadoCadastro)
                 envioEmail.push({
-                    nome: resultadoCadastro.nome,
-                    email: resultadoCadastro.email
+                    nome: resultadoCadastro.aluno.nome,
+                    email: resultadoCadastro.aluno.email
                 })
             }
         })
 
-        return { alunosCadastrados: alunosCadastrados, alunosNaoCadastrados: alunosComErro, envioEmail }
+        await enviarEmail(envioEmail)
+
+        return { alunosCadastrados: alunosCadastrados, alunosNaoCadastrados: alunosComErro }
 
     } catch (error) {
         return (error)
@@ -140,25 +143,45 @@ function cadastroUnicoAluno(aluno, sequelize) {
 
     return new Promise(async (resolve, reject) => {
         try {
-            const CPF = retirarFormatacao(aluno.CPF)
+            // inserindo o aluno no database
 
-            await alunoModel(sequelize).create({
-                CPF,
-                nome: aluno.nome,
-                email: aluno.email,
-                fk_curso: aluno.fk_curso
+            const { CPF, nome, email, telefone, celular, fk_curso, socioAapm } = aluno
+
+            await sequelize.query("call cadastrar_aluno(?,?,?,?,?,?)", {
+                replacements: [CPF, nome, email, fk_curso, celular, telefone],
+                type: sequelize.QueryTypes.INSERT
             })
-                .then((r) => {
-                    aluno.idAluno = r.dataValues.id_aluno
-                    resolve(aluno)
-                })
-                .catch((e) => {
-                    reject(e)
-                })
-        }
-        catch (e) {
 
-            reject(e)
+            const dadosAluno = await pesquisarAlunoPorCpf(CPF, sequelize)
+
+            let response = {
+                id_aluno: dadosAluno[0].id_aluno,
+                CPF,
+                nome,
+                email,
+                telefone,
+                celular,
+                curso: dadosAluno.curso,
+                modalidade: dadosAluno.modalidade
+            }
+
+            if (socioAapm) {
+                const dadosSocio = {
+                    id_aluno: dadosAluno[0].id_aluno,
+                    brinde: false,
+                    dataAssociacao: new Date()
+
+                }
+                await associarAluno(dadosSocio, sequelize)
+                response["dadosAssociado"] = await pesquisarUmAssociado(dadosAluno[0].id_aluno, sequelize)
+            }
+            else {
+
+            }
+            resolve(response)
+        } catch (error) {
+
+            reject(error)
         }
     })
 
@@ -171,15 +194,45 @@ function atualizarAluno(aluno, sequelize) {
 
         try {
 
-            const { idAluno, CPF, nome, email, foto, fk_curso } = aluno
+            const { idAluno, CPF, nome, email, foto, fk_curso, socioAapm } = aluno
 
+            // pesquisa se o aluno existe antes de atualizar
+            const alunoExiste = await pesquisaAluno(idAluno, sequelize)
 
-            sequelize.query("call editar_aluno(?,?,?,?,?,?)", {
+            if (!!alunoExiste[0] == false) {
+                reject(novoErro("Aluno não encontrado", 404))
+            }
+
+            // realiza a operação de editar o aluno
+            await sequelize.query("call editar_aluno(?,?,?,?,?,?)", {
                 replacements: [idAluno, CPF, nome, email, foto, fk_curso],
                 type: sequelize.QueryTypes.INSERT
             })
-                .then((r) => !!r[0] == false ? reject(novoErro(`Erro ao atualizar o aluno: ${r}`, 404)) : resolve(r))
+                .then((r) => !!r[0] == false ? reject(novoErro(`Erro ao atualizar o aluno: ${r}`, 404)) : " ")
                 .catch((e) => reject(e))
+
+            // confirma que o aluno foi atualizado e guarda na resposta
+            let response = await pesquisaAluno(idAluno, sequelize)[0]
+
+            // caso o aluno seja sócio da aapm atribui ele aos associados
+            if (socioAapm) {
+                const dadosSocio = {
+                    id_aluno: idAluno,
+                    brinde: false,
+                    dataAssociacao: new Date()
+
+                }
+                await associarAluno(dadosSocio, sequelize)
+                response["dadosAssociado"] = await pesquisarUmAssociado(idAluno, sequelize)
+
+
+            } else {
+                // caso ele não seja sócio/ remove ele caso ele esteja na tabela ou apenas n faz nada.
+                // ADICIONAR LOGICA PARA REMOVER ASSOCIADO
+
+            }
+
+            resolve(response)
         }
 
         catch (err) {
@@ -224,5 +277,27 @@ function pesquisaTodosAlunos(sequelize) {
 
 }
 
+function enviarEmail(listaEmail) {
+
+    return new Promise(async (resolve, reject) => {
+
+        try {
+
+            // Faz uma requisição para o envio de SMTP
+            fetch(process.env.API_ALUNOS_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json' // Specify the content type as JSON
+                },
+                body: JSON.stringify({ listaEmail: listaEmail }) // Convert the data to a JSON string
+            })
+            resolve(200)
+        }
+        catch (err) {
+            reject(err)
+        }
+    })
+
+}
 
 module.exports = { cadastroMultiplosAlunos, cadastroUnicoAluno, atualizarAluno, pesquisaAluno, pesquisaTodosAlunos }

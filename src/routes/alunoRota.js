@@ -16,14 +16,16 @@ router.post("/cadastro/multiplos", uploadArquivoAlunos.single("alunosFile"), asy
         const listaALunos = await excelToJson(req.file.path) // pega o arquivo do excel e devolve os alunos em json
         await cadastroDeTurmas(listaALunos, req.sequelize) // pega o json dos alunos e cadastra as turmas
         const resultadoCadastroAlunos = await cadastroMultiplosAlunos(listaALunos, req.sequelize)
-        
+
         let statusCode = 201
         let mensagemResposta = "Operação realizada com sucesso"
-        if(!!resultadoCadastroAlunos.alunosCadastrados[0] == false){
+        if (!!resultadoCadastroAlunos.alunosCadastrados[0] == false) {
             statusCode = 400 // caso tenha apenas erros na hora da inserção
             mensagemResposta = "Todos os dados já estão cadastrados, verifique se o arquivo está correto."
         }
-        res.status(statusCode).json({ msg: `${mensagemResposta}`, "statusCode":`${statusCode}`, "response": resultadoCadastroAlunos })
+        
+      
+        res.status(statusCode).json({ msg: `${mensagemResposta}`, "statusCode": `${statusCode}`, "response": resultadoCadastroAlunos })
     }
     catch (err) {
         const erroTratado = await tratarMensagensDeErro(err)
@@ -37,18 +39,19 @@ router.post("/cadastro/unico", async (req, res) => {
 
     //Dados que chegam da rota
     const aluno = {
-        CPF,
+        CPF: retirarFormatacao(CPF),
         nome,
         email,
         fk_curso,
         socioAapm,
-        telefone,
-        celular
+        telefone: retirarFormatacao(telefone),
+        celular: retirarFormatacao(celular)
     }
 
     try {
         const alunoValidado = alunoUnicoValidacao.parse(aluno)
         const response = await cadastroUnicoAluno(alunoValidado, req.sequelize)
+        fetch()
         res.status(201).json({ "msg": "cadastrado com sucesso", "statusCode": 201, "response": response })
 
     }
@@ -62,7 +65,7 @@ router.patch("/atualizar", async (req, res) => {
 
 
     try {
-        const { idAluno,CPF, nome,foto, email,socioAapm, fk_curso, telefone, celular } = req.body
+        const { idAluno, CPF, nome, foto, email, socioAapm, fk_curso, telefone, celular } = req.body
 
         //Dados que chegam da rota
         const aluno = {
@@ -78,11 +81,11 @@ router.patch("/atualizar", async (req, res) => {
         }
 
         const alunoValidado = alunoUnicoValidacao.parse(aluno)
-        const response = await atualizarAluno(alunoValidado,req.sequelize)
-        const responseContato = await atualizarUnicoTelefone(alunoValidado,req.sequelize)
+        const response = await atualizarAluno(alunoValidado, req.sequelize)
+        const responseContato = await atualizarUnicoTelefone(alunoValidado, req.sequelize)
         response.erroCadastroContato = responseContato
-        
-        response[0] == 1    
+
+        response[0] == 1
             ? res.status(200).json({ "msg": "Atualizado com sucesso", "statusCode": 200 })
             : res.status(400).json({ "msg": "Erro ao atualizar aluno, verifique os campos.", "statusCode": 400 })
 
@@ -99,7 +102,6 @@ router.get("/unico/:idAluno", async (req, res) => {
         const { idAluno } = req.params
 
         const response = await pesquisaAluno(idAluno, req.sequelize)
-        console.log(response)
         res.status(200).json({ "msg": "Consulta realizada com sucesso", "statusCode": 200, "response": response })
 
     }
