@@ -2,8 +2,9 @@ const cursoModel = require("../models/cursoModel")
 const alunoModel = require("../models/alunoModel")
 const { definirGraduacao, retirarFormatacao } = require("../utils/converterString")
 const { tratarMensagensDeErro, novoErro } = require("../utils/errorMsg")
-const { associarAluno, pesquisarUmAssociado } = require("./associadoController")
+const { associarAluno, pesquisarUmAssociadoPeloId, removerAssociado } = require("./associadoController")
 const { resolve } = require("path")
+const { salvarImagemAzure } = require('./blobController')
 
 async function cadastroMultiplosAlunos(listaAluno, sequelize) {
     // Pega o id da turma do aluno e coloca no fk_curso
@@ -121,7 +122,6 @@ async function mandarAlunosDb(listaAlunos, sequelize) {
             }
             else {
                 alunosCadastrados.push(resultadoCadastro)
-                console.log(resultadoCadastro)
                 envioEmail.push({
                     nome: resultadoCadastro.aluno.nome,
                     email: resultadoCadastro.aluno.email
@@ -175,9 +175,6 @@ function cadastroUnicoAluno(aluno, sequelize) {
                 await associarAluno(dadosSocio, sequelize)
                 response["dadosAssociado"] = await pesquisarUmAssociado(dadosAluno[0].id_aluno, sequelize)
             }
-            else {
-
-            }
             resolve(response)
         } catch (error) {
 
@@ -188,13 +185,13 @@ function cadastroUnicoAluno(aluno, sequelize) {
 
 }
 
-function atualizarAluno(aluno, sequelize) {
+function atualizarAluno(aluno, foto, sequelizeParams) {
 
     return new Promise(async (resolve, reject) => {
 
         try {
-
-            const { idAluno, CPF, nome, email, foto, fk_curso, socioAapm } = aluno
+            const sequelize = sequelizeParams
+            const { idAluno, CPF, nome, email, fk_curso, socioAapm, telefone, celular } = aluno
 
             // pesquisa se o aluno existe antes de atualizar
             const alunoExiste = await pesquisaAluno(idAluno, sequelize)
@@ -203,32 +200,42 @@ function atualizarAluno(aluno, sequelize) {
                 reject(novoErro("Aluno não encontrado", 404))
             }
 
+            // troca a foto caso o arquivo
+            let linkImagem = ""
+            if (!!foto == true) {
+                linkImagem = await salvarImagemAzure("aluno", foto)
+            }
+            else {
+                linkImagem = alunoExiste[0].foto
+            }
             // realiza a operação de editar o aluno
-            await sequelize.query("call editar_aluno(?,?,?,?,?,?)", {
-                replacements: [idAluno, CPF, nome, email, foto, fk_curso],
-                type: sequelize.QueryTypes.INSERT
+            await sequelize.query("call editar_aluno(?,?,?,?,?,?,?,?)", {
+                replacements: [idAluno, CPF, nome, email, foto, fk_curso, celular, telefone],
+                type: sequelize.QueryTypes.UPDATE
             })
-                .then((r) => !!r[0] == false ? reject(novoErro(`Erro ao atualizar o aluno: ${r}`, 404)) : " ")
-                .catch((e) => reject(e))
 
             // confirma que o aluno foi atualizado e guarda na resposta
-            let response = await pesquisaAluno(idAluno, sequelize)[0]
+            const response = await pesquisaAluno(idAluno, sequelize)
 
             // caso o aluno seja sócio da aapm atribui ele aos associados
-            if (socioAapm) {
+            if (socioAapm == "true") {
                 const dadosSocio = {
                     id_aluno: idAluno,
                     brinde: false,
                     dataAssociacao: new Date()
 
                 }
-                await associarAluno(dadosSocio, sequelize)
-                response["dadosAssociado"] = await pesquisarUmAssociado(idAluno, sequelize)
+                //await associarAluno(dadosSocio, sequelize)
+                response["dadosAssociado"] = await pesquisarUmAssociadoPeloId(idAluno, sequelize)
 
 
             } else {
                 // caso ele não seja sócio/ remove ele caso ele esteja na tabela ou apenas n faz nada.
-                // ADICIONAR LOGICA PARA REMOVER ASSOCIADO
+
+                await sequelize.query("call encerrar_associacao(?)", {
+                    replacements: [idAluno],
+                    type: sequelize.QueryTypes.DELETE
+                })
 
             }
 
@@ -241,7 +248,6 @@ function atualizarAluno(aluno, sequelize) {
     })
 }
 
-// Pode pesquisar por id, cpf ou email
 function pesquisaAluno(idAluno, sequelize) {
     return new Promise(async (resolve, reject) => {
 

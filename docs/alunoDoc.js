@@ -31,6 +31,35 @@
  *         type: string
  *         required: true
  * 
+ *   editarAlunoModelo:
+ *     type: object
+ *     properties:
+ *       idAluno:
+ *         type: string
+ *         required: true  
+ *       CPF:
+ *         type: string
+ *         required: true
+ *       nome:
+ *         type: string
+ *         required: true
+ *       email:
+ *         type: string
+ *         required: true
+ *       fk_curso:
+ *         type: string
+ *         value: "1"
+ *         required: true
+ *       socioAapm:
+ *         type: boolean
+ *         required: true
+ *       telefone:
+ *         type: string
+ *         required: false
+ *       celular:
+ *         type: string
+ *         required: true
+ * 
  * /aluno/cadastro/multiplos:
  *   post:
  *     security:
@@ -99,7 +128,7 @@
  *         description: Erro no banco de dados.
  * 
  * 
- * /aluno/atualizar/unico:
+ * /aluno/atualizar:
  *   patch:
  *     security:
  *       - bearerAuth: []
@@ -118,7 +147,7 @@
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/definitions/cadastroAlunoModelo'
+ *             $ref: '#/definitions/editarAlunoModelo'
  *     responses:
  *       201:
  *         description: Aluno cadastrado com sucesso.
@@ -129,4 +158,26 @@
  *       500:
  *         description: Erro no banco de dados.
  * 
+ * 
+ * /aluno/todos:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: nif
+ *         in: header
+ *         description: Nif do funcionário que está logado
+ *         required: true
+ *         type: string
+ *     tags:
+ *       - Aluno
+ *     summary: Pega todos os alunos do banco.
+ *     description: Pega todos os alunos do banco de dados.
+ *     responses:
+ *       201:
+ *         description: Consulta realizada com sucesso
+ *       403:
+ *         description: Sem autorização.
+ *       500:
+ *         description: Erro no banco de dados.
  */

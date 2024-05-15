@@ -5,13 +5,13 @@ const alunoUnicoValidacao = z.object({
     nome: z.string().min(1, "Nome não pode estar vazio"),
     email: z.string().email("Email inválido.").min(1, "Email não pode estar vazio"),
     fk_curso: z.string().min(1, "Curso não pode estar vazio"),
-    socioAapm: z.boolean(),
+    socioAapm: z.enum(["false","true"]),
     telefone: z.string().optional(),
     celular: z.string().min(1,"Número de celular obrigatório")
 })
 
 const funcionarioValidacao = z.object({
-    idFuncionario: z.string(),
+    idFuncionario: z.string().optional(),
     NIF: z.string().min(1).max(20),
     nome: z.string().min(1).max(50),
     email: z.string().email().max(100),

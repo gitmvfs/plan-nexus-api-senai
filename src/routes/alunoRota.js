@@ -5,7 +5,7 @@ const { cadastroDeTurmas } = require("../controllers/cursoController")
 const authMiddleware = require("../middleware/auth")
 const { tratarMensagensDeErro } = require("../utils/errorMsg")
 const excelToJson = require("../utils/excelParseJson")
-const { uploadArquivoAlunos } = require("../utils/multer")
+const { uploadArquivoAlunos, uploadImagem } = require("../utils/multer")
 const { alunoUnicoValidacao } = require("../utils/validacao")
 
 // ROTAS PROTEGIDAS
@@ -23,8 +23,8 @@ router.post("/cadastro/multiplos", uploadArquivoAlunos.single("alunosFile"), asy
             statusCode = 400 // caso tenha apenas erros na hora da inserção
             mensagemResposta = "Todos os dados já estão cadastrados, verifique se o arquivo está correto."
         }
-        
-      
+
+
         res.status(statusCode).json({ msg: `${mensagemResposta}`, "statusCode": `${statusCode}`, "response": resultadoCadastroAlunos })
     }
     catch (err) {
@@ -61,18 +61,20 @@ router.post("/cadastro/unico", async (req, res) => {
     }
 })
 
-router.patch("/atualizar", async (req, res) => {
+router.patch("/atualizar", uploadImagem.single("fotoAluno"), async (req, res) => {
 
 
     try {
-        const { idAluno, CPF, nome, foto, email, socioAapm, fk_curso, telefone, celular } = req.body
+        const { idAluno, CPF, nome, email, socioAapm, fk_curso, telefone, celular } = req.body
+
+        const foto = req.file || null
+
 
         //Dados que chegam da rota
         const aluno = {
             idAluno,
             CPF,
             nome,
-            foto,
             socioAapm,
             email,
             fk_curso,
@@ -80,13 +82,11 @@ router.patch("/atualizar", async (req, res) => {
             celular
         }
 
-        const alunoValidado = alunoUnicoValidacao.parse(aluno)
-        const response = await atualizarAluno(alunoValidado, req.sequelize)
-        const responseContato = await atualizarUnicoTelefone(alunoValidado, req.sequelize)
-        response.erroCadastroContato = responseContato
+        alunoUnicoValidacao.parse(aluno)
+        const response = await atualizarAluno(aluno, foto, req.sequelize)
 
-        response[0] == 1
-            ? res.status(200).json({ "msg": "Atualizado com sucesso", "statusCode": 200 })
+        response
+            ? res.status(200).json({ "msg": "Atualizado com sucesso", "statusCode": 200, "response: ": response })
             : res.status(400).json({ "msg": "Erro ao atualizar aluno, verifique os campos.", "statusCode": 400 })
 
     }
