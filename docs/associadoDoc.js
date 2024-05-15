@@ -17,6 +17,11 @@
 *       data_associacao:
 *         type: string
 
+*   deletarAssociado:
+*     type: object
+*     properties:
+*       id_aluno:
+*         type: number
 
 
 
@@ -44,7 +49,7 @@
 *         description: associado ja existe.
 
 
-* /associado/novo:
+* /associado/:
 *   post:
 *     security:
 *       - bearerAuth: []
@@ -71,5 +76,34 @@
 *         description: dados invalidos.
 *       500:
 *         description: erro no server.
+
+* /associado/delete:
+*   delete:
+*     security:
+*       - bearerAuth: []
+*     parameters:
+*       - name: nif
+*         in: header
+*         description: Nif do funcionario que está logado
+*         required: true
+*         type: string
+*     requestBody:
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             $ref: '#/definitions/deletarAssociado'
+*     tags:
+*       - Associado
+*     summary: Remover um associado.    
+*     description: Remove um associado pelo id do aluno
+*     responses:
+*       201:
+*         description: associacao bem sucedida
+*       400:
+*         description: dados invalidos.
+*       500:
+*         description: erro no server.
+
 
 */
