@@ -109,5 +109,43 @@
 *         description: Erro ao atualizar usuario.
 
 
+* /produto/estoque:
+*   patch:
+*     security:
+*       - bearerAuth: []
+*     parameters:
+*       - name: nif
+*         in: header
+*         description: Nif do funcionario que está logado
+*         required: true
+*         type: string 
+*     tags:
+*       - Produto
+*     summary: Edita o estoque do produto.     
+*     description: define o estoque do produto.
+*     consumes:
+*       - application/json
+*     requestBody:
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               idProduto:
+*                 type: string
+*               quantidade:
+*                 type: number
+*     responses:
+*       '201':
+*         description: Funcionario cadastrado com sucesso.
+*       '400':
+*         description: Dados inválidos.
+*       '403':
+*         description: Sem autorização.  
+*       '500':
+*         description: Erro no banco de dados.
+
+
 
 */

@@ -1,5 +1,5 @@
 const router = require("express").Router()
-const { cadastrarProduto, pesquisarTodosProdutos, pesquisarUnicoProduto } = require("../controllers/produtoController")
+const { cadastrarProduto, pesquisarTodosProdutos, pesquisarUnicoProduto, definirEstoqueProduto } = require("../controllers/produtoController")
 const authMiddleware = require("../middleware/auth")
 const { produtoValidacao } = require("../utils/validacao")
 const { tratarMensagensDeErro } = require("../utils/errorMsg")
@@ -56,13 +56,14 @@ router.get("/todos", async (req, res) => {
 
 })
 
-router.get("/:idProduto", async (req, res) => {
+
+router.patch("/estoque", async (req, res) => {
 
     try {
-        const response = await pesquisarUnicoProduto(req.params.idProduto, req.sequelize)
-        !!response[0] == true
-        ?res.status(200).json({ msg: "Consulta realizada com sucesso", "statusCode": 200, "response": response })
-        :res.status(404).json({ msg: "Produto não encontrado", "statusCode": 404,})
+        const {idProduto , quantidade} = req.body
+        console.log(req.body)
+        const response = await definirEstoqueProduto(idProduto,quantidade, req.sequelize)
+        res.status(200).json({ msg: "Estoque atualizado com sucesso", "statusCode": 200})
     }
     catch (err) {
         const erroTratado = await tratarMensagensDeErro(err)
@@ -72,7 +73,7 @@ router.get("/:idProduto", async (req, res) => {
 
 })
 
-router.post("/estoque/", async (req, res) => {
+router.get("/:idProduto", async (req, res) => {
 
     try {
         const response = await pesquisarUnicoProduto(req.params.idProduto, req.sequelize)

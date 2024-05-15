@@ -28,9 +28,9 @@ function criarProdutosParaCadastro(produto, imagensAgrupadasParams) {
             const listaErrosImagem = [] // lista com os erros de tentar cadastrar imagem
 
             for (let index = 0; index < imagensAgrupadas.length; index++) {
-                imagensAgrupadas[index].fieldname = imagensAgrupadas[index].fieldname.split("][")[1].split("][")[0]                
+                imagensAgrupadas[index].fieldname = imagensAgrupadas[index].fieldname.split("][")[1].split("][")[0]
             }
-            
+
             const promessasDeSalvarImagens = imagensAgrupadas.map((imagem) => {
                 return new Promise((resolve, reject) => {
                     salvarImagemAzure("produto", imagem)
@@ -161,32 +161,27 @@ function pesquisarUnicoProduto(idProduto, sequelize) {
 
 }
 
-function definirEstoqueProduto(id_produto,quantidade ,sequelize) {
+function definirEstoqueProduto(idProduto, quantidade, sequelize) {
 
     return new Promise(async (resolve, reject) => {
-
-        const response = await pesquisarTodosProdutos(id_Produto)
-
-        if (!!response[0] == false) {
-            reject(novoErro("Produto inválido, confira o id", 404))
-        }
-
         try {
-            produtoModel(sequelize).update({
-                where: {
-                    id_produto
-                }
-            }, {
-                qtd_estoque : quantidade
+            const response = await pesquisarUnicoProduto(idProduto,sequelize)
+
+            if (!!response[0] == false) {
+                reject(novoErro("Produto inválido, confira o id", 404))
+
+            }
+
+            sequelize.query("call definir_estoque(?,?)",{
+                replacements:[idProduto,quantidade],
+                type: sequelize.QueryTypes.UPDATE
             })
-                .then((r) => resolve(r))
-                .catch((e) => reject(e))
+            resolve()
         }
-
-
         catch (err) {
             reject(err)
         }
+
     })
 
 
