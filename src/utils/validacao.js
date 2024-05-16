@@ -33,6 +33,7 @@ const produtoValidacao = z.object({
     cores: z.array(z.string()).min(1, "As cores não podem estar vazias"),
     tamanhos: z.array(z.string()).min(1, "Os tamanhos não podem estar vazios"),
     valor: z.number().min(1, "O valor não pode estar vazio"),
+    desconto: z.number().min(1, "O desconto não pode estar vazio"),
     descricao: z.string().max(150).nullable(),
     brinde: z.enum(["false","true"])
   });
