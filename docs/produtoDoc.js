@@ -48,6 +48,8 @@
 *                 type: array
 *                 items:
 *                   type: string
+*               desconto: 
+*                 type: number
 *               valor: 
 *                 type: number
 *               brinde:

@@ -28,7 +28,16 @@ function criarProdutosParaCadastro(produto, imagensAgrupadasParams) {
             const listaErrosImagem = [] // lista com os erros de tentar cadastrar imagem
 
             for (let index = 0; index < imagensAgrupadas.length; index++) {
-                imagensAgrupadas[index].fieldname = imagensAgrupadas[index].fieldname.split("][")[1].split("][")[0]
+                try {
+                    imagensAgrupadas[index].fieldname = imagensAgrupadas[index].fieldname.split("][")[1].split("][")[0]
+
+                }
+                catch (err) {
+                    if (err.message == "Cannot read properties of undefined (reading 'split')") {
+                        imagensAgrupadas[index].fieldname = imagensAgrupadas[index].fieldname
+                    }
+                }
+
             }
 
             const promessasDeSalvarImagens = imagensAgrupadas.map((imagem) => {
@@ -80,18 +89,17 @@ function criarProdutosParaCadastro(produto, imagensAgrupadasParams) {
                     //Cria o modelo do produto para o banco
                     const produtoModeloBanco = {
                         nome: produto.nome,
-                        foto: listaDeLinks[`${cor}`],
+                        foto: JSON.stringify(listaDeLinks[`${cor}`]),
                         tamanho: tamanho.trim(),
                         valor: produto.valor,
+                        desconto: produto.desconto,
                         cor: cor,
                         descricao: produto.descricao,
                         brinde: produto.brinde
                     }
-
                     listaProdutos.push(produtoModeloBanco)
                 })
             })
-
             resolve(listaProdutos)
 
 
@@ -106,21 +114,26 @@ function criarProdutosParaCadastro(produto, imagensAgrupadasParams) {
 
 function mandarProdutoParaBanco(listaProdutoParaBanco, sequelize) {
 
-
-
     return new Promise(async (resolve, reject) => {
-        const listaReponse = []
+        try {
 
-        listaProdutoParaBanco.map((produto) => {
-            produtoModel(sequelize).create(produto)
-                .then((r) => listaReponse.push(r))
-                .catch((e) => {
-                    listaReponse.push(e)
+            const listaReponse = []
+
+            listaProdutoParaBanco.map((produto) => {
+                const { nome, foto, tamanho, valor, desconto, cor, descricao } = produto
+                let brinde = produto.brinde == "true" ? 1 : 0
+                const quantidadeEstoque = 0
+                sequelize.query("call cadastrar_produto(?,?,?,?,?,?,?,?,?)", {
+                    replacements: [nome, descricao, foto, cor, tamanho, valor, brinde, quantidadeEstoque, desconto],
+                    types: sequelize.QueryTypes.INSERT
                 })
-        })
-        resolve(listaReponse)
+            })
+            resolve(listaReponse)
 
-
+        }
+        catch(err){
+            reject(err)
+        }
     })
 
 }
@@ -165,15 +178,15 @@ function definirEstoqueProduto(idProduto, quantidade, sequelize) {
 
     return new Promise(async (resolve, reject) => {
         try {
-            const response = await pesquisarUnicoProduto(idProduto,sequelize)
+            const response = await pesquisarUnicoProduto(idProduto, sequelize)
 
             if (!!response[0] == false) {
                 reject(novoErro("Produto inválido, confira o id", 404))
 
             }
 
-            sequelize.query("call definir_estoque(?,?)",{
-                replacements:[idProduto,quantidade],
+            sequelize.query("call definir_estoque(?,?)", {
+                replacements: [idProduto, quantidade],
                 type: sequelize.QueryTypes.UPDATE
             })
             resolve()
