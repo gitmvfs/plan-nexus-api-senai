@@ -131,7 +131,7 @@ function mandarProdutoParaBanco(listaProdutoParaBanco, sequelize) {
             resolve(listaReponse)
 
         }
-        catch(err){
+        catch (err) {
             reject(err)
         }
     })
@@ -155,7 +155,7 @@ function pesquisarTodosProdutos(sequelize) {
 
 }
 
-function pesquisarUnicoProduto(idProduto, sequelize) {
+function pesquisarProdutoPeloId(idProduto, sequelize) {
 
     return new Promise(async (resolve, reject) => {
 
@@ -173,6 +173,62 @@ function pesquisarUnicoProduto(idProduto, sequelize) {
     })
 
 }
+
+
+function pesquisarProdutosUnicos(sequelize) {
+
+    return new Promise(async (resolve, reject) => {
+
+        try {
+
+            function agruparProdutos(produtos) {
+                // Objeto para armazenar os produtos agrupados
+                const produtosAgrupados = {};
+
+                // Iterar sobre cada produto
+                produtos.forEach(produto => {
+                    // Criar uma chave única baseada no nome e na cor do produto
+                    const chave = `${produto.nome}-${produto.cor}`;
+
+                    // Se a chave ainda não existir no objeto, inicialize-a com uma lista vazia
+                    if (!produtosAgrupados[chave]) {
+                        produtosAgrupados[chave] = {
+                            listaIdProduto: [],
+                            nome: produto.nome,
+                            foto: new Set(), // Usando Set para garantir links únicos de fotos
+                            cor: produto.cor
+                        };
+                    }
+
+                    // Adicionar o ID do produto à lista de IDs
+                    produtosAgrupados[chave].listaIdProduto.push(produto.id_produto);
+
+                    // Adicionar as fotos do produto ao conjunto de fotos
+                    produto.foto.forEach(link => produtosAgrupados[chave].foto.add(link));
+                });
+
+                // Converter os conjuntos de fotos de volta para arrays
+                for (const chave in produtosAgrupados) {
+                    produtosAgrupados[chave].foto = [...produtosAgrupados[chave].foto];
+                }
+
+                // Retornar os produtos agrupados como um array de objetos
+                return Object.values(produtosAgrupados);
+            }
+
+            const response = await pesquisarTodosProdutos(sequelize)
+
+            const produtosAgrupados = agruparProdutos(response)
+            resolve(produtosAgrupados)
+        }
+        catch(err){
+            reject(err)
+        }
+    })
+
+
+}
+
 
 function definirEstoqueProduto(idProduto, quantidade, sequelize) {
 
@@ -200,4 +256,25 @@ function definirEstoqueProduto(idProduto, quantidade, sequelize) {
 
 }
 
-module.exports = { cadastrarProduto, pesquisarTodosProdutos, pesquisarUnicoProduto, definirEstoqueProduto }
+function atualizarProduto(idProduto, dadosProduto, fotos, sequelize) {
+
+    return new Promise((resolve, reject) => {
+
+
+        try {
+            const { nome, descricao, cor, valor, desconto } = dadosProduto
+            const foto = fotos
+
+        }
+        catch (err) {
+            reject(err)
+        }
+
+
+
+
+    })
+
+}
+
+module.exports = { cadastrarProduto, pesquisarTodosProdutos, pesquisarProdutoPeloId, definirEstoqueProduto, pesquisarProdutosUnicos }

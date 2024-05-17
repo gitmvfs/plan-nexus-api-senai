@@ -148,6 +148,25 @@
 *       '500':
 *         description: Erro no banco de dados.
 
+* /produto/unico/:
+*   get:
+*     security:
+*       - bearerAuth: []
+*     parameters:
+*       - name: nif
+*         in: header
+*         description: Nif do funcionario que está logado
+*         required: true
+*         type: string 
+*     tags:
+*       - Produto
+*     summary: Pesquisa todos os produtos.    
+*     description: Retorna todos os produtos cadastrados no banco
+*     responses:
+*       200:
+*         description: Produtos consultados com sucesso.
+*       500:
+*         description: Erro ao consultar produtos.
 
 
 */

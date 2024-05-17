@@ -1,8 +1,8 @@
 const router = require("express").Router()
-const { cadastrarProduto, pesquisarTodosProdutos, pesquisarUnicoProduto, definirEstoqueProduto } = require("../controllers/produtoController")
+const { cadastrarProduto, pesquisarTodosProdutos, pesquisarProdutoPeloId, definirEstoqueProduto, pesquisarProdutosUnicos } = require("../controllers/produtoController")
 const authMiddleware = require("../middleware/auth")
 const { produtoValidacao } = require("../utils/validacao")
-const { tratarMensagensDeErro } = require("../utils/errorMsg")
+const { tratarMensagensDeErro, novoErro } = require("../utils/errorMsg")
 const { uploadImagem } = require("../utils/multer")
 const { array } = require("zod")
 
@@ -13,17 +13,17 @@ router.post("/", uploadImagem.any(), async (req, res) => {
         const { nome, descricao } = req.body
 
         // define a lista de cores e tamanhos
-        const cores = req.body.cores instanceof Array == true? req.body.cores: new Array(req.body.cores) //verifica se é um array ou uma string unica
-        const tamanhos = req.body.tamanhos instanceof Array == true? req.body.tamanhos: new Array(req.body.tamanhos)
+        const cores = req.body.cores instanceof Array == true ? req.body.cores : new Array(req.body.cores) //verifica se é um array ou uma string unica
+        const tamanhos = req.body.tamanhos instanceof Array == true ? req.body.tamanhos : new Array(req.body.tamanhos)
         const valor = Number(req.body.valor)
         const brinde = req.body.brinde
         const imagensAgrupadas = req.files
         const desconto = Number(req.body.desconto)
-        
+
         const produto = {
             nome,
             cores,
-            tamanhos, 
+            tamanhos,
             desconto,
             valor,
             descricao,
@@ -57,10 +57,28 @@ router.get("/todos", async (req, res) => {
 
 })
 
+router.get("/unico/", async (req, res) => {
+
+    try {
+
+        const response = await pesquisarProdutosUnicos(req.sequelize)
+            .then((response) => res.status(200).json({ msg: "Consulta realizada com sucesso", "statusCode": 200, "response": response }))
+
+
+    }
+    catch (err) {
+        const erroTratado = await tratarMensagensDeErro(err)
+        res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
+
+    }
+
+
+})
+
 router.get("/:idProduto", async (req, res) => {
 
     try {
-        const response = await pesquisarUnicoProduto(req.params.idProduto, req.sequelize)
+        const response = await pesquisarProdutoPeloId(req.params.idProduto, req.sequelize)
         !!response[0] == true
             ? res.status(200).json({ msg: "Consulta realizada com sucesso", "statusCode": 200, "response": response })
             : res.status(404).json({ msg: "Produto não encontrado", "statusCode": 404, })
