@@ -255,15 +255,13 @@ function atualizarProduto(idProdutoParams, dadosProduto, fotosFile, sequelize) {
             }
             else {
 
-                console.log(id_produto, nome, descricao, foto, cor, tamanho, valor, brinde, qtd_estoque)
-
                 // fazer lógica de trocar fotos
 
                 await sequelize.query("call editar_produto (?,?,?,?,?,?,?,?,?)", {
                     replacements: [id_produto, nome, descricao, foto, cor, tamanho, valor, brinde, qtd_estoque],
                     types: sequelize.QueryTypes.UPDATE
                 })
-                console.log("TERMINEI O PRODUTO: ", id_produto)
+                resolve()
             }
         }
         catch (err) {
@@ -361,4 +359,4 @@ function agruparProdutos(produtos) {
     return Object.values(produtosAgrupados);
 }
 
-module.exports = { cadastrarProduto, pesquisarTodosProdutos, pesquisarProdutoPeloId, definirEstoqueProduto, pesquisarProdutosUnicos, trocarProdutoBrinde }
+module.exports = { cadastrarProduto, pesquisarTodosProdutos, pesquisarProdutoPeloId, definirEstoqueProduto, pesquisarProdutosUnicos, trocarProdutoBrinde, atualizarProduto }

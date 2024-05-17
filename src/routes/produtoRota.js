@@ -1,5 +1,5 @@
 const router = require("express").Router()
-const { cadastrarProduto, pesquisarTodosProdutos, pesquisarProdutoPeloId, definirEstoqueProduto, pesquisarProdutosUnicos, trocarProdutoBrinde } = require("../controllers/produtoController")
+const { cadastrarProduto, pesquisarTodosProdutos, pesquisarProdutoPeloId, definirEstoqueProduto, pesquisarProdutosUnicos, trocarProdutoBrinde, atualizarProduto } = require("../controllers/produtoController")
 const authMiddleware = require("../middleware/auth")
 const { produtoValidacao } = require("../utils/validacao")
 const { tratarMensagensDeErro, novoErro } = require("../utils/errorMsg")
@@ -138,9 +138,36 @@ router.post("/", uploadImagem.any(), async (req, res) => {
     }
 })
 
-router.patch("/editar", (req, res) => {
+router.patch("/editar", uploadImagem.any(), async (req, res) => {
 
+    try {
+        const { idProduto, nome, cor, brinde, tamanho, descricao, } = req.body
+        const valor = Number(req.body.valor)
+        const imagensAgrupadas = req.files
+        const desconto = Number(req.body.desconto)
+        const quantidadeEstoque = Number(req.body.quantidadeEstoque)
+        const fotos = req.files
 
+        const produto = {
+            nome,
+            descricao,
+            cor,
+            valor,
+            tamanho,
+            desconto,
+            qtd_estoque: quantidadeEstoque,
+            brinde
+        }
+
+        // adicionar fotos futuramente
+        const response = await atualizarProduto(idProduto, produto, null, req.sequelize)
+        res.status(200).json({ msg: "Produto atualizado com sucesso", "statusCode": 200 })
+    }
+    catch (err) {
+        const erroTratado = await tratarMensagensDeErro(err)
+        res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
+
+    }
 })
 
 router.patch("/trocarBrinde", async (req, res) => {

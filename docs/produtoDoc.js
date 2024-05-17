@@ -198,4 +198,63 @@
 
 
 
+* /produto/editar:
+*   patch:
+*     security:
+*       - bearerAuth: []
+*     parameters:
+*       - name: nif
+*         in: header
+*         description: Nif do funcionario que está logado
+*         required: true
+*         type: string 
+*     tags:
+*       - Produto
+*     summary: Cadastra novos produtos.     
+*     description: Cadastra um novo produto.
+*     consumes:
+*       - multipart/form-data
+*     requestBody:
+*       required: true
+*       content:
+*         multipart/form-data:
+*           schema:
+*             type: object
+*             properties:
+*               idProduto:
+*                 type: string
+*               preto:
+*                 type: array
+*                 items:
+*                   type: string
+*                   format: binary
+*               nome:
+*                 type: string
+*               descricao:
+*                 type: string 
+*               cor:
+*                 type: array
+*                 items:
+*                   type: string
+*               tamanho:
+*                 type: array
+*                 items:
+*                   type: string
+*               desconto: 
+*                 type: number
+*               valor: 
+*                 type: number
+*               brinde:
+*                 type: boolean
+*     responses:
+*       '201':
+*         description: Funcionario cadastrado com sucesso.
+*       '400':
+*         description: Dados inválidos.
+*       '403':
+*         description: Sem autorização.  
+*       '500':
+*         description: Erro no banco de dados.
+
+
 */
