@@ -1,6 +1,6 @@
 const { atualizarArmario, pesquisarTodosArmario, pesquisarArmarioPorStatus } = require("../controllers/armarioController")
 const { definirStatusArmario } = require("../utils/converterString")
-const {tratarMensagensDeErro} = require("../utils/errorMsg")
+const { tratarMensagensDeErro } = require("../utils/errorMsg")
 const authMiddleware = require("../middleware/auth")
 
 const router = require("express").Router()
@@ -11,14 +11,15 @@ router.use(authMiddleware)
 router.patch("/atualizar", async (req, res) => {
 
     try {
-        let { numeroArmario, idAluno, statusArmario } = req.body
+        const { numeroArmario } = req.body
+        let statusArmario = req.body.statusArmario
+        const idAluno = req.body.idAluno || null
+
         statusArmario = definirStatusArmario(statusArmario)
 
         const response = await atualizarArmario(numeroArmario, idAluno, statusArmario, req.sequelize)
 
-        response[0] == 1
-            ? res.status(200).json({ "msg": "Atualizado com sucesso", "statusCode": 200 })
-            : res.status(400).json({ "msg": "Erro ao atualizar armario, verifique os campos.", "statusCode": 400 })
+        res.status(response.status).json({ "msg": response.msg, "statusCode": response.status })
     }
     catch (err) {
         const erroTratado = await tratarMensagensDeErro(err)
@@ -31,7 +32,7 @@ router.get("/todos", async (req, res) => {
     try {
         const response = await pesquisarTodosArmario(req.sequelize)
 
-        res.status(200).json({ "statusCode": 200, "response": response   })
+        res.status(200).json({ "statusCode": 200, "response": response })
     }
     catch (err) {
         const erroTratado = await tratarMensagensDeErro(err)
@@ -41,7 +42,7 @@ router.get("/todos", async (req, res) => {
 })
 
 router.get("/:statusArmario", async (req, res) => {
-    let {statusArmario} = req.params
+    let { statusArmario } = req.params
     console.log(statusArmario)
 
     try {

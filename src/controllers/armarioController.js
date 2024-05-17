@@ -1,24 +1,46 @@
 const armarioModel = require("../models/armarioModel")
 const { definirStatusArmario } = require("../utils/converterString")
+const { pesquisaAluno } = require("./alunoController")
 
 function atualizarArmario(numeroArmario, idAluno, statusArmario, sequelize) {
 
     return new Promise(async (resolve, reject) => {
 
         try {
-            await armarioModel(sequelize).update(
-                {
-                    fk_aluno: idAluno,
-                    status: statusArmario
-                },
-                {
-                    where: {
-                        numero: numeroArmario
-                    }
-                })
-                .then((r) => resolve(r))
-                .catch((e) => reject(e))
 
+            if (statusArmario == 1) {
+                await pesquisaAluno(idAluno, sequelize)
+
+                await sequelize.query("call ocupar_armario(?,?)", {
+                    replacements: [idAluno, numeroArmario],
+                    type: sequelize.QueryTypes.UPDATE
+                })
+                resolve({ status: 200, msg: "armario ocupado com sucesso" })
+
+            }
+            else if (statusArmario == 2) {
+                // trocar para procedure depois
+                await armarioModel(sequelize).update(
+                    {
+                        status: statusArmario,
+                        fk_aluno: null
+                    },
+                    {
+                        where: {
+                            numero: numeroArmario
+                        }
+                    })
+                resolve({ status: 200, msg: "armario desocupado com sucesso" })
+
+            }
+            else if (statusArmario == 3) {
+                await sequelize.query("call trancar_armario(?)", {
+                    replacements: [numeroArmario],
+                    type: sequelize.QueryTypes.UPDATE
+                })
+                resolve({ status: 200, msg: "armario trancado com sucesso" })
+
+            }
         }
         catch (err) {
             reject(err)
