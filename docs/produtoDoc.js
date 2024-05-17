@@ -168,5 +168,34 @@
 *       500:
 *         description: Erro ao consultar produtos.
 
+* /produto/trocarBrinde/:
+*   patch:
+*     security:
+*       - bearerAuth: []
+*     parameters:
+*       - name: nif
+*         in: header
+*         description: Nif do funcionario que está logado
+*         required: true
+*         type: string 
+*     tags:
+*       - Produto
+*     summary: Troca o brinde ativo.     
+*     description: define o brinde do semestre.
+*     consumes:
+*       - application/json
+*     requestBody:
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               listaIdProduto:
+*                 type: array
+*                 items:
+*                   type: string
+
+
 
 */

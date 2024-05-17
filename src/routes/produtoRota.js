@@ -1,5 +1,5 @@
 const router = require("express").Router()
-const { cadastrarProduto, pesquisarTodosProdutos, pesquisarProdutoPeloId, definirEstoqueProduto, pesquisarProdutosUnicos } = require("../controllers/produtoController")
+const { cadastrarProduto, pesquisarTodosProdutos, pesquisarProdutoPeloId, definirEstoqueProduto, pesquisarProdutosUnicos, trocarProdutoBrinde } = require("../controllers/produtoController")
 const authMiddleware = require("../middleware/auth")
 const { produtoValidacao } = require("../utils/validacao")
 const { tratarMensagensDeErro, novoErro } = require("../utils/errorMsg")
@@ -143,5 +143,24 @@ router.patch("/editar", (req, res) => {
 
 })
 
+router.patch("/trocarBrinde", async (req, res) => {
+
+    try {
+        const listaIdProduto = req.body.listaIdProduto instanceof Array == true ? req.body.listaIdProduto : Array(req.body.listaIdProduto)
+        await trocarProdutoBrinde(listaIdProduto, req.sequelize)
+        res.status(200).json({ msg: "Brinde atualizado com sucesso", "statusCode": 200 })
+
+
+
+    }
+    catch (err) {
+        const erroTratado = await tratarMensagensDeErro(err)
+        res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
+
+    }
+
+
+
+})
 
 module.exports = router

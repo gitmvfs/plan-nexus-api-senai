@@ -174,6 +174,21 @@ function pesquisarProdutoPeloId(idProduto, sequelize) {
 
 }
 
+function pesquisarProdutoBrinde(sequelize) {
+    return new Promise(async (resolve, reject) => {
+
+        try {
+            //Verifica se o filtro está vazio e passa um json vazio caso contrario passa o proprio filtro
+            sequelize.query("select * from todos_produtos where brinde = 1;")
+                .then((r) => resolve(r[0]))
+                .catch((e) => resolve(e))
+        }
+        catch (err) {
+            reject(err)
+        }
+    })
+}
+
 
 function pesquisarProdutosUnicos(sequelize) {
 
@@ -181,47 +196,14 @@ function pesquisarProdutosUnicos(sequelize) {
 
         try {
 
-            function agruparProdutos(produtos) {
-                // Objeto para armazenar os produtos agrupados
-                const produtosAgrupados = {};
 
-                // Iterar sobre cada produto
-                produtos.forEach(produto => {
-                    // Criar uma chave única baseada no nome e na cor do produto
-                    const chave = `${produto.nome}-${produto.cor}`;
-
-                    // Se a chave ainda não existir no objeto, inicialize-a com uma lista vazia
-                    if (!produtosAgrupados[chave]) {
-                        produtosAgrupados[chave] = {
-                            listaIdProduto: [],
-                            nome: produto.nome,
-                            foto: new Set(), // Usando Set para garantir links únicos de fotos
-                            cor: produto.cor
-                        };
-                    }
-
-                    // Adicionar o ID do produto à lista de IDs
-                    produtosAgrupados[chave].listaIdProduto.push(produto.id_produto);
-
-                    // Adicionar as fotos do produto ao conjunto de fotos
-                    produto.foto.forEach(link => produtosAgrupados[chave].foto.add(link));
-                });
-
-                // Converter os conjuntos de fotos de volta para arrays
-                for (const chave in produtosAgrupados) {
-                    produtosAgrupados[chave].foto = [...produtosAgrupados[chave].foto];
-                }
-
-                // Retornar os produtos agrupados como um array de objetos
-                return Object.values(produtosAgrupados);
-            }
 
             const response = await pesquisarTodosProdutos(sequelize)
 
             const produtosAgrupados = agruparProdutos(response)
             resolve(produtosAgrupados)
         }
-        catch(err){
+        catch (err) {
             reject(err)
         }
     })
@@ -256,15 +238,33 @@ function definirEstoqueProduto(idProduto, quantidade, sequelize) {
 
 }
 
-function atualizarProduto(idProduto, dadosProduto, fotos, sequelize) {
+function atualizarProduto(idProdutoParams, dadosProduto, fotosFile, sequelize) {
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
 
 
         try {
-            const { nome, descricao, cor, valor, desconto } = dadosProduto
-            const foto = fotos
+            const { nome, descricao, cor, valor, tamanho, qtd_estoque, brinde } = dadosProduto
+            // prioriza pegar foto e id_produto do dadosProduto, caso não venha quer dizer que o produto veio direto da rota editar e não da função atualizar brinde
+            const foto = dadosProduto.foto || fotosFile
+            const id_produto = idProdutoParams
 
+            const produtoExiste = await pesquisarProdutoPeloId(id_produto, sequelize)
+            if (!produtoExiste[0]) {
+                reject(novoErro("Produto não encontrado", 404))
+            }
+            else {
+
+                console.log(id_produto, nome, descricao, foto, cor, tamanho, valor, brinde, qtd_estoque)
+
+                // fazer lógica de trocar fotos
+
+                await sequelize.query("call editar_produto (?,?,?,?,?,?,?,?,?)", {
+                    replacements: [id_produto, nome, descricao, foto, cor, tamanho, valor, brinde, qtd_estoque],
+                    types: sequelize.QueryTypes.UPDATE
+                })
+                console.log("TERMINEI O PRODUTO: ", id_produto)
+            }
         }
         catch (err) {
             reject(err)
@@ -277,4 +277,88 @@ function atualizarProduto(idProduto, dadosProduto, fotos, sequelize) {
 
 }
 
-module.exports = { cadastrarProduto, pesquisarTodosProdutos, pesquisarProdutoPeloId, definirEstoqueProduto, pesquisarProdutosUnicos }
+function trocarProdutoBrinde(listaIdNovoBrinde, sequelize) {
+
+    return new Promise(async (resolve, reject) => {
+
+        try {
+            let listaBrindeAtual = agruparProdutos(await pesquisarProdutoBrinde(sequelize))[0]
+            !!listaBrindeAtual == false ? listaBrindeAtual = {listaBrindeAtual: []} : "" // retorna um obj vazio caso não tenha nada nele
+            
+            // compara se o brinde ja está ativo
+            if (JSON.stringify(listaIdNovoBrinde) === JSON.stringify(listaBrindeAtual.listaIdProduto)) {
+                const erro = novoErro("O brinde está atualmente ativo", 400)
+                throw erro
+            }
+            else {
+
+                // Caso exista algum brinde atual, limpa ele.
+                if (!!listaBrindeAtual.listaIdProduto == true) {
+
+                    listaBrindeAtual.listaIdProduto.map(async (id) => {
+                        let produto = await pesquisarProdutoPeloId(id, sequelize)
+                        produto[0].brinde = 0
+                        produto[0].foto = JSON.stringify(produto[0].foto)
+
+                        await atualizarProduto(id, produto[0], null, sequelize)
+                    })
+                }
+
+
+
+                listaIdNovoBrinde.map(async (id) => {
+
+                    let produto = await pesquisarProdutoPeloId(id, sequelize)
+                    produto[0].brinde = 1
+                    produto[0].foto = JSON.stringify(produto[0].foto)
+                    await atualizarProduto(id, produto[0], null, sequelize)
+                })
+                resolve()
+            }
+
+        }
+        catch (err) {
+            reject(err)
+        }
+
+
+    })
+
+}
+
+function agruparProdutos(produtos) {
+    // Objeto para armazenar os produtos agrupados
+    const produtosAgrupados = {};
+
+    // Iterar sobre cada produto
+    produtos.forEach(produto => {
+        // Criar uma chave única baseada no nome e na cor do produto
+        const chave = `${produto.nome}-${produto.cor}`;
+
+        // Se a chave ainda não existir no objeto, inicialize-a com uma lista vazia
+        if (!produtosAgrupados[chave]) {
+            produtosAgrupados[chave] = {
+                listaIdProduto: [],
+                nome: produto.nome,
+                foto: new Set(), // Usando Set para garantir links únicos de fotos
+                cor: produto.cor
+            };
+        }
+
+        // Adicionar o ID do produto à lista de IDs
+        produtosAgrupados[chave].listaIdProduto.push(produto.id_produto);
+
+        // Adicionar as fotos do produto ao conjunto de fotos
+        produto.foto.forEach(link => produtosAgrupados[chave].foto.add(link));
+    });
+
+    // Converter os conjuntos de fotos de volta para arrays
+    for (const chave in produtosAgrupados) {
+        produtosAgrupados[chave].foto = [...produtosAgrupados[chave].foto];
+    }
+
+    // Retornar os produtos agrupados como um array de objetos
+    return Object.values(produtosAgrupados);
+}
+
+module.exports = { cadastrarProduto, pesquisarTodosProdutos, pesquisarProdutoPeloId, definirEstoqueProduto, pesquisarProdutosUnicos, trocarProdutoBrinde }
