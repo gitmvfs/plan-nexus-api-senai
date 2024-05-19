@@ -43,9 +43,6 @@ async function encontrarFuncionarioLogin(nif, token) {
             }
         })
         if (!!response == false || response.token != token) {
-            console.log(response.token != token)
-            console.log(response.token)
-            console.log(token)
             reject(novoErro("Usuario ou token inválidos, permissão negada.", 403))
         }
         resolve(response)
