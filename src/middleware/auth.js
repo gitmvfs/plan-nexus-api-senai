@@ -28,25 +28,33 @@ function validarDataToken(token) {
 async function encontrarFuncionarioLogin(nif, token) {
 
     return new Promise(async (resolve, reject) => {
-        // Se conecta usando um usuario q só tem acesso a uma view de login
-        const sequelize = new Sequelize({
-            database: process.env.database_name,
-            username: process.env.database_user_root, // dps atualizar para o login funcionario
-            password: process.env.database_password_root, // dps atualizar para o senha funcionario
-            host: process.env.database_host,
-            dialect: 'mysql'
-        });
+        try {
+            // Se conecta usando um usuario q só tem acesso a uma view de login
+            const sequelize = new Sequelize({
+                database: process.env.database_name,
+                username: process.env.database_user_root, // dps atualizar para o login funcionario
+                password: process.env.database_password_root, // dps atualizar para o senha funcionario
+                host: process.env.database_host,
+                dialect: 'mysql'
+            });
 
-        const response = await funcionarioModel(sequelize).findOne({
-            where: {
-                NIF: nif,
+            const response = await funcionarioModel(sequelize).findOne({
+                where: {
+                    NIF: nif,
+                }
+            })
+            if (!!response == false || response.token != token) {
+                reject(novoErro("Usuario ou token inválidos, permissão negada.", 403))
             }
-        })
-        if (!!response == false || response.token != token) {
-            reject(novoErro("Usuario ou token inválidos, permissão negada.", 403))
+            resolve(response)
+       
         }
-        resolve(response)
-    })
+        catch(err){
+            reject(err)
+        }
+    )
+}
+        
 
 }
 
