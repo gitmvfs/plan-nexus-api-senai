@@ -22,7 +22,7 @@ function criarProdutosParaCadastro(produto, imagensAgrupadasParams) {
             // PARTEE PARA FATORAR -- ENVIO DE IMAGEM PARA O BLOB
 
             // Separa as imagens em grupos por cor (após pegar o link do blob)
-            if(!!imagensAgrupadas[0] == false){
+            if(!!imagensAgrupadasParams[0] == false){
                 reject(novoErro("Nenhuma imagem foi inserida.", 400))
 
             }
