@@ -20,16 +20,10 @@ function atualizarArmario(numeroArmario, idAluno, statusArmario, sequelize) {
             }
             else if (statusArmario == 2) {
                 // trocar para procedure depois
-                await armarioModel(sequelize).update(
-                    {
-                        status: statusArmario,
-                        fk_aluno: null
-                    },
-                    {
-                        where: {
-                            numero: numeroArmario
-                        }
-                    })
+                await sequelize.query("call desocupar_armario(?)", {
+                    replacements: [numeroArmario],
+                    type: sequelize.QueryTypes.UPDATE
+                })
                 resolve({ status: 200, msg: "armario desocupado com sucesso" })
 
             }
