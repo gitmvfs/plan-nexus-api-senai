@@ -20,6 +20,8 @@ router.post("/", uploadImagem.any(), async (req, res) => {
         const imagensAgrupadas = req.files
         const desconto = Number(req.body.desconto)
 
+        console.log(req.files)
+
         const produto = {
             nome,
             cores,
@@ -107,36 +109,6 @@ router.patch("/estoque", async (req, res) => {
 
 })
 
-
-router.post("/", uploadImagem.any(), async (req, res) => {
-    try {
-        const { nome, descricao } = req.body
-
-        // define a lista de cores e tamanhos
-        const valor = Number(req.body.valor)
-        const imagensAgrupadas = req.files
-
-        // console.log(uploadImagem)
-        const produto = {
-            nome,
-            cores,
-            tamanhos,
-            valor,
-            descricao,
-            brinde
-        }
-
-        // console.log(produto)
-        const produtoValidado = produtoValidacao.parse(produto)
-        const response = await cadastrarProduto(produtoValidado, imagensAgrupadas, req.sequelize)
-        res.json({ "statusCode": 201, "msg": "Produto cadastrado com sucesso" })
-    }
-    catch (err) {
-        const erroTratado = await tratarMensagensDeErro(err)
-        res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
-
-    }
-})
 
 router.patch("/editar", uploadImagem.any(), async (req, res) => {
 

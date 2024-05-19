@@ -22,7 +22,10 @@ function criarProdutosParaCadastro(produto, imagensAgrupadasParams) {
             // PARTEE PARA FATORAR -- ENVIO DE IMAGEM PARA O BLOB
 
             // Separa as imagens em grupos por cor (após pegar o link do blob)
+            if(!!imagensAgrupadas[0] == false){
+                reject(novoErro("Nenhuma imagem foi inserida.", 400))
 
+            }
             const imagensAgrupadas = imagensAgrupadasParams;
             const listaDeLinks = {}; // lista com a cor da imagem + url de resposta
             const listaErrosImagem = [] // lista com os erros de tentar cadastrar imagem
