@@ -3,14 +3,17 @@ const { novoErro } = require("../utils/errorMsg")
 const { salvarImagemAzure } = require("./blobController")
 
 async function cadastrarProduto(produto, imagensAgrupadas, sequelize) {
-    try {
-        const listaProdutoParaBanco = await criarProdutosParaCadastro(produto, imagensAgrupadas)
-        const response = await mandarProdutoParaBanco(listaProdutoParaBanco, sequelize)
-        return response
-    }
-    catch (err) {
-        reject(err)
-    }
+    return new Promise(async (resolve, reject) => {
+
+        try {
+            const listaProdutoParaBanco = await criarProdutosParaCadastro(produto, imagensAgrupadas)
+            const response = await mandarProdutoParaBanco(listaProdutoParaBanco, sequelize)
+            resolve (response)
+        }
+        catch (err) {
+            reject(err)
+        }
+    })
 }
 
 function criarProdutosParaCadastro(produto, imagensAgrupadasParams) {
@@ -22,7 +25,7 @@ function criarProdutosParaCadastro(produto, imagensAgrupadasParams) {
             // PARTEE PARA FATORAR -- ENVIO DE IMAGEM PARA O BLOB
 
             // Separa as imagens em grupos por cor (após pegar o link do blob)
-            if(!!imagensAgrupadasParams[0] == false){
+            if (!!imagensAgrupadasParams[0] == false) {
                 reject(novoErro("Nenhuma imagem foi inserida.", 400))
 
             }
@@ -284,8 +287,8 @@ function trocarProdutoBrinde(listaIdNovoBrinde, sequelize) {
 
         try {
             let listaBrindeAtual = agruparProdutos(await pesquisarProdutoBrinde(sequelize))[0]
-            !!listaBrindeAtual == false ? listaBrindeAtual = {listaBrindeAtual: []} : "" // retorna um obj vazio caso não tenha nada nele
-            
+            !!listaBrindeAtual == false ? listaBrindeAtual = { listaBrindeAtual: [] } : "" // retorna um obj vazio caso não tenha nada nele
+
             // compara se o brinde ja está ativo
             if (JSON.stringify(listaIdNovoBrinde) === JSON.stringify(listaBrindeAtual.listaIdProduto)) {
                 const erro = novoErro("O brinde está atualmente ativo", 400)
