@@ -9,7 +9,7 @@ async function cadastrarProduto(produto, imagensAgrupadas, sequelize) {
         return response
     }
     catch (err) {
-
+        reject(err)
     }
 }
 
