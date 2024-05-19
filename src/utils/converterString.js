@@ -1,3 +1,5 @@
+const { novoErro } = require("./errorMsg");
+
 function definirGraduacao(objeto) {
 
     // const listaCursosTecnicos = ["técnico", "técnica", "tecnico", "tecnica"] // palavras-chaves para cursos técnicos
@@ -22,28 +24,34 @@ function definirGraduacao(objeto) {
 
 }
 
-function definirStatusArmario(status){
+function definirStatusArmario(status) {
 
-    let statusLowerCase = status.toLowerCase()
+    return new Promise((resolve, reject) => {
 
-    switch (statusLowerCase) {
-        case "ocupado":
-            return 1
-            break;
-        case "desocupado":
-            return 2
-            break;
-        default:
-            return 3 // retorna trancado por padrão
-            break;
-    }
+        let statusLowerCase = status.toLowerCase()
+
+        switch (statusLowerCase) {
+            case "ocupado":
+                resolve(1)
+                break;
+            case "desocupado":
+                resolve(2)
+                break;
+            case "trancado":
+                resolve(3) 
+                break;
+            default:
+                reject(novoErro("Opção inválida do Status Armario, insira : 'Desocupado', 'Ocupado', 'trancado '", 400)) // retorna trancado por padrão
+                break;
+        }
+
+    })
+}
+
+function retirarFormatacao(string) {
+
+    return new String(string).replace("(", "").replace(".", "").replace("-", "").replace(")", "").trim()
 
 }
 
-function retirarFormatacao(string){
-
-    return new String(string).replace("(", "").replace(".","").replace("-","").replace(")","").trim()
-
-}
-
-module.exports = {definirGraduacao , definirStatusArmario, retirarFormatacao}
+module.exports = { definirGraduacao, definirStatusArmario, retirarFormatacao }

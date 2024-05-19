@@ -28,6 +28,12 @@ function atualizarArmario(numeroArmario, idAluno, statusArmario, sequelize) {
 
             }
             else if (statusArmario == 3) {
+                
+                await sequelize.query("call desocupar_armario(?)", {
+                    replacements: [numeroArmario],
+                    type: sequelize.QueryTypes.UPDATE
+                })
+
                 await sequelize.query("call trancar_armario(?)", {
                     replacements: [numeroArmario],
                     type: sequelize.QueryTypes.UPDATE

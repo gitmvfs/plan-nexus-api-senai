@@ -15,7 +15,7 @@ router.patch("/atualizar", async (req, res) => {
         let statusArmario = req.body.statusArmario
         const idAluno = req.body.idAluno || null
 
-        statusArmario = definirStatusArmario(statusArmario)
+        statusArmario =  await definirStatusArmario(statusArmario)
 
         const response = await atualizarArmario(numeroArmario, idAluno, statusArmario, req.sequelize)
 
