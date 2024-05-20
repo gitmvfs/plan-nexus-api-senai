@@ -70,16 +70,14 @@ router.get('/todos', async (req, res) => {
 
     }
 })
-
 router.post("/deslogar", async (req, res) => {
 
     const { nif, token } = req.funcionario
     try {
 
-        const response = await deslogarFuncionario(nif, token, req.sequelize)
+        const response = await deslogarFuncionario(nif, token, req, req.sequelize)
 
-        response[0] == 1 ? res.json({ msg: "Usuario deslogado com sucesso", "statusCode": "200" })
-            : res.status(500).json({ msg: "Erro ao deslogar usuario", "statusCode": "500" })
+        res.json({ msg: "Usuario deslogado com sucesso", "statusCode": "200" })
 
     }
     catch (err) {
