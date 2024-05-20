@@ -117,7 +117,7 @@
 *       500:
 *         description: Erro no banco de dados.
 
-* /funcionario/logout:
+* /funcionario/deslogar:
 *   post:
 *     security:
 *       - bearerAuth: []
