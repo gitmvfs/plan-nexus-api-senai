@@ -30,7 +30,6 @@ function salvarImagemAzure(nomeContainer, arquivoImagem) {
         blobService.createBlockBlobFromStream(nomeContainer, imagemNome, stream, arquivoImagem.size, opcoes,
             (error, result, response) => { // Callback da resposta 
                 if (error) {
-                    console.log("Error ao salvar:" + error)
                     reject(error);
                 } else {
                     const imageUrl = blobService.getUrl(nomeContainer, imagemNome);
@@ -45,10 +44,8 @@ function excluirImagemAzure(nomeContainer, nomeImagem) {
     return new Promise((resolve, reject) => {
         blobService.deleteBlob(nomeContainer, nomeImagem, (error, response) => {
             if (error) {
-                console.error("Erro ao excluir imagem:", error);
                 reject(error);
             } else {
-                console.log("Imagem excluída com sucesso");
                 resolve(true);
             }
         });

@@ -20,8 +20,8 @@ router.post("/", uploadImagem.any(), async (req, res) => {
         const imagensAgrupadas = req.files
         const desconto = Number(req.body.desconto)
 
-        console.log(req.files)
-
+        // caso req.files esteja vazio
+        
         const produto = {
             nome,
             cores,
@@ -32,8 +32,8 @@ router.post("/", uploadImagem.any(), async (req, res) => {
             brinde
         }
 
-        const produtoValidado = produtoValidacao.parse(produto)
-        const response = await cadastrarProduto(produtoValidado, imagensAgrupadas, req.sequelize)
+        // const produtoValidado = produtoValidacao.parse(produto)
+        //  const response = await cadastrarProduto(produtoValidado, imagensAgrupadas, req.sequelize)
         res.json({ "statusCode": 201, "msg": "Produto cadastrado com sucesso" })
     }
     catch (err) {
@@ -97,7 +97,6 @@ router.patch("/estoque", async (req, res) => {
 
     try {
         const { idProduto, quantidade } = req.body
-        console.log(req.body)
         const response = await definirEstoqueProduto(idProduto, quantidade, req.sequelize)
         res.status(200).json({ msg: "Estoque atualizado com sucesso", "statusCode": 200 })
     }
@@ -126,7 +125,7 @@ router.patch("/editar", uploadImagem.any(), async (req, res) => {
             cor,
             valor,
             tamanho,
-            desconto,
+            desconto_associado : desconto,
             qtd_estoque: quantidadeEstoque,
             brinde
         }
@@ -148,8 +147,6 @@ router.patch("/trocarBrinde", async (req, res) => {
         const listaIdProduto = req.body.listaIdProduto instanceof Array == true ? req.body.listaIdProduto : Array(req.body.listaIdProduto)
         await trocarProdutoBrinde(listaIdProduto, req.sequelize)
         res.status(200).json({ msg: "Brinde atualizado com sucesso", "statusCode": 200 })
-
-
 
     }
     catch (err) {

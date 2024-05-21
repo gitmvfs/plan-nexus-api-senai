@@ -88,7 +88,6 @@ function pesquisarArmarioPorStatus(status, sequelize) {
 function paginacao(numPorPagina, listaArmarios) {
     const numPagina = Math.ceil(listaArmarios.length / numPorPagina);
     const listaResposta = {};
-    // console.log(listaArmarios)
     for (let index = 0; index < listaArmarios.length; index++) {
         const paginaAtual = Math.floor(index / numPorPagina);
 
@@ -97,7 +96,6 @@ function paginacao(numPorPagina, listaArmarios) {
         }
         listaResposta[paginaAtual].push(listaArmarios[index]);
     }
-    console.log(listaResposta)
     return listaResposta
 }
 

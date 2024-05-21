@@ -112,6 +112,7 @@ function criarProdutosParaCadastro(produto, imagensAgrupadasParams) {
         }
         catch (err) {
             console.log(err.message)
+            reject(err)
         }
 
     })
@@ -125,7 +126,7 @@ function mandarProdutoParaBanco(listaProdutoParaBanco, sequelize) {
 
             const listaReponse = []
 
-            listaProdutoParaBanco.map(async(produto) => {
+            listaProdutoParaBanco.map(async (produto) => {
                 const { nome, foto, tamanho, valor, desconto, cor, descricao } = produto
                 let brinde = produto.brinde == "true" ? 1 : 0
                 const quantidadeEstoque = 0
@@ -336,7 +337,6 @@ function agruparProdutos(produtos) {
 
     // Iterar sobre cada produto
     produtos.forEach(produto => {
-        console.log(produto)
         // Criar uma chave única baseada no nome e na cor do produto
         const chave = `${produto.nome}-${produto.cor}`;
 

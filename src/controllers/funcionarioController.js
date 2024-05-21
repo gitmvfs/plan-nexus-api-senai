@@ -64,7 +64,6 @@ async function editarFuncionario(dadosFuncionario, foto, sequelize) {
 
     return new Promise(async (resolve, reject) => {
         try {
-            console.log(dadosFuncionario)
             const { idFuncionario, NIF, nome, email, nivel_acesso } = dadosFuncionario
 
             // Verifica se o usuario existe no banco
@@ -77,7 +76,6 @@ async function editarFuncionario(dadosFuncionario, foto, sequelize) {
             let linkImagem = ""
             if (!!foto == true) {
                 linkImagem = await salvarImagemAzure("funcionario", foto)
-                console.log("LINK FOTO:", linkImagem)
             }
             else {
                 linkImagem = funcionarioExistente[0].foto
@@ -162,7 +160,7 @@ function pesquisarTodosFuncionarios(sequelize) {
 }
 
 
-function deslogarFuncionario(nif, token, req, sequelize) {
+function deslogarFuncionario(nif, token, sequelize, req) {
 
     return new Promise(async (resolve, reject) => {
 
@@ -173,24 +171,18 @@ function deslogarFuncionario(nif, token, req, sequelize) {
 
         // Valida o token do usuario para deslogar
 
-        if (token == req.funcionario.token) {
-            await sequelize.query("call deslogar_funcionario(?)", {
-                replacements: [response[0].id_funcionario],
-                type: sequelize.QueryTypes.UPDATE
+        await sequelize.query("call deslogar_funcionario(?,?)", {
+            replacements: [response[0].id_funcionario, token],
+            type: sequelize.QueryTypes.UPDATE
 
-            })
-                .then((r) => resolve(r))
-                .catch((e) => reject(e))
-        }
-        else {
-            reject(novoErro("Não autorizado, token inválido.", 403))
-        }
-        // remove o token do banco
-
+        })
+            .then((r) => resolve(r))
+            .catch((e) => reject(e))
     })
-
-
 }
+
+
+
 
 function retornarSenhaCriptografada(email, sequelize_login) {
 

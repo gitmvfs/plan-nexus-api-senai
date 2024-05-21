@@ -14,6 +14,6 @@ async function compararHash(palavra,hash){
     return response
 }
 
-console.log(gerarHash("teste"))
+// console.log(gerarHash("teste"))
 
 module.exports = {gerarHash, compararHash}

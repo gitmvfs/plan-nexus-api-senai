@@ -115,9 +115,6 @@ const authMiddleware = (req, res, next) => {
 
             const funcionario = await encontrarFuncionarioLogin(nif, token) // procura o funcionario no banco
 
-            console.log("FUNCIONARIO:", funcionario)
-
-
             const { usuarioBanco, senhaBanco } = definirPermissaoNoBanco(funcionario) // define a permissão dele de acordo com o banco
 
             const sequelize = criarConexaoBanco(usuarioBanco, senhaBanco) // cria uma conexão no banco com o nivel da permissão
