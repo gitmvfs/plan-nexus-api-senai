@@ -84,7 +84,7 @@ async function editarFuncionario(dadosFuncionario, foto, sequelize) {
             }
 
 
-            sequelize.query("call editar_funcionario(?,?,?,?,?,?)", {
+            await sequelize.query("call editar_funcionario(?,?,?,?,?,?)", {
                 replacements: [idFuncionario, NIF, nome, email, linkImagem, nivel_acesso],
                 type: sequelize.QueryTypes.UPDATE
             })
