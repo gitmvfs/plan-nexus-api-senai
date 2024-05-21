@@ -1,11 +1,11 @@
 function cadastroDoacaoDinheiro(doacaoDinheiro, sequelize) {
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
 
         try {
             const { valorDoado, idAluno, auxilio, contrato, data } = doacaoDinheiro
 
-            sequelize.query("call doar_dinheiro(?,?,?,?,?)", {
+            await sequelize.query("call doar_dinheiro(?,?,?,?,?)", {
                 replacements: [idAluno, valorDoado, auxilio, contrato, data],
                 type: sequelize.QueryTypes.INSERT
             })
@@ -21,9 +21,9 @@ function cadastroDoacaoDinheiro(doacaoDinheiro, sequelize) {
 
 function visualizarTodasDoacoesDinheiro(sequelize) {
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
-            sequelize.query("select * from doacoes_dinheiro order by data;", {
+            await sequelize.query("select * from doacoes_dinheiro order by data;", {
                 type: sequelize.QueryTypes.SELECT
             })
                 .then(r => resolve(r))
@@ -37,14 +37,14 @@ function visualizarTodasDoacoesDinheiro(sequelize) {
 
 function editarDoacaoDinheiro(dadosDoacao, sequelize) {
 
-    return new Promise((resolve, reject) => {
+    return new Promise( async(resolve, reject) => {
 
         try {
             const { idDoacao, valorDoado, idAluno, auxilio, data } = dadosDoacao
 
             // Verificar se o idDoacao existe, se o idAluno é válido
 
-            sequelize.query("call editar_doacao_dinheiro(?,?,?,?,?)", {
+            await sequelize.query("call editar_doacao_dinheiro(?,?,?,?,?)", {
                 replacements: [idDoacao, idAluno, valorDoado, auxilio, data],
                 type: sequelize.QueryTypes.UPDATE
             })

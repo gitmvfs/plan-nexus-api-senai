@@ -55,7 +55,7 @@ function pesquisarTodosArmario(sequelize) {
     return new Promise(async (resolve, reject) => {
 
         try {
-            sequelize.query("select * from todos_armarios order by numero;")
+           await sequelize.query("select * from todos_armarios order by numero;")
                 .then(r => resolve(paginacao(28, r[0])))
                 .catch((e) => reject(e))
         }
@@ -70,7 +70,7 @@ function pesquisarArmarioPorStatus(status, sequelize) {
     return new Promise(async (resolve, reject) => {
 
         try {
-            sequelize.query("SELECT * FROM todos_armarios WHERE status = ? ORDER BY numero", {
+            await sequelize.query("SELECT * FROM todos_armarios WHERE status = ? ORDER BY numero", {
                 replacements: [status],
                 type: sequelize.QueryTypes.SELECT
             })

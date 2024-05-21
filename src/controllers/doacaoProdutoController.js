@@ -1,10 +1,10 @@
-function cadastroDoacaoProduto(doacaoProduto, sequelize){
-    return new Promise((resolve, reject) => {
+function cadastroDoacaoProduto(doacaoProduto, sequelize) {
+    return new Promise(async (resolve, reject) => {
         try {
-            
+
             const { idAluno, idProduto, quantidade, contrato, data } = doacaoProduto
 
-            sequelize.query("call doar_produto(?,?,?,?,?)", {
+            await sequelize.query("call doar_produto(?,?,?,?,?)", {
                 replacements: [idAluno, idProduto, quantidade, contrato, data],
                 type: sequelize.QueryTypes.INSERT
             })
@@ -17,12 +17,12 @@ function cadastroDoacaoProduto(doacaoProduto, sequelize){
     })
 }
 
-function editarDoacaoProduto(dadosDoacao, sequelize){
-    return new Promise((resolve, reject) => {
+function editarDoacaoProduto(dadosDoacao, sequelize) {
+    return new Promise(async (resolve, reject) => {
         try {
-            const {idDoacao, idAluno, idProduto, quantidade, data} = dadosDoacao
+            const { idDoacao, idAluno, idProduto, quantidade, data } = dadosDoacao
 
-            sequelize.query("call editar_doacao_produto(?,?,?,?,?)", {
+            await sequelize.query("call editar_doacao_produto(?,?,?,?,?)", {
                 replacements: [idDoacao, idAluno, idProduto, quantidade, data],
                 type: sequelize.QueryTypes.UPDATE
             })
@@ -35,10 +35,10 @@ function editarDoacaoProduto(dadosDoacao, sequelize){
     })
 }
 
-function verTodasDoacoes(sequelize){
-    return new Promise((resolve, reject) => {
+function verTodasDoacoes(sequelize) {
+    return new Promise(async (resolve, reject) => {
         try {
-            sequelize.query("select * from doacoes_produto order by data", {
+            await sequelize.query("select * from doacoes_produto order by data", {
                 type: sequelize.QueryTypes.SELECT
             })
                 .then(r => resolve(r))
@@ -50,4 +50,4 @@ function verTodasDoacoes(sequelize){
     })
 }
 
-module.exports = {verTodasDoacoes, cadastroDoacaoProduto, editarDoacaoProduto}
+module.exports = { verTodasDoacoes, cadastroDoacaoProduto, editarDoacaoProduto }

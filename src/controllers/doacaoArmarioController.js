@@ -1,11 +1,11 @@
 function cadastroDoacaoArmario(doacaoArmario, sequelize) {
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async(resolve, reject) => {
 
         try {
             const { numeroArmario, idAluno, contrato, data } = doacaoArmario
 
-            sequelize.query("call doar_armario(?,?,?,?)", {
+            await sequelize.query("call doar_armario(?,?,?,?)", {
                 replacements: [idAluno, numeroArmario, contrato, data],
                 type: sequelize.QueryTypes.INSERT
             })
@@ -22,9 +22,9 @@ function cadastroDoacaoArmario(doacaoArmario, sequelize) {
 
 function visualizarTodasDoacoesArmario(sequelize) {
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async(resolve, reject) => {
         try {
-            sequelize.query("select * from doacao_armario order by data;", {
+            await sequelize.query("select * from doacao_armario order by data;", {
                 type: sequelize.QueryTypes.SELECT
             })
                 .then(r => resolve(r))
@@ -38,14 +38,14 @@ function visualizarTodasDoacoesArmario(sequelize) {
 
 function editarDoacaoArmario(dadosDoacao, sequelize) {
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async(resolve, reject) => {
 
         try {
             const { idDoacao, idAluno, numeroArmario, contrato, data } = dadosDoacao
 
             // Verificar se o idDoacao existe, se o idAluno é válido, e se o numero do armário está entre 1 e 280
 
-            sequelize.query("call editar_doacao_armario(?,?,?,?)", {
+            await sequelize.query("call editar_doacao_armario(?,?,?,?)", {
                 replacements: [idDoacao, idAluno, numeroArmario, data],
                 type: sequelize.QueryTypes.UPDATE
             })

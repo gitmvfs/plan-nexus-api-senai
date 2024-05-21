@@ -2,9 +2,9 @@
 const alunoModel = require('../models/alunoModel')
 
 function visualizarTodasReservas(sequelize) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
-            sequelize.query("select * from todas_reservas order by retirada;")
+            await sequelize.query("select * from todas_reservas order by retirada;")
                 .then(r => resolve(r[0]))
                 .catch(e => reject(e))
         }
@@ -15,11 +15,11 @@ function visualizarTodasReservas(sequelize) {
 }
 
 function cancelarReserva(id_reserva, sequelize) {
-    return new Promise(async(resolve, reject) => {
-        
+    return new Promise(async (resolve, reject) => {
+
         try {
             const reservaExiste = await pesquisarUmaReserva(id_reserva, sequelize)
-            if(!reservaExiste){
+            if (!reservaExiste) {
                 return res.status(404).send('reserva não encontrada.')
             }
 
@@ -27,11 +27,11 @@ function cancelarReserva(id_reserva, sequelize) {
                 replacements: [id_reserva],
                 type: sequelize.QueryTypes.UPDATE,
             })
-            .then((r) => resolve(r))
-            .catch((e) => reject(e))
+                .then((r) => resolve(r))
+                .catch((e) => reject(e))
 
             console.log(reserva)
-            
+
         } catch (err) {
             reject(err)
         }
@@ -39,21 +39,21 @@ function cancelarReserva(id_reserva, sequelize) {
 }
 
 function confirmarReserva(id_reserva, sequelize) {
-    return new Promise(async(resolve, reject) => {
-        
+    return new Promise(async (resolve, reject) => {
+
         try {
             const reservaExiste = await pesquisarUmaReserva(id_reserva, sequelize)
-            if(!reservaExiste){
+            if (!reservaExiste) {
                 return res.status(404).send('reserva não encontrada.')
             }
-            
+
             await sequelize.query('call efetuar_reserva(?)', {
                 replacements: [id_reserva],
                 type: sequelize.QueryTypes.UPDATE,
             })
-            
-            .then((r) => resolve(r))
-            .catch((e) => reject(e))
+
+                .then((r) => resolve(r))
+                .catch((e) => reject(e))
 
         } catch (err) {
             reject(err)
@@ -65,11 +65,11 @@ function confirmarReserva(id_reserva, sequelize) {
 // SÓ PRECISA NA APLICAÇÃO ALUNO
 function criarReserva(reserva, sequelize) {
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
-            const { fk_aluno, fk_produto, quantidade, dataRetirada:retirada } = reserva
+            const { fk_aluno, fk_produto, quantidade, dataRetirada: retirada } = reserva
 
-            sequelize.query("call criar_reserva(?,?,?,?)", {
+            await sequelize.query("call criar_reserva(?,?,?,?)", {
                 replacements: [fk_aluno, fk_produto, quantidade, retirada],
                 type: sequelize.QueryTypes.INSERT
             })
@@ -90,8 +90,8 @@ function pesquisarUmaReserva(id_reserva, sequelize) {
                 replacements: [id_reserva],
                 type: sequelize.QueryTypes.SELECT,
             })
-            .then((r) => {resolve(r)})
-            .catch((e) => {reject(e)})
+                .then((r) => { resolve(r) })
+                .catch((e) => { reject(e) })
 
         } catch (err) {
             console.log(err)

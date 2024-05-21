@@ -271,7 +271,7 @@ function pesquisaTodosAlunos(sequelize) {
     return new Promise(async (resolve, reject) => {
 
         try {
-            sequelize.query("select * from todos_alunos order by nome;")
+            await sequelize.query("select * from todos_alunos order by nome;")
                 .then((r) => resolve(r[0]))
                 .catch((e) => resolve(e))
         }

@@ -13,7 +13,7 @@ function cadastrarFuncionario(funcionario, sequelize) {
         try {
             const { NIF, nome, email, nivel_acesso } = funcionario
 
-            sequelize.query("call cadastrar_funcionario(?,?,?,?)", {
+            await sequelize.query("call cadastrar_funcionario(?,?,?,?)", {
                 replacements: [NIF, nome, email, nivel_acesso],
                 type: sequelize.QueryTypes.INSERT
             })
@@ -126,7 +126,7 @@ async function loginFuncionario(funcionario) {
             //Gera o token para verificar se está logado
             const token = gerarToken(dadosUsuario[0].email, dadosUsuario[0].nome, "12h")
 
-            sequelize.query("call logar_funcionario(? , ?)",
+            await sequelize.query("call logar_funcionario(? , ?)",
                 {
                     replacements: [dadosUsuario[0].NIF, token],
                     type: sequelize.QueryTypes.UPDATE
@@ -174,7 +174,7 @@ function deslogarFuncionario(nif, token, req, sequelize) {
         // Valida o token do usuario para deslogar
 
         if (token == req.funcionario.token) {
-            sequelize.query("call deslogar_funcionario(?)", {
+            await sequelize.query("call deslogar_funcionario(?)", {
                 replacements: [response[0].id_funcionario],
                 type: sequelize.QueryTypes.UPDATE
 
