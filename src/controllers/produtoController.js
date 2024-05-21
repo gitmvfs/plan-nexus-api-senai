@@ -8,7 +8,7 @@ async function cadastrarProduto(produto, imagensAgrupadas, sequelize) {
         try {
             const listaProdutoParaBanco = await criarProdutosParaCadastro(produto, imagensAgrupadas)
             const response = await mandarProdutoParaBanco(listaProdutoParaBanco, sequelize)
-            resolve (response)
+            resolve(response)
         }
         catch (err) {
             reject(err)
@@ -125,11 +125,11 @@ function mandarProdutoParaBanco(listaProdutoParaBanco, sequelize) {
 
             const listaReponse = []
 
-            listaProdutoParaBanco.map((produto) => {
+            listaProdutoParaBanco.map(async(produto) => {
                 const { nome, foto, tamanho, valor, desconto, cor, descricao } = produto
                 let brinde = produto.brinde == "true" ? 1 : 0
                 const quantidadeEstoque = 0
-                sequelize.query("call cadastrar_produto(?,?,?,?,?,?,?,?,?)", {
+                await sequelize.query("call cadastrar_produto(?,?,?,?,?,?,?,?,?)", {
                     replacements: [nome, descricao, foto, cor, tamanho, valor, brinde, quantidadeEstoque, desconto],
                     types: sequelize.QueryTypes.INSERT
                 })
@@ -150,7 +150,7 @@ function pesquisarTodosProdutos(sequelize) {
 
         try {
             //Verifica se o filtro está vazio e passa um json vazio caso contrario passa o proprio filtro
-            sequelize.query("select * from todos_produtos;")
+            await sequelize.query("select * from todos_produtos;")
                 .then((r) => resolve(r[0]))
                 .catch((e) => resolve(e))
         }
@@ -185,7 +185,7 @@ function pesquisarProdutoBrinde(sequelize) {
 
         try {
             //Verifica se o filtro está vazio e passa um json vazio caso contrario passa o proprio filtro
-            sequelize.query("select * from todos_produtos where brinde = 1;")
+            await sequelize.query("select * from todos_produtos where brinde = 1;")
                 .then((r) => resolve(r[0]))
                 .catch((e) => resolve(e))
         }
@@ -201,8 +201,6 @@ function pesquisarProdutosUnicos(sequelize) {
     return new Promise(async (resolve, reject) => {
 
         try {
-
-
 
             const response = await pesquisarTodosProdutos(sequelize)
 
@@ -229,11 +227,12 @@ function definirEstoqueProduto(idProduto, quantidade, sequelize) {
 
             }
 
-            sequelize.query("call definir_estoque(?,?)", {
+            await sequelize.query("call definir_estoque(?,?)", {
                 replacements: [idProduto, quantidade],
                 type: sequelize.QueryTypes.UPDATE
             })
-            resolve()
+                .then((r) => resolve())
+                .catch((err) => reject(err))
         }
         catch (err) {
             reject(err)
@@ -250,7 +249,7 @@ function atualizarProduto(idProdutoParams, dadosProduto, fotosFile, sequelize) {
 
 
         try {
-            const { nome, descricao, cor, valor, tamanho, qtd_estoque, brinde } = dadosProduto
+            const { nome, descricao, cor, valor, tamanho, qtd_estoque, brinde, desconto_associado } = dadosProduto
             // prioriza pegar foto e id_produto do dadosProduto, caso não venha quer dizer que o produto veio direto da rota editar e não da função atualizar brinde
             const foto = dadosProduto.foto || fotosFile
             const id_produto = idProdutoParams
@@ -263,11 +262,12 @@ function atualizarProduto(idProdutoParams, dadosProduto, fotosFile, sequelize) {
 
                 // fazer lógica de trocar fotos
 
-                await sequelize.query("call editar_produto (?,?,?,?,?,?,?,?,?)", {
-                    replacements: [id_produto, nome, descricao, foto, cor, tamanho, valor, brinde, qtd_estoque],
+                await sequelize.query("call editar_produto (?,?,?,?,?,?,?,?,?,?)", {
+                    replacements: [id_produto, nome, descricao, foto, cor, tamanho, valor, brinde, qtd_estoque, desconto_associado],
                     types: sequelize.QueryTypes.UPDATE
                 })
-                resolve()
+                    .then((r) => resolve())
+                    .catch((err) => reject(err))
             }
         }
         catch (err) {
@@ -336,6 +336,7 @@ function agruparProdutos(produtos) {
 
     // Iterar sobre cada produto
     produtos.forEach(produto => {
+        console.log(produto)
         // Criar uma chave única baseada no nome e na cor do produto
         const chave = `${produto.nome}-${produto.cor}`;
 
@@ -345,7 +346,8 @@ function agruparProdutos(produtos) {
                 listaIdProduto: [],
                 nome: produto.nome,
                 foto: new Set(), // Usando Set para garantir links únicos de fotos
-                cor: produto.cor
+                cor: produto.cor,
+                brinde: produto.brinde
             };
         }
 
