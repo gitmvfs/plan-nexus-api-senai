@@ -75,7 +75,7 @@ router.post("/deslogar", async (req, res) => {
     const { nif, token } = req.funcionario
     try {
 
-        const response = await deslogarFuncionario(nif, token, req, req.sequelize)
+        const response = await deslogarFuncionario(nif, token, req.sequelize)
 
         res.json({ msg: "Usuario deslogado com sucesso", "statusCode": "200" })
 
@@ -103,7 +103,7 @@ router.get('/unico/:NIF', async (req, res) => {
     }
 });
 
-router.patch('/atualizar',uploadImagem.single("fotoFuncionario") , async (req, res) => {
+router.patch('/atualizar', uploadImagem.single("fotoFuncionario"), async (req, res) => {
 
     try {
         const { idFuncionario, nome, email, NIF, nivel_acesso } = req.body
@@ -122,7 +122,7 @@ router.patch('/atualizar',uploadImagem.single("fotoFuncionario") , async (req, r
         }
 
         const funcionarioValidado = funcionarioValidacao.parse(dadosFuncionario)
-        await editarFuncionario(funcionarioValidado,foto, req.sequelize)
+        await editarFuncionario(funcionarioValidado, foto, req.sequelize)
         res.json({ msg: "Atualização realizada com sucesso", "statusCode": 200 })
     } catch (err) {
         const erroTratado = await tratarMensagensDeErro(err)
