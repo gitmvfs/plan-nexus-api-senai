@@ -32,8 +32,8 @@ router.post("/", uploadImagem.any(), async (req, res) => {
             brinde
         }
 
-        // const produtoValidado = produtoValidacao.parse(produto)
-        //  const response = await cadastrarProduto(produtoValidado, imagensAgrupadas, req.sequelize)
+        const produtoValidado = produtoValidacao.parse(produto)
+        const response = await cadastrarProduto(produtoValidado, imagensAgrupadas, req.sequelize)
         res.json({ "statusCode": 201, "msg": "Produto cadastrado com sucesso" })
     }
     catch (err) {
