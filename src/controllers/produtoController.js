@@ -221,7 +221,7 @@ function definirEstoqueProduto(idProduto, quantidade, sequelize) {
 
     return new Promise(async (resolve, reject) => {
         try {
-            const response = await pesquisarUnicoProduto(idProduto, sequelize)
+            const response = await pesquisarProdutoPeloId(idProduto, sequelize)
 
             if (!!response[0] == false) {
                 reject(novoErro("Produto inválido, confira o id", 404))
