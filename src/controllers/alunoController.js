@@ -5,6 +5,7 @@ const { tratarMensagensDeErro, novoErro } = require("../utils/errorMsg")
 const { associarAluno, pesquisarUmAssociadoPeloId, removerAssociado } = require("./associadoController")
 const { resolve } = require("path")
 const { salvarImagemAzure } = require('./blobController')
+const { definirMultiplasSenhas } = require("./smtpController")
 
 async function cadastroMultiplosAlunos(listaAluno, sequelize) {
     // Pega o id da turma do aluno e coloca no fk_curso
@@ -129,7 +130,7 @@ async function mandarAlunosDb(listaAlunos, sequelize) {
             }
         })
 
-        await enviarEmail(envioEmail)
+        definirMultiplasSenhas(envioEmail)
 
         return { alunosCadastrados: alunosCadastrados, alunosNaoCadastrados: alunosComErro }
 
@@ -173,8 +174,10 @@ function cadastroUnicoAluno(aluno, sequelize) {
 
                 }
                 await associarAluno(dadosSocio, sequelize)
-                response["dadosAssociado"] = await pesquisarUmAssociado(dadosAluno[0].id_aluno, sequelize)
+                response["dadosAssociado"] = await pesquisarUmAssociadoPeloId(dadosAluno[0].id_aluno, sequelize)
             }
+            definirMultiplasSenhas([{nome: response.nome, email: response.email}])
+
             resolve(response)
         } catch (error) {
 
@@ -280,29 +283,6 @@ function pesquisaTodosAlunos(sequelize) {
         }
     })
 
-
-}
-
-function enviarEmail(listaEmail) {
-
-    return new Promise(async (resolve, reject) => {
-
-        try {
-
-            // Faz uma requisição para o envio de SMTP
-            fetch(process.env.API_ALUNOS_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json' // Specify the content type as JSON
-                },
-                body: JSON.stringify({ listaEmail: listaEmail }) // Convert the data to a JSON string
-            })
-            resolve(200)
-        }
-        catch (err) {
-            reject(err)
-        }
-    })
 
 }
 

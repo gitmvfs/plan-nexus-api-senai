@@ -34,17 +34,24 @@ function associarAluno(associacao, sequelize) {
         try {
             const { id_aluno, brinde, dataAssociacao } = associacao
             const associadoExiste = await pesquisarUmAssociadoPeloId(id_aluno, sequelize)
-
-            associadoExiste ? reject(novoErro("aluno ja e associado", 400)) :
-                await sequelize.query("call associar_aluno(?,?,?)", {
-                    replacements: [id_aluno, brinde, dataAssociacao],
-                    type: sequelize.QueryTypes.INSERT
+                .then((dados) => {
+                    reject(novoErro("Aluno já cadastrado como sócio", 400))
                 })
-                    .then((r) => { resolve(r) })
-                    .catch((e) => { reject(e) })
+                .catch(async (err) => {
+                    await sequelize.query("call associar_aluno(?,?,?)", {
+                        replacements: [id_aluno, brinde, dataAssociacao],
+                        type: sequelize.QueryTypes.INSERT
+                    })
+                        .then((r) => { resolve(r) })
+                        .catch((e) => { reject(e) })
+                })
+
 
 
         } catch (error) {
+
+
+
             reject(error)
         }
     })
@@ -81,9 +88,9 @@ function resgatarBrindeAssociado(idAluno, sequelize) {
             // verifica se o associado existe
 
             const response = await pesquisarUmAssociadoPeloId(idAluno, sequelize)
-            
+
             // verifica se o brinde já foi resgatado
-            if(response.brinde == 1){
+            if (response.brinde == 1) {
                 reject(novoErro("Aluno já resgatou o brinde", 400))
             }
 

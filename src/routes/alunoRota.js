@@ -7,6 +7,7 @@ const { tratarMensagensDeErro } = require("../utils/errorMsg")
 const excelToJson = require("../utils/excelParseJson")
 const { uploadArquivoAlunos, uploadImagem } = require("../utils/multer")
 const { alunoUnicoValidacao } = require("../utils/validacao")
+const { retirarFormatacao } = require("../utils/converterString")
 
 // ROTAS PROTEGIDAS
 router.use(authMiddleware)
@@ -51,7 +52,6 @@ router.post("/cadastro/unico", async (req, res) => {
     try {
         const alunoValidado = alunoUnicoValidacao.parse(aluno)
         const response = await cadastroUnicoAluno(alunoValidado, req.sequelize)
-        fetch()
         res.status(201).json({ "msg": "cadastrado com sucesso", "statusCode": 201, "response": response })
 
     }

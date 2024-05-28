@@ -62,4 +62,4 @@ app.use("/turma", turmaRota)
 app.use("/associado", associadoRota)
 app.use("/doacaoProduto", doacaoProdutoRota)
 
-app.listen(serverPort, () => console.log(`HTTP RUNNING AT: http://localhost:${serverPort}`))
+app.listen(serverPort, "0.0.0.0" ,() => console.log(`HTTP RUNNING AT: http://localhost:${serverPort}`))
