@@ -117,7 +117,7 @@ router.patch("/editar", uploadImagem.any(), async (req, res) => {
         const desconto = Number(req.body.desconto)
         const quantidadeEstoque = Number(req.body.quantidadeEstoque)
         const fotos = req.files
-        const linksFotosAntigas = req.linksFotosAntigas
+        const linksFotosAntigas = req.linksFotosAntigas || []
 
         const produto = {
             nome,
