@@ -1,7 +1,7 @@
 const parseXlSX = require("node-xlsx")
 
 function excelToJson(diretorioArquivo) {
-    
+
     return new Promise((resolve, reject) => {
         try {
 
@@ -19,8 +19,10 @@ function excelToJson(diretorioArquivo) {
                 for (let index = 0; index < aluno.length; index++) {
                     obj[keys[index]] = aluno[index]
                 }
+                if (!!obj.Cpf != false) {
+                    responseJson.push(obj) // adiciona o objeto com chave + atributo a lista de json
 
-                responseJson.push(obj) // adiciona o objeto com chave + atributo a lista de json
+                }
             }
 
             resolve(responseJson)
