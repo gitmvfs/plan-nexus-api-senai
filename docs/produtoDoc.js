@@ -232,6 +232,10 @@
 *                 type: string
 *               descricao:
 *                 type: string 
+*               quantidadeEstoque:
+*                 type: number
+*               linksFotoAntiga:
+*                 type: array  
 *               cor:
 *                 type: array
 *                 items:

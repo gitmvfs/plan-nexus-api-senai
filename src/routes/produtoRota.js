@@ -114,16 +114,17 @@ router.patch("/editar", uploadImagem.any(), async (req, res) => {
     try {
         const { idProduto, nome, cor, brinde, tamanho, descricao, } = req.body
         const valor = Number(req.body.valor)
-        const imagensAgrupadas = req.files
         const desconto = Number(req.body.desconto)
         const quantidadeEstoque = Number(req.body.quantidadeEstoque)
         const fotos = req.files
+        const linksFotosAntigas = req.linksFotosAntigas
 
         const produto = {
             nome,
             descricao,
             cor,
             valor,
+            linksFotosAntigas,
             tamanho,
             desconto_associado : desconto,
             qtd_estoque: quantidadeEstoque,
@@ -131,7 +132,7 @@ router.patch("/editar", uploadImagem.any(), async (req, res) => {
         }
 
         // adicionar fotos futuramente
-        const response = await atualizarProduto(idProduto, produto, null, req.sequelize)
+        const response = await atualizarProduto(idProduto, produto, fotos, req.sequelize)
         res.status(200).json({ msg: "Produto atualizado com sucesso", "statusCode": 200 })
     }
     catch (err) {
