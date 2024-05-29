@@ -7,6 +7,7 @@ const { novoErro } = require('../utils/errorMsg')
 const { Blob } = require('buffer')
 const { salvarImagemAzure } = require('./blobController')
 const dotenv = require("dotenv").config({ path: resolve(__dirname, "../", "../", ".env") })
+const { definirMultiplasSenhas} = require("../controllers/smtpController")
 
 function cadastrarFuncionario(funcionario, sequelize) {
     return new Promise(async (resolve, reject) => {
@@ -17,7 +18,7 @@ function cadastrarFuncionario(funcionario, sequelize) {
                 replacements: [NIF, nome, email, nivel_acesso],
                 type: sequelize.QueryTypes.INSERT
             })
-                .then((r) => resolve(r))
+                .then((r) => {   definirMultiplasSenhas([{nome: nome, email: email}]) ; resolve(r)})
                 .catch((e) => reject(e))
         } catch (err) {
             reject(err)
