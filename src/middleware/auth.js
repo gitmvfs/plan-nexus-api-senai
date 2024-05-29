@@ -41,11 +41,13 @@ async function encontrarFuncionarioLogin(nif, token) {
         const response = await funcionarioModel(sequelize).findOne({
             where: {
                 NIF: nif,
+                token:token.replace("\"","")
             }
         })
-        if (!!response == false || response.token != token) {
-            reject(novoErro("Usuario ou token inválidos, permissão negada.", 403))
+        if (!!response == false) {
+            reject(novoErro("Nif ou token inválidos, permissão negada.", 403))
         }
+
         resolve(response)
         }
     catch(err){
