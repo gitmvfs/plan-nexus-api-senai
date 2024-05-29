@@ -35,7 +35,7 @@ function criarProdutosParaCadastro(produto, imagensAgrupadasParams) {
 
             for (let index = 0; index < imagensAgrupadas.length; index++) {
                 try {
-                    imagensAgrupadas[index].fieldname = imagensAgrupadas[index].fieldname.split("][")[1].split("][")[0]
+                    imagensAgrupadas[index].fieldname = imagensAgrupadas[index].fieldname.split("][")[2]
 
                 }
                 catch (err) {
@@ -251,14 +251,18 @@ async function atualizarProduto(idProdutoParams, dadosProduto, fotosFile, sequel
             const id_produto = idProdutoParams
             let brinde = dadosProduto.brinde == "true" ? 1 : 0
 
-            const salvarImagensPromises = fotosFile.map(async (foto) => {
-                const link = await salvarImagemAzure('produto', foto)
-                console.log(link)
-                return link
-            })
+            if (fotosFile != null) {
 
-            const novasFotos = await Promise.all(salvarImagensPromises)
-            fotoArray.push(...novasFotos)
+                const salvarImagensPromises = fotosFile.map(async (foto) => {
+                    const link = await salvarImagemAzure('produto', foto)
+                    console.log(link)
+                    return link
+                })
+
+                const novasFotos = await Promise.all(salvarImagensPromises)
+                fotoArray.push(...novasFotos)
+
+            }
 
             const produtoExiste = await pesquisarProdutoPeloId(id_produto, sequelize)
 
@@ -270,8 +274,11 @@ async function atualizarProduto(idProdutoParams, dadosProduto, fotosFile, sequel
                     replacements: [id_produto, nome, descricao, JSON.stringify(fotoArray), cor, tamanho, valor, brinde, qtd_estoque, desconto_associado],
                     types: sequelize.QueryTypes.UPDATE
                 })
-                resolve()
+                    .catch((e) => reject(e))
+
             }
+            resolve()
+
         }
         catch (err) {
             reject(err)
@@ -299,8 +306,8 @@ function trocarProdutoBrinde(listaIdNovoBrinde, sequelize) {
 
                     listaBrindeAtual.listaIdProduto.map(async (id) => {
                         let produto = await pesquisarProdutoPeloId(id, sequelize)
-                        produto[0].brinde = 0
-                        produto[0].foto = JSON.stringify(produto[0].foto)
+                        produto[0].brinde = "false"
+                        produto[0].foto = produto[0].foto
 
                         await atualizarProduto(id, produto[0], null, sequelize)
                     })
@@ -311,12 +318,21 @@ function trocarProdutoBrinde(listaIdNovoBrinde, sequelize) {
                 listaIdNovoBrinde.map(async (id) => {
 
                     let produto = await pesquisarProdutoPeloId(id, sequelize)
-                    produto[0].brinde = 1
-                    produto[0].foto = JSON.stringify(produto[0].foto)
+
+                    if (!!produto[0] == false) {
+                        reject(novoErro(`Id do produto não encontrado: ${id}`))
+                        return;
+                    }
+                    produto[0].brinde = "true"
+                    produto[0].foto = produto[0].foto
+                    console.log(produto)
+
                     await atualizarProduto(id, produto[0], null, sequelize)
                 })
-                resolve()
+
             }
+            console.log("CHEGAMOS")
+            resolve()
 
         }
         catch (err) {
