@@ -18,6 +18,8 @@ const reservaRota = require("./routes/reservaRota")
 const turmaRota = require("./routes/turmaRota")
 const associadoRota = require("./routes/associadoRota")
 const doacaoProdutoRota = require("./routes/doacaoProdutoRota")
+const smtpRota = require("./routes/smtpRota")
+
 // Config dotenv
 dotenv.config({ path: resolve("../", ".env") })
 const serverPort = process.env.PORT || 3333
@@ -51,6 +53,7 @@ const options = {
 
 
 //Configurando rotas
+app.use("/smtp", smtpRota)
 app.use("/funcionario", funcionarioRota)
 app.use("/aluno", alunosRota)
 app.use("/armario", armarioRota)

@@ -1,9 +1,8 @@
 const router = require("express").Router()
-const authMiddleware = require("../middleware/auth")
+const {authMiddleware} = require("../middleware/auth")
 const reservaModel = require("../models/reservaModel")
 const {tratarMensagensDeErro} = require("../utils/errorMsg")
 const {criarReserva, pesquisarUmaReserva, cancelarReserva, confirmarReserva, visualizarTodasReservas} = require("./../controllers/reservaController")
-const sequelize = require("sequelize")
 
 router.use(authMiddleware)
 

@@ -2,7 +2,7 @@ const router = require("express").Router()
 const { cadastrarFuncionario, pesquisarTodosFuncionarios, pesquisarUnicoFuncionario, editarFuncionario, loginFuncionario, deslogarFuncionario, inativarFuncionario } = require("../controllers/funcionarioController")
 const { tratarMensagensDeErro } = require("../utils/errorMsg")
 const { object, string, number } = require('zod')
-const authMiddleware = require("../middleware/auth")
+const {authMiddleware} = require("../middleware/auth")
 const { funcionarioValidacao } = require("../utils/validacao")
 const { uploadImagem } = require("../utils/multer")
 

@@ -12,14 +12,15 @@ function validarDataToken(token) {
         const tokenDecodificado = jwt.decode(token)
 
         if (!tokenDecodificado || !tokenDecodificado.exp) {
-            reject("Token inválido", 403)  // Token inválido ou sem data de expiração
+            reject(novoErro("Token inválido", 403))  // Token inválido ou sem data de expiração
+            console.log(tokenDecodificado)
         }
 
         const dataExpiracaoToken = new Date(tokenDecodificado.exp * 1000)
         const dataAtual = new Date();
 
         if (dataExpiracaoToken < dataAtual) {
-            reject("Token expirado", 403)
+            reject(novoErro("Token expirado", 403))
         }
         resolve(true)
     })
@@ -141,4 +142,4 @@ const authMiddleware = (req, res, next) => {
 
 };
 
-module.exports = authMiddleware
+module.exports = {authMiddleware, validarDataToken}

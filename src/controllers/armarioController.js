@@ -1,5 +1,6 @@
 const armarioModel = require("../models/armarioModel")
 const { definirStatusArmario } = require("../utils/converterString")
+const { novoErro } = require("../utils/errorMsg")
 const { pesquisaAluno } = require("./alunoController")
 
 function atualizarArmario(numeroArmario, idAluno, statusArmario, sequelize) {
@@ -8,6 +9,13 @@ function atualizarArmario(numeroArmario, idAluno, statusArmario, sequelize) {
 
         try {
 
+            const armario = await pesquisarArmarioPeloNumero(numeroArmario, sequelize)
+
+            if (!!armario[0] == false) {
+                reject(novoErro("Armário não encontrado, por favor consulte o suporte", 400))
+
+            }
+
             if (statusArmario == 1) {
                 await pesquisaAluno(idAluno, sequelize)
 
@@ -15,6 +23,7 @@ function atualizarArmario(numeroArmario, idAluno, statusArmario, sequelize) {
                     replacements: [idAluno, numeroArmario],
                     type: sequelize.QueryTypes.UPDATE
                 })
+
                 resolve({ status: 200, msg: "armario ocupado com sucesso" })
 
             }
@@ -28,11 +37,10 @@ function atualizarArmario(numeroArmario, idAluno, statusArmario, sequelize) {
 
             }
             else if (statusArmario == 3) {
-                
-                await sequelize.query("call desocupar_armario(?)", {
-                    replacements: [numeroArmario],
-                    type: sequelize.QueryTypes.UPDATE
-                })
+
+                if (armario[0].status == "ocupado") {
+                    reject(novoErro("Erro ao trancar armário, ocupado no momento", 400))
+                }
 
                 await sequelize.query("call trancar_armario(?)", {
                     replacements: [numeroArmario],
@@ -55,7 +63,7 @@ function pesquisarTodosArmario(sequelize) {
     return new Promise(async (resolve, reject) => {
 
         try {
-           await sequelize.query("select * from todos_armarios order by numero;")
+            await sequelize.query("select * from todos_armarios order by numero;")
                 .then(r => resolve(paginacao(28, r[0])))
                 .catch((e) => reject(e))
         }
@@ -80,6 +88,30 @@ function pesquisarArmarioPorStatus(status, sequelize) {
         catch (err) {
             reject(err)
         }
+    })
+
+
+}
+
+function pesquisarArmarioPeloNumero(numeroArmario, sequelize) {
+
+    return new Promise(async (resolve, reject) => {
+
+        try {
+            await sequelize.query("SELECT * FROM todos_armarios WHERE numero = ? ", {
+                replacements: [numeroArmario],
+                type: sequelize.QueryTypes.SELECT
+            })
+                .then((r) => resolve(r))
+                .catch(e => reject(e));
+        }
+        catch (err) {
+            reject(err)
+        }
+
+
+
+
     })
 
 
