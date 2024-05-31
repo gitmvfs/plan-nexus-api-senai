@@ -246,16 +246,14 @@ function definirEstoqueProduto(idProduto, quantidade, sequelize) {
 async function atualizarProduto(idProdutoParams, dadosProduto, fotosFile, sequelize) {
     return new Promise(async (resolve, reject) => {
         try {
-            const { nome, descricao, cor, valor, tamanho, qtd_estoque, desconto_associado, linksFotosAntigas } = dadosProduto
-            const fotoArray = dadosProduto.foto || linksFotosAntigas
+            const { nome, descricao, cor, valor, tamanho, qtd_estoque, desconto_associado } = dadosProduto
+            const fotoArray = dadosProduto.foto instanceof Array == true ? dadosProduto.foto : new Array(dadosProduto.foto)
             const id_produto = idProdutoParams
             let brinde = dadosProduto.brinde == "true" ? 1 : 0
-
             if (fotosFile != null) {
 
                 const salvarImagensPromises = fotosFile.map(async (foto) => {
                     const link = await salvarImagemAzure('produto', foto)
-                    console.log(link)
                     return link
                 })
 
@@ -270,6 +268,7 @@ async function atualizarProduto(idProdutoParams, dadosProduto, fotosFile, sequel
                 reject(novoErro("Produto não encontrado", 404))
             }
             else {
+                console.log(fotoArray)
                 await sequelize.query("call editar_produto (?,?,?,?,?,?,?,?,?,?)", {
                     replacements: [id_produto, nome, descricao, JSON.stringify(fotoArray), cor, tamanho, valor, brinde, qtd_estoque, desconto_associado],
                     types: sequelize.QueryTypes.UPDATE

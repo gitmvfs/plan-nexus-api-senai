@@ -210,8 +210,8 @@
 *         type: string 
 *     tags:
 *       - Produto
-*     summary: Cadastra novos produtos.     
-*     description: Cadastra um novo produto.
+*     summary: Edita  produtos.     
+*     description: Edita um  produto.
 *     consumes:
 *       - multipart/form-data
 *     requestBody:
@@ -234,13 +234,11 @@
 *                 type: string 
 *               quantidadeEstoque:
 *                 type: number
-*               linksFotoAntiga:
-*                 type: array  
 *               cor:
-*                 type: array
-*                 items:
-*                   type: string
+*                 type: string
 *               tamanho:
+*                  type: string
+*               linksFotosAntigas:
 *                 type: array
 *                 items:
 *                   type: string
