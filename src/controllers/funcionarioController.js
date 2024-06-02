@@ -7,7 +7,7 @@ const { novoErro } = require('../utils/errorMsg')
 const { Blob } = require('buffer')
 const { salvarImagemAzure } = require('./blobController')
 const dotenv = require("dotenv").config({ path: resolve(__dirname, "../", "../", ".env") })
-const { definirMultiplasSenhas} = require("../controllers/smtpController")
+const { definirMultiplasSenhas } = require("../controllers/smtpController")
 
 function cadastrarFuncionario(funcionario, sequelize) {
     return new Promise(async (resolve, reject) => {
@@ -18,7 +18,7 @@ function cadastrarFuncionario(funcionario, sequelize) {
                 replacements: [NIF, nome, email, nivel_acesso],
                 type: sequelize.QueryTypes.INSERT
             })
-                .then((r) => {   definirMultiplasSenhas([{nome: nome, email: email}]) ; resolve(r)})
+                .then((r) => { definirMultiplasSenhas([{ nome: nome, email: email }]); resolve(r) })
                 .catch((e) => reject(e))
         } catch (err) {
             reject(err)
@@ -100,9 +100,7 @@ async function editarFuncionario(dadosFuncionario, foto, sequelize) {
 async function loginFuncionario(funcionario) {
 
     return new Promise(async (resolve, reject) => {
-
         try {
-
             const sequelize = new Sequelize({
                 database: process.env.database_name,
                 username: process.env.database_user_root, // dps atualizar para o login funcionario
@@ -111,38 +109,33 @@ async function loginFuncionario(funcionario) {
                 dialect: 'mysql'
             });
 
-            const { email, senha } = funcionario
+            const { email, senha } = funcionario;
 
-            const usuario_criptografado = await retornarSenhaCriptografada(email, sequelize)
+            const usuario_criptografado = await retornarSenhaCriptografada(email, sequelize);
+            await confirmarSenhaCriptografa(senha, usuario_criptografado);
+            const usuario = await pesquisarUnicoFuncionario(usuario_criptografado.NIF, sequelize);
 
-            confirmarSenhaCriptografa(senha, usuario_criptografado)
+            // Devolve os dados do usuário sem a senha
+            const { senha: _, CPF: __, ...dadosUsuario } = usuario;
 
-            const usuario = await pesquisarUnicoFuncionario(usuario_criptografado.NIF, sequelize)
+            // Gera o token para verificar se está logado
+            const token = gerarToken(dadosUsuario[0].email, dadosUsuario[0].nome, "12h");
 
-            // Deolve os dados do usuario sem a senha
-            const { senha: _, CPF: __, ...dadosUsuario } = usuario
+            await sequelize.query("call logar_funcionario(? , ?)", {
+                replacements: [dadosUsuario[0].NIF, token],
+                type: sequelize.QueryTypes.UPDATE
+            });
 
-            //Gera o token para verificar se está logado
-            const token = gerarToken(dadosUsuario[0].email, dadosUsuario[0].nome, "12h")
+            // Adiciona o token à resposta
+            dadosUsuario[0].token = token;
 
-            await sequelize.query("call logar_funcionario(? , ?)",
-                {
-                    replacements: [dadosUsuario[0].NIF, token],
-                    type: sequelize.QueryTypes.UPDATE
-
-                })
-            // adiciona o token a resposta
-            dadosUsuario[0].token = token
-
-            resolve(dadosUsuario[0])
-
-        }
-
-        catch (err) {
+            resolve(dadosUsuario[0]);
+        } catch (err) {
             // Se der algum erro inesperado no processo
-            reject(err)
+            console.log("erro")
+            reject(err);
         }
-    })
+    });
 }
 
 function pesquisarTodosFuncionarios(sequelize) {
@@ -210,6 +203,7 @@ function confirmarSenhaCriptografa(senha, senhaCriptografada) {
         if (!confirmarSenha) {
             reject(novoErro("Usuario ou senha inválidos", 403))
         }
+        resolve()
     })
 
 }
