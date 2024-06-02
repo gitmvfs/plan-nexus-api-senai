@@ -65,4 +65,11 @@ app.use("/turma", turmaRota)
 app.use("/associado", associadoRota)
 app.use("/doacaoProduto", doacaoProdutoRota)
 
+app.get("", (req,res => {
+
+  res.json({ server_status: "ok", api_v : "1.0.0"})
+
+}))
+
+
 app.listen(serverPort, "0.0.0.0" ,() => console.log(`HTTP RUNNING AT: http://localhost:${serverPort}`))
