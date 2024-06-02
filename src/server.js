@@ -33,23 +33,23 @@ app.use(cors())
 
 
 const options = {
-    definition: {
-      openapi: "3.0.0",
-      info: {
-        title: "Api Gestão Senai ERP",
-        version: "1.0.0",
-        description:
-          "A api tem como função desenvolver um modelo crud de ecommerce",
-      },
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Api Gestão Senai ERP",
+      version: "1.0.0",
+      description:
+        "A api tem como função desenvolver um modelo crud de ecommerce",
     },
-    apis: ["./docs/*.js"],
-  };
-  
-  const swaggerSpec = swaggerJSDoc(options);
-  
-  // Use o Swagger UI Express para servir a documentação Swagger
-  app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
-  
+  },
+  apis: ["./docs/*.js"],
+};
+
+const swaggerSpec = swaggerJSDoc(options);
+
+// Use o Swagger UI Express para servir a documentação Swagger
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
+
 
 
 //Configurando rotas
@@ -65,11 +65,11 @@ app.use("/turma", turmaRota)
 app.use("/associado", associadoRota)
 app.use("/doacaoProduto", doacaoProdutoRota)
 
-app.get("", (req,res) => {
+app.get("", (req, res) => {
 
-  res.json({ server_status: "ok", api_v : "1.0.0"})
+  res.json({ server_status: "ok", api_v: "1.0.0" })
 
 })
 
 
-app.listen(serverPort, "0.0.0.0" ,() => console.log(`HTTP RUNNING AT: http://localhost:${serverPort}`))
+app.listen(serverPort, "0.0.0.0", () => console.log(`HTTP RUNNING AT: http://localhost:${serverPort}`))
