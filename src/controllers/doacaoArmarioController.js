@@ -4,7 +4,7 @@ function cadastroDoacaoArmario(doacaoArmario, sequelize) {
 
         try {
             const { numeroArmario, idAluno, contrato, data } = doacaoArmario
-
+            
             await sequelize.query("call doar_armario(?,?,?,?)", {
                 replacements: [idAluno, numeroArmario, contrato, data],
                 type: sequelize.QueryTypes.INSERT

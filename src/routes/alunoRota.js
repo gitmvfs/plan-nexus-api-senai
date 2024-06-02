@@ -1,6 +1,6 @@
 const router = require("express").Router()
 const { response } = require("express")
-const { cadastroMultiplosAlunos, atualizarAluno, cadastroUnicoAluno, pesquisaAluno, pesquisaTodosAlunos } = require("../controllers/alunoController")
+const { cadastroMultiplosAlunos, atualizarAluno, cadastroUnicoAluno, pesquisaAluno, pesquisaTodosAlunos, pesquisarAlunoPorCpf } = require("../controllers/alunoController")
 const { cadastroDeTurmas } = require("../controllers/cursoController")
 const {authMiddleware} = require("../middleware/auth")
 const { tratarMensagensDeErro } = require("../utils/errorMsg")
@@ -112,6 +112,23 @@ router.get("/unico/:idAluno", async (req, res) => {
     }
 
 })
+
+router.get("/unico/cpf/:cpf", async (req, res) => {
+
+    try {
+
+        const response = await pesquisarAlunoPorCpf(req.params.cpf, req.sequelize)
+        res.status(200).json({ "msg": "Consulta realizada com sucesso", "statusCode": 200, "response": response })
+
+    }
+    catch (err) {
+        const erroTratado = await tratarMensagensDeErro(err)
+        res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
+
+    }
+
+})
+
 
 router.get("/todos", async (req, res) => {
 

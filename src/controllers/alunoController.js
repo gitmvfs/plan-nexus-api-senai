@@ -286,4 +286,4 @@ function pesquisaTodosAlunos(sequelize) {
 
 }
 
-module.exports = { cadastroMultiplosAlunos, cadastroUnicoAluno, atualizarAluno, pesquisaAluno, pesquisaTodosAlunos }
+module.exports = { cadastroMultiplosAlunos, cadastroUnicoAluno, atualizarAluno, pesquisaAluno, pesquisaTodosAlunos, pesquisarAlunoPorCpf }

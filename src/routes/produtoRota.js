@@ -19,7 +19,6 @@ router.post("/", uploadImagem.any(), async (req, res) => {
         const brinde = req.body.brinde
         const imagensAgrupadas = req.files
         const desconto = Number(req.body.desconto)
-
         // caso req.files esteja vazio
         
         const produto = {
