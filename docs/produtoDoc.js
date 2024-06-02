@@ -102,7 +102,7 @@
 *         type: string 
 *     tags:
 *       - Produto
-*     summary: Pesquisa todos os produtos.    
+*     summary: Pesquisa produto pelo id.    
 *     description: Retorna todos os produtos cadastrados no banco
 *     responses:
 *       200:
@@ -195,6 +195,44 @@
 *                 type: array
 *                 items:
 *                   type: string
+*     responses:
+*       200:
+*         description: Produtos consultados com sucesso.
+*       500:
+*         description: Erro ao consultar produtos.
+
+
+* /produto/inativar/:
+*   patch:
+*     security:
+*       - bearerAuth: []
+*     parameters:
+*       - name: nif
+*         in: header
+*         description: Nif do funcionario que está logado
+*         required: true
+*         type: string 
+*     tags:
+*       - Produto
+*     summary: Inativa um produto.     
+*     description: define o brinde do semestre.
+*     consumes:
+*       - application/json
+*     requestBody:
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               idProduto:
+*                 type: string
+*     responses:
+*       200:
+*         description: Produtos consultados com sucesso.
+*       500:
+*         description: Erro ao consultar produtos.
+
 
 
 

@@ -1,6 +1,6 @@
 const router = require("express").Router()
-const { cadastrarProduto, pesquisarTodosProdutos, pesquisarProdutoPeloId, definirEstoqueProduto, pesquisarProdutosUnicos, trocarProdutoBrinde, atualizarProduto } = require("../controllers/produtoController")
-const {authMiddleware} = require("../middleware/auth_funcionario")
+const { cadastrarProduto, pesquisarTodosProdutos, pesquisarProdutoPeloId, definirEstoqueProduto, pesquisarProdutosUnicos, trocarProdutoBrinde, atualizarProduto, inativarProduto } = require("../controllers/produtoController")
+const { authMiddleware } = require("../middleware/auth_funcionario")
 const { produtoValidacao } = require("../utils/validacao")
 const { tratarMensagensDeErro, novoErro } = require("../utils/errorMsg")
 const { uploadImagem } = require("../utils/multer")
@@ -20,7 +20,7 @@ router.post("/", uploadImagem.any(), async (req, res) => {
         const imagensAgrupadas = req.files
         const desconto = Number(req.body.desconto)
         // caso req.files esteja vazio
-        
+
         const produto = {
             nome,
             cores,
@@ -122,9 +122,9 @@ router.patch("/editar", uploadImagem.any(), async (req, res) => {
             descricao,
             cor,
             valor,
-            foto:linksFotosAntigas,
+            foto: linksFotosAntigas,
             tamanho,
-            desconto_associado : desconto,
+            desconto_associado: desconto,
             brinde
         }
         // adicionar fotos futuramente
@@ -151,9 +151,21 @@ router.patch("/trocarBrinde", async (req, res) => {
         res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
 
     }
+})
 
+router.patch("/inativar", async (req, res) => {
 
+    try {
+        const idProduto = req.body.idProduto
+        await inativarProduto(idProduto, req.sequelize)
+        res.status(200).json({ msg: "Produto inativado com sucesso", "statusCode": 200 })
 
+    }
+    catch (err) {
+        const erroTratado = await tratarMensagensDeErro(err)
+        res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
+
+    }
 })
 
 module.exports = router

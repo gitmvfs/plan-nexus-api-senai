@@ -324,7 +324,6 @@ function trocarProdutoBrinde(listaIdNovoBrinde, sequelize) {
                     }
                     produto[0].brinde = "true"
                     produto[0].foto = produto[0].foto
-                    console.log(produto)
 
                     await atualizarProduto(id, produto[0], null, sequelize)
                 })
@@ -379,4 +378,38 @@ function agruparProdutos(produtos) {
     return Object.values(produtosAgrupados);
 }
 
-module.exports = { cadastrarProduto, pesquisarTodosProdutos, pesquisarProdutoPeloId, definirEstoqueProduto, pesquisarProdutosUnicos, trocarProdutoBrinde, atualizarProduto }
+function inativarProduto(idProduto, sequelize) {
+
+    return new Promise(async (resolve, reject) => {
+
+        try {
+
+            await pesquisarProdutoPeloId(idProduto, sequelize)
+                .then((r) => {
+                    if (!!r[0] == false) {
+                        reject(novoErro("Produto não encontrado", 400))
+                        return
+                    }
+                })
+                .catch((err) => reject(err))
+
+
+            await sequelize.query("call inativar_produto (?)", {
+                replacements: [idProduto],
+                types: sequelize.QueryTypes.UPDATE
+            })
+                .catch((e) => reject(e))
+
+            resolve()
+        }
+        catch (err) {
+            reject(err)
+        }
+
+
+
+    })
+
+}
+
+module.exports = { cadastrarProduto, pesquisarTodosProdutos, pesquisarProdutoPeloId, definirEstoqueProduto, pesquisarProdutosUnicos, trocarProdutoBrinde, atualizarProduto, inativarProduto }
