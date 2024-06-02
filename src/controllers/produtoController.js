@@ -32,17 +32,15 @@ function criarProdutosParaCadastro(produto, imagensAgrupadasParams) {
             const imagensAgrupadas = imagensAgrupadasParams;
             const listaDeLinks = {}; // lista com a cor da imagem + url de resposta
             const listaErrosImagem = [] // lista com os erros de tentar cadastrar imagem
+            console.log(imagensAgrupadas)
 
             for (let index = 0; index < imagensAgrupadas.length; index++) {
                 try {
-                    imagensAgrupadas[index].fieldname = imagensAgrupadas[index].fieldname.split("][")[2]
-
-                }
-                catch (err) {
-                    if (err.message == "Cannot read properties of undefined (reading 'split')") {
-                        imagensAgrupadas[index].fieldname = imagensAgrupadas[index].fieldname
+                    if (imagensAgrupadas[index].fieldname.contains('][')) {
+                        imagensAgrupadas[index].fieldname = imagensAgrupadas[index].fieldname.split("][")[2]
                     }
                 }
+                catch (err) { console.log(err) }
 
             }
 
@@ -51,6 +49,7 @@ function criarProdutosParaCadastro(produto, imagensAgrupadasParams) {
                     salvarImagemAzure("produto", imagem)
                         .then((imageUrl) => {
                             resolve({ nome: imagem.fieldname, url: imageUrl });
+                            console.log(imageUrl)
                         })
                         .catch((error) => {
                             // Se houver algum erro ao salvar a imagem, você rejeita a promessa com o erro
@@ -91,7 +90,7 @@ function criarProdutosParaCadastro(produto, imagensAgrupadasParams) {
                 listaTamanho.map((tamanho) => {
 
                     let cor = cores.trim()
-
+                    console.log(listaDeLinks)
                     //Cria o modelo do produto para o banco
                     const produtoModeloBanco = {
                         nome: produto.nome,
@@ -111,7 +110,6 @@ function criarProdutosParaCadastro(produto, imagensAgrupadasParams) {
 
         }
         catch (err) {
-            console.log(err.message)
             reject(err)
         }
 
@@ -130,10 +128,12 @@ function mandarProdutoParaBanco(listaProdutoParaBanco, sequelize) {
                 const { nome, foto, tamanho, valor, desconto, cor, descricao } = produto
                 let brinde = produto.brinde == "true" ? 1 : 0
                 const quantidadeEstoque = 0
+
                 await sequelize.query("call cadastrar_produto(?,?,?,?,?,?,?,?,?)", {
                     replacements: [nome, descricao, foto, cor, tamanho, valor, brinde, quantidadeEstoque, desconto],
                     types: sequelize.QueryTypes.INSERT
                 })
+                    .catch((e) => reject(e))
             })
             resolve(listaReponse)
 

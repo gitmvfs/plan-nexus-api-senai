@@ -10,7 +10,7 @@ function salvarImagemAzure(nomeContainer, arquivoImagem) {
 
     // Salva os dados do arquivo
 
-    const imagemNome = arquivoImagem.originalname;
+    const imagemNome = `${arquivoImagem.originalname}_${Date.now()}`;
     const stream = new Readable();
     stream.push(arquivoImagem.buffer)
     stream.push(null)
