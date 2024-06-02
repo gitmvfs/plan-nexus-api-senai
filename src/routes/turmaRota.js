@@ -1,5 +1,5 @@
 const router = require("express").Router()
-const {authMiddleware} = require("../middleware/auth")
+const {authMiddleware} = require("../middleware/auth_funcionario")
 const {tratarMensagensDeErro} = require("../utils/errorMsg")
 const {verTodosCursos} = require("../controllers/turmaController")
 

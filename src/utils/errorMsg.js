@@ -25,6 +25,8 @@ function tratarMensagensDeErro(err) {
                     mensagem = `Dados já cadastrados: ${err.parent.sqlMessage.split("key")[1].split(".")[1]}` // Devolve qual campo está duplicado
 
                 }
+                resolve(erroTratado)
+
             }
 
             //Erros de validação do zod
@@ -48,6 +50,8 @@ function tratarMensagensDeErro(err) {
                         mensagem = err.issues[0].message
                         break;
                 }
+                resolve(erroTratado)
+
             }
 
             //Erros do auth
@@ -55,10 +59,14 @@ function tratarMensagensDeErro(err) {
             if (mensagem == "Cannot read properties of undefined (reading 'split')") {
                 mensagem = "Token vazio."
                 status = 403
+                resolve(erroTratado)
+
             }
             else if (mensagem == "Cannot read properties of undefined (reading 'path')") {
                 mensagem = "Necessário enviar arquivo."
                 status = 400
+                resolve(erroTratado)
+
             }
 
             const erroTratado = {
@@ -66,10 +74,11 @@ function tratarMensagensDeErro(err) {
                 "status": status
             }
 
+            console.log("ERRO - ", erroTratado)
             resolve(erroTratado)
         }
         catch {
-            resolve("Mensagem de erro não tratada :" + err)
+            resolve("Mensagem de erro não tratada, err msg: ", err.message )
         }
 
     })

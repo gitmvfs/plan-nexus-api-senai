@@ -1,6 +1,6 @@
 const router = require("express").Router()
 const { verTodosAssociados, associarAluno, removerAssociado, resgatarBrindeAssociado } = require("../controllers/associadoController")
-const {authMiddleware} = require("../middleware/auth")
+const {authMiddleware} = require("../middleware/auth_funcionario")
 const { tratarMensagensDeErro } = require("../utils/errorMsg")
 
 router.use(authMiddleware)

@@ -1,6 +1,6 @@
 const router = require("express").Router()
 const { cadastrarProduto, pesquisarTodosProdutos, pesquisarProdutoPeloId, definirEstoqueProduto, pesquisarProdutosUnicos, trocarProdutoBrinde, atualizarProduto } = require("../controllers/produtoController")
-const {authMiddleware} = require("../middleware/auth")
+const {authMiddleware} = require("../middleware/auth_funcionario")
 const { produtoValidacao } = require("../utils/validacao")
 const { tratarMensagensDeErro, novoErro } = require("../utils/errorMsg")
 const { uploadImagem } = require("../utils/multer")

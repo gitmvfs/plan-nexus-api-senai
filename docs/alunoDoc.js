@@ -31,6 +31,14 @@
  *         type: string
  *         required: true
  * 
+ *   alunoLoginModelo:
+ *     type: object
+ *     properties:
+ *       email:
+ *         type: string
+ *       senha:
+ *         type: string
+ *
  *   editarAlunoModelo:
  *     type: object
  *     properties:
@@ -180,4 +188,26 @@
  *         description: Sem autorização.
  *       500:
  *         description: Erro no banco de dados.
+ * 
+ * 
+ * /aluno/login:
+ *   post:
+ *     tags:
+ *       - Aluno
+ *     summary: Logar como aluno.     
+ *     description: Verifica se o login é válido e devolve as informações do usuário.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/definitions/alunoLoginModelo'    
+ *     responses:
+ *       200:
+ *         description: logado com sucesso (retorna o token).
+ *       400:
+ *         description: Usuário ou senha incorretos.
+ *       500:
+ *         description: Erro no banco de dados.
+
  */

@@ -1,5 +1,5 @@
 const { tratarMensagensDeErro } = require("../utils/errorMsg")
-const {authMiddleware} = require("../middleware/auth")
+const {authMiddleware} = require("../middleware/auth_funcionario")
 const { cadastroDoacaoDinheiro, visualizarTodasDoacoesDinheiro, editarDoacaoDinheiro } = require("../controllers/doacaoDinheiroController")
 
 const router = require("express").Router()

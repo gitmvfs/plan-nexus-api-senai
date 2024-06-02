@@ -2,7 +2,7 @@ const router = require("express").Router()
 const jwt = require("jsonwebtoken")
 const { enviarEmailRedefinirSenha, redefinirSenha } = require("../controllers/smtpController")
 const { tratarMensagensDeErro } = require("../utils/errorMsg")
-const { validarDataToken } = require("../middleware/auth")
+const { validarDataToken } = require("../middleware/auth_funcionario")
 
 // esta rota é para enviar o e-mail e o token
 router.post('/recuperarSenha', async (req, res) => {

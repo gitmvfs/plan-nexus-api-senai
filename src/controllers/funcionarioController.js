@@ -111,6 +111,10 @@ async function loginFuncionario(funcionario) {
 
             const { email, senha } = funcionario;
 
+            if(!email || !senha){
+                reject(novoErro("Email ou senha vazios.", 400))
+            }
+
             const usuario_criptografado = await retornarSenhaCriptografada(email, sequelize);
             await confirmarSenhaCriptografa(senha, usuario_criptografado);
             const usuario = await pesquisarUnicoFuncionario(usuario_criptografado.NIF, sequelize);

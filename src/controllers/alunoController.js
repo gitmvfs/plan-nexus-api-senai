@@ -1,11 +1,12 @@
 const cursoModel = require("../models/cursoModel")
-const alunoModel = require("../models/alunoModel")
 const { definirGraduacao, retirarFormatacao } = require("../utils/converterString")
 const { tratarMensagensDeErro, novoErro } = require("../utils/errorMsg")
 const { associarAluno, pesquisarUmAssociadoPeloId, removerAssociado } = require("./associadoController")
 const { resolve } = require("path")
 const { salvarImagemAzure } = require('./blobController')
 const { definirMultiplasSenhas } = require("./smtpController")
+const Sequelize = require("sequelize")
+const { compararHash } = require("../utils/bcrypt")
 
 async function cadastroMultiplosAlunos(listaAluno, sequelize) {
     // Pega o id da turma do aluno e coloca no fk_curso
@@ -176,7 +177,7 @@ function cadastroUnicoAluno(aluno, sequelize) {
                 await associarAluno(dadosSocio, sequelize)
                 response["dadosAssociado"] = await pesquisarUmAssociadoPeloId(dadosAluno[0].id_aluno, sequelize)
             }
-            definirMultiplasSenhas([{nome: response.nome, email: response.email}])
+            definirMultiplasSenhas([{ nome: response.nome, email: response.email }])
 
             resolve(response)
         } catch (error) {
@@ -286,4 +287,91 @@ function pesquisaTodosAlunos(sequelize) {
 
 }
 
-module.exports = { cadastroMultiplosAlunos, cadastroUnicoAluno, atualizarAluno, pesquisaAluno, pesquisaTodosAlunos, pesquisarAlunoPorCpf }
+
+async function loginAluno(funcionario) {
+
+    return new Promise(async (resolve, reject) => {
+        try {
+            const sequelize = new Sequelize({
+                database: process.env.database_name,
+                username: process.env.database_user_root, // dps atualizar para o login funcionario
+                password: process.env.database_password_root, // dps atualizar para o senha funcionario
+                host: process.env.database_host,
+                dialect: 'mysql'
+            });
+
+            const { email, senha } = funcionario;
+
+            if (!email || !senha) {
+                reject(novoErro("Email ou senha vazios.", 400))
+                return
+            }
+
+            const usuario_criptografado = await retornarSenhaCriptografada(email, sequelize);
+
+            if (usuario_criptografado.senha == undefined) {
+                reject(novoErro("Primeira senha não cadastrada", 400))
+                return
+            }
+
+            await confirmarSenhaCriptografa(senha, usuario_criptografado);
+
+            const usuario = await pesquisaAluno(usuario_criptografado.id, sequelize);
+            console.log("AQ")
+
+            // Devolve os dados do usuário sem a senha
+            const { senha: _, CPF: __, ...dadosUsuario } = usuario;
+
+
+            // Gera o token para verificar se está logado
+            const token = gerarToken(dadosUsuario[0].email, dadosUsuario[0].nome, "12h");
+
+            await sequelize.query("call logar_aluno(? , ?)", {
+                replacements: [dadosUsuario[0].id, token],
+                type: sequelize.QueryTypes.UPDATE
+            })
+                .catch((err) => reject(err))
+
+            // Adiciona o token à resposta
+            dadosUsuario[0].token = token;
+
+            resolve(dadosUsuario[0]);
+        } catch (err) {
+            // Se der algum erro inesperado no processo
+            reject(err);
+        }
+    });
+}
+
+
+function retornarSenhaCriptografada(email, sequelize_login) {
+
+    return new Promise(async (resolve, reject) => {
+        const senhaCriptografada = await sequelize_login.query("select * from buscar_senhas_aluno where email = ?", {
+            replacements: [email],
+            type: sequelize_login.QueryTypes.SELECT
+        })
+
+        // Caso o usuario não exista
+        !!senhaCriptografada[0] == false
+            ? reject(novoErro("Usuario ou senha inválidos", 403))
+            : ""
+
+        resolve(senhaCriptografada[0])
+    })
+}
+
+function confirmarSenhaCriptografa(senha, senhaCriptografada) {
+
+    return new Promise(async (resolve, reject) => {
+        const confirmarSenha = await compararHash(senha, senhaCriptografada.senha)
+
+        if (!confirmarSenha) {
+            reject(novoErro("Usuario ou senha inválidos", 403))
+        }
+        resolve()
+    })
+
+}
+
+module.exports = { cadastroMultiplosAlunos, cadastroUnicoAluno, atualizarAluno, pesquisaAluno, pesquisaTodosAlunos, pesquisarAlunoPorCpf, loginAluno }
