@@ -2,12 +2,14 @@ const router = require("express").Router()
 const { response } = require("express")
 const { cadastroMultiplosAlunos, atualizarAluno, cadastroUnicoAluno, pesquisaAluno, pesquisaTodosAlunos, pesquisarAlunoPorCpf, loginAluno } = require("../controllers/alunoController")
 const { cadastroDeTurmas } = require("../controllers/cursoController")
-const {authMiddleware} = require("../middleware/auth_funcionario")
+const { authMiddleware } = require("../middleware/auth_funcionario")
 const { tratarMensagensDeErro } = require("../utils/errorMsg")
 const excelToJson = require("../utils/excelParseJson")
 const { uploadArquivoAlunos, uploadImagem } = require("../utils/multer")
 const { alunoUnicoValidacao } = require("../utils/validacao")
 const { retirarFormatacao } = require("../utils/converterString")
+const { authMiddleware_aluno } = require("../middleware/auth_aluno")
+const { adicionarItemCarrinho } = require("../controllers/carrinhoComprasController")
 
 
 router.post("/login", async (req, res) => {
@@ -29,7 +31,26 @@ router.post("/login", async (req, res) => {
     }
 })
 
-// ROTAS PROTEGIDAS
+// ROTAS PROTEGIDAS ALUNOS
+
+router.patch("/carrinhoCompras/adicionar", authMiddleware_aluno, async (req, res) => {
+
+    try {
+        const { idProduto, quantidade } = req.body
+
+        await adicionarItemCarrinho(idProduto, quantidade,req.aluno , req.sequelize)
+        res.status(200).json({ "msg": "Carrinho atualizado com sucesso", "statusCode": 201, "response": response })
+    }
+    catch (err) {
+        const erroTratado = await tratarMensagensDeErro(err)
+        res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
+    }
+
+})
+
+
+
+// ROTAS PROTEGIDAS FUNCIONARIOS
 
 router.use(authMiddleware)
 router.post("/cadastro/multiplos", uploadArquivoAlunos.single("alunosFile"), async (req, res) => {

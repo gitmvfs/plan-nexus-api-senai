@@ -374,4 +374,6 @@ function confirmarSenhaCriptografa(senha, senhaCriptografada) {
 
 }
 
+
+
 module.exports = { cadastroMultiplosAlunos, cadastroUnicoAluno, atualizarAluno, pesquisaAluno, pesquisaTodosAlunos, pesquisarAlunoPorCpf, loginAluno }

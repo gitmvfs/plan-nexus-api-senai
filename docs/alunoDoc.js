@@ -31,6 +31,14 @@
  *         type: string
  *         required: true
  * 
+ *   carrinhoDeCompras:
+ *     type: object
+ *     properties:
+ *       idProduto:
+ *         type: "string"
+ *       quantidade:
+ *         type: "string"
+ *  
  *   alunoLoginModelo:
  *     type: object
  *     properties:
@@ -125,6 +133,37 @@
  *         application/json:
  *           schema:
  *             $ref: '#/definitions/cadastroAlunoModelo'
+ *     responses:
+ *       201:
+ *         description: Aluno cadastrado com sucesso.
+ *       400:
+ *         description: Dados inválidos.
+ *       403:
+ *         description: Sem autorização.
+ *       500:
+ *         description: Erro no banco de dados.
+ * 
+ * 
+ * /aluno/carrinhoCompras/adicionar:
+ *   patch:
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id_aluno
+ *         in: header
+ *         description: id do aluno que está logado
+ *         required: true
+ *         type: string
+ *     tags:
+ *       - Aluno
+ *     summary: Define o carrinho de compras do aluno.
+ *     description: Define o carrinho de compras do aluno 
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/definitions/carrinhoDeCompras'
  *     responses:
  *       201:
  *         description: Aluno cadastrado com sucesso.
