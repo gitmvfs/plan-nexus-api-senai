@@ -374,6 +374,38 @@ function confirmarSenhaCriptografa(senha, senhaCriptografada) {
 
 }
 
+function atualizarFotoAluno(foto, aluno, sequelize) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const idAluno = aluno.id_aluno
+            let link = ""
+            let mensagem = ""
+
+            if (!!foto == false) {
+                link = null
+                mensagem = "Foto removida com sucesso"
+            }
+            else{
+                link = await salvarImagemAzure('aluno',foto)
+                link = JSON.stringify(link)
+                mensagem = "Foto adicionada com sucesso"
+            }
+
+            const linkContrato = await salvarImagemAzure('contrato', contrato)
 
 
-module.exports = { cadastroMultiplosAlunos, cadastroUnicoAluno, atualizarAluno, pesquisaAluno, pesquisaTodosAlunos, pesquisarAlunoPorCpf, loginAluno }
+            await sequelize.query("call atualizar_foto_aluno(?,?,?)", {
+                replacements: [idAluno , link, idAluno],
+                type: sequelize.QueryTypes.INSERT
+            })
+                .then((r) => resolve(r))
+                .catch((e) => reject(e))
+
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+}
+
+module.exports = { cadastroMultiplosAlunos, cadastroUnicoAluno, atualizarAluno, pesquisaAluno, pesquisaTodosAlunos, pesquisarAlunoPorCpf, loginAluno, atualizarFotoAluno }
