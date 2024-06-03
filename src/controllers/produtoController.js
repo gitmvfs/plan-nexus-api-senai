@@ -161,6 +161,23 @@ function pesquisarTodosProdutos(sequelize) {
 
 }
 
+function pesquisarProdutoAtivoPeloId(idProduto, sequelize) {
+    return new Promise(async (resolve, reject) => {
+
+        try {
+            await sequelize.query("select * from todos_produtos where id_produto = ? and status = ?;", {
+                replacements: [idProduto, 1],
+                type: sequelize.QueryTypes.SELECT
+            })
+                .then((r) => resolve(r))
+                .catch((e) => reject(e))
+        }
+        catch (err) {
+            reject(err)
+        }
+    })
+}
+
 function pesquisarProdutoPeloId(idProduto, sequelize) {
 
     return new Promise(async (resolve, reject) => {
@@ -266,7 +283,7 @@ async function atualizarProduto(idProdutoParams, dadosProduto, fotosFile, sequel
             const id_produto = idProdutoParams
             let brinde = dadosProduto.brinde == "true" ? 1 : 0
 
-            if(!!linksFotosAntigas[0] == false && fotos[0] == false){
+            if (!!linksFotosAntigas[0] == false && fotos[0] == false) {
                 reject(novoErro("Nenhum link e/ou foto foi inserido", 400))
                 return
             }
@@ -433,4 +450,4 @@ function inativarProduto(idProduto, sequelize) {
 
 }
 
-module.exports = { cadastrarProduto, pesquisarTodosProdutos, pesquisarProdutoPeloId, definirEstoqueProduto, pesquisarProdutosUnicos, trocarProdutoBrinde, atualizarProduto, inativarProduto, pesquisarTodosProdutosAtivos }
+module.exports = { cadastrarProduto, pesquisarTodosProdutos, pesquisarProdutoPeloId, definirEstoqueProduto, pesquisarProdutosUnicos, trocarProdutoBrinde, atualizarProduto, inativarProduto, pesquisarTodosProdutosAtivos, pesquisarProdutoAtivoPeloId }
