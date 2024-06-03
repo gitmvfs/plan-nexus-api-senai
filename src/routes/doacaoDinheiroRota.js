@@ -1,18 +1,19 @@
 const { tratarMensagensDeErro } = require("../utils/errorMsg")
 const {authMiddleware} = require("../middleware/auth_funcionario")
 const { cadastroDoacaoDinheiro, visualizarTodasDoacoesDinheiro, editarDoacaoDinheiro } = require("../controllers/doacaoDinheiroController")
-
+const { uploadImagem } = require("../utils/multer")
 const router = require("express").Router()
 
 router.use(authMiddleware)
 
-router.post("/cadastro", async (req, res) => {
+router.post("/cadastro", uploadImagem.single("contrato"), async (req, res) => {
 
     try {
-        const { valorDoado, idAluno, auxilio, contrato } = req.body
+        const { valorDoado, idAluno, auxilio } = req.body
+        const contrato = req.file
         const data = new Date(req.body.data)
         const doacaoDinheiro = { valorDoado, idAluno, auxilio, contrato, data }
-
+        
         await cadastroDoacaoDinheiro(doacaoDinheiro, req.sequelize)
         res.status(201).json({ "msg": "Doação de dinheiro criado com sucesso", "statusCode": "201" })
     }
