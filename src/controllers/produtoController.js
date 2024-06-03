@@ -150,7 +150,6 @@ function pesquisarTodosProdutos(sequelize) {
     return new Promise(async (resolve, reject) => {
 
         try {
-            //Verifica se o filtro está vazio e passa um json vazio caso contrario passa o proprio filtro
             await sequelize.query("select * from todos_produtos;")
                 .then((r) => resolve(r[0]))
                 .catch((e) => resolve(e))
@@ -216,6 +215,22 @@ function pesquisarProdutosUnicos(sequelize) {
 
 }
 
+function pesquisarTodosProdutosAtivos(sequelize) {
+    return new Promise(async (resolve, reject) => {
+
+        try {
+            await sequelize.query("select * from todos_produtos WHERE status = 1 ;")
+                .then((r) => resolve(r[0]))
+                .catch((e) => resolve(e))
+        }
+        catch (err) {
+            reject(err)
+        }
+    })
+
+
+}
+
 
 function definirEstoqueProduto(idProduto, quantidade, sequelize) {
 
@@ -250,6 +265,12 @@ async function atualizarProduto(idProdutoParams, dadosProduto, fotosFile, sequel
             const fotoArray = dadosProduto.foto instanceof Array == true ? dadosProduto.foto : new Array(dadosProduto.foto)
             const id_produto = idProdutoParams
             let brinde = dadosProduto.brinde == "true" ? 1 : 0
+
+            if(!!linksFotosAntigas[0] == false && fotos[0] == false){
+                reject(novoErro("Nenhum link e/ou foto foi inserido", 400))
+                return
+            }
+
             if (fotosFile != null) {
 
                 const salvarImagensPromises = fotosFile.map(async (foto) => {
@@ -412,4 +433,4 @@ function inativarProduto(idProduto, sequelize) {
 
 }
 
-module.exports = { cadastrarProduto, pesquisarTodosProdutos, pesquisarProdutoPeloId, definirEstoqueProduto, pesquisarProdutosUnicos, trocarProdutoBrinde, atualizarProduto, inativarProduto }
+module.exports = { cadastrarProduto, pesquisarTodosProdutos, pesquisarProdutoPeloId, definirEstoqueProduto, pesquisarProdutosUnicos, trocarProdutoBrinde, atualizarProduto, inativarProduto, pesquisarTodosProdutosAtivos }

@@ -85,6 +85,28 @@
 *       500:
 *         description: Erro ao atualizar usuario.
 
+
+* /produto/todosAtivos:
+*   get:
+*     security:
+*       - bearerAuth: []
+*     parameters:
+*       - name: nif
+*         in: header
+*         description: Nif do funcionario que está logado
+*         required: true
+*         type: string 
+*     tags:
+*       - Produto
+*     summary: Pesquisa todos os produtos ativos.    
+*     description: Retorna todos os produtos cadastrados no banco
+*     responses:
+*       200:
+*         description: Usuario consultado com sucesso.
+*       500:
+*         description: Erro ao atualizar usuario.
+
+
 * /produto/{id_Produto}:
 *   get:
 *     security:
