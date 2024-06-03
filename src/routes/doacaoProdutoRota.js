@@ -2,6 +2,7 @@ const router = require("express").Router()
 const { tratarMensagensDeErro } = require("../utils/errorMsg")
 const {authMiddleware} = require("../middleware/auth_funcionario")
 const { verTodasDoacoes, cadastroDoacaoProduto, editarDoacaoProduto } = require("../controllers/doacaoProdutoController")
+const { uploadImagem } = require("../utils/multer")
 
 router.use(authMiddleware)
 
@@ -19,10 +20,11 @@ router.get("/todas", async(req, res) => {
 
 })
 
-router.post("/cadastro", async(req, res) => {
+router.post("/cadastro",  uploadImagem.single("contrato"), async(req, res) => {
     try {
-        const {idAluno, idProduto, quantidade, contrato} = req.body
+        const {idAluno, idProduto, quantidade} = req.body
         const data = new Date(req.body.data)
+        const contrato = req.file
         const doacaoProduto = {idAluno, idProduto, quantidade, contrato, data}
 
         await cadastroDoacaoProduto(doacaoProduto, req.sequelize)
