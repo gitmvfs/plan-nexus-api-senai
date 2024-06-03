@@ -1,11 +1,36 @@
+const { salvarImagemAzure } = require("./blobController");
+const { novoErro } = require("../utils/errorMsg");
+const { pesquisarProdutoAtivoPeloId } = require("./produtoController");
+
+
 function cadastroDoacaoProduto(doacaoProduto, sequelize) {
     return new Promise(async (resolve, reject) => {
         try {
 
             const { idAluno, idProduto, quantidade, contrato, data } = doacaoProduto
 
+            const produto = await pesquisarProdutoAtivoPeloId(idProduto, sequelize)
+
+            if(!!produto[0] == false){
+                reject(novoErro("Produto não encontrado", 404))
+                return
+            }
+
+            if (quantidade > produto[0].qtd_disponivel) {
+                reject(novoErro("Quantidade maior do que estoque disponivel", 400))
+                return
+            }
+
+            if (!!contrato == false) {
+                reject(novoErro("Arquivo de contrato não enviado", 400))
+                return
+            }
+
+            const linkContrato = await salvarImagemAzure('contrato', contrato)
+
+
             await sequelize.query("call doar_produto(?,?,?,?,?)", {
-                replacements: [idAluno, idProduto, quantidade, contrato, data],
+                replacements: [idAluno, idProduto, quantidade, linkContrato, data],
                 type: sequelize.QueryTypes.INSERT
             })
                 .then((r) => resolve(r))

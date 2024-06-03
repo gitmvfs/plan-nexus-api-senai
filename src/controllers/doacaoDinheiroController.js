@@ -1,12 +1,25 @@
+const { novoErro } = require("../utils/errorMsg");
+const { salvarImagemAzure } = require("./blobController");
+
 function cadastroDoacaoDinheiro(doacaoDinheiro, sequelize) {
 
     return new Promise(async (resolve, reject) => {
 
         try {
-            const { valorDoado, idAluno, auxilio, contrato, data } = doacaoDinheiro
+            const { valorDoado, idAluno, contrato, data } = doacaoDinheiro
+            let auxilio = doacaoDinheiro.auxilio
+
+            if (!!contrato == false) {
+                reject(novoErro("Arquivo de contrato não enviado", 400))
+                return
+
+            }
+
+            const linkContrato = await salvarImagemAzure('contrato', contrato)
+
 
             await sequelize.query("call doar_dinheiro(?,?,?,?,?)", {
-                replacements: [idAluno, valorDoado, auxilio, contrato, data],
+                replacements: [idAluno, valorDoado, auxilio, linkContrato, data],
                 type: sequelize.QueryTypes.INSERT
             })
                 .then(r => resolve(r))
@@ -37,7 +50,7 @@ function visualizarTodasDoacoesDinheiro(sequelize) {
 
 function editarDoacaoDinheiro(dadosDoacao, sequelize) {
 
-    return new Promise( async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
 
         try {
             const { idDoacao, valorDoado, idAluno, auxilio, data } = dadosDoacao
