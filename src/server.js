@@ -6,6 +6,7 @@ const bodyParser = require("body-parser")
 const cors = require("cors")
 const swaggerJSDoc = require("swagger-jsdoc");
 const swaggerUI = require("swagger-ui-express");
+const rateLimit = require("express-rate-limit")
 
 //Importando as rotas
 const alunosRota = require("./routes/alunoRota")
