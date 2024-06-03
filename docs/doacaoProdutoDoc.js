@@ -69,9 +69,22 @@
 *     requestBody:
 *       required: true
 *       content:
-*         application/json:
+*         multipart/form-data:
 *           schema:
-*             $ref: '#/definitions/cadastroDoacaoProduto' 
+*             type: object
+*             properties:
+*               idAluno:
+*                 type: number
+*               idProduto:
+*                 type: number
+*               quantidade:
+*                 type: number
+*               contrato:
+*                 type: string
+*                 format: binary
+*               data:
+*                 type: string
+*                 format: date
 *     tags:
 *       - doacaoProduto
 *     summary: cadastro de doação de Produto

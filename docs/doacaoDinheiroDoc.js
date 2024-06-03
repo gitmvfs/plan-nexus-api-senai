@@ -32,9 +32,9 @@
 *         type: number
 *       contrato:
 *         type: string
+*         format: binary
 *       data:
 *         type: string
-
 
 * /doacaoDinheiro/todos:
 *   get:
@@ -69,9 +69,23 @@
 *     requestBody:
 *       required: true
 *       content:
-*         application/json:
+*         multipart/form-data:
 *           schema:
-*             $ref: '#/definitions/cadastroDoacaoDinheiro' 
+*             type: object
+*             properties:
+*               valorDoado:
+*                 type: number
+*               idAluno:
+*                 type: number
+*               auxilio:
+*                 type: number
+*               contrato:
+*                 type: string
+*                 format: binary
+*               data:
+*                 type: string
+*                 format: date
+
 *     tags:
 *       - doacaoDinheiro
 *     summary: cadastro de doação de Dinheiro
