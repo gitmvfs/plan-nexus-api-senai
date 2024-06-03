@@ -7,6 +7,7 @@ const { salvarImagemAzure } = require('./blobController')
 const { definirMultiplasSenhas } = require("./smtpController")
 const Sequelize = require("sequelize")
 const { compararHash } = require("../utils/bcrypt")
+const { gerarToken } = require("../utils/jwt")
 
 async function cadastroMultiplosAlunos(listaAluno, sequelize) {
     // Pega o id da turma do aluno e coloca no fk_curso
@@ -316,8 +317,7 @@ async function loginAluno(funcionario) {
 
             await confirmarSenhaCriptografa(senha, usuario_criptografado);
 
-            const usuario = await pesquisaAluno(usuario_criptografado.id, sequelize);
-            console.log("AQ")
+            const usuario = await pesquisaAluno(usuario_criptografado.id_aluno, sequelize);
 
             // Devolve os dados do usuário sem a senha
             const { senha: _, CPF: __, ...dadosUsuario } = usuario;
@@ -327,7 +327,7 @@ async function loginAluno(funcionario) {
             const token = gerarToken(dadosUsuario[0].email, dadosUsuario[0].nome, "12h");
 
             await sequelize.query("call logar_aluno(? , ?)", {
-                replacements: [dadosUsuario[0].id, token],
+                replacements: [dadosUsuario[0].id_aluno, token],
                 type: sequelize.QueryTypes.UPDATE
             })
                 .catch((err) => reject(err))
