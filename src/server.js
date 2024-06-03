@@ -29,6 +29,17 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors())
 
+// Configurar o limitador
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minuto
+  max: 50, // Limite de 100 requisições por IP a cada 15 minutos
+  message: 'Muitas requisições neste IP, tente novamente mais tarde.',
+  headers: true, // Inclui os cabeçalhos `RateLimit-*` na resposta
+});
+
+// Aplicar o limitador a todas as rotas
+app.use(limiter);
+
 // Configurações da rota de documentação
 
 
