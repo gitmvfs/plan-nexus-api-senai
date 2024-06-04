@@ -169,7 +169,7 @@ function pesquisarProdutoAtivoPeloId(idProduto, sequelize) {
                 replacements: [idProduto, 1],
                 type: sequelize.QueryTypes.SELECT
             })
-                .then((r) => resolve(r))
+                .then((r) => resolve(r[0]))
                 .catch((e) => reject(e))
         }
         catch (err) {

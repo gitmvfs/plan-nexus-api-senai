@@ -29,31 +29,32 @@ function validarDataToken(token) {
 async function encontrarAlunoLogin(id_aluno, token) {
 
     return new Promise(async (resolve, reject) => {
-        try{
-                // Se conecta usando um usuario q só tem acesso a uma view de login
-        const sequelize = new Sequelize({
-            database: process.env.database_name,
-            username: process.env.database_user_root, // dps atualizar para o login funcionario
-            password: process.env.database_password_root, // dps atualizar para o senha funcionario
-            host: process.env.database_host,
-            dialect: 'mysql'
-        });
+        try {
 
-        const response = await alunoModel(sequelize).findOne({
-            where: {
-                id_aluno: id_aluno,
-                token:token.replace("\"","")
+            // Se conecta usando um usuario q só tem acesso a uma view de login
+            const sequelize = new Sequelize({
+                database: process.env.database_name,
+                username: process.env.database_user_root, // dps atualizar para o login funcionario
+                password: process.env.database_password_root, // dps atualizar para o senha funcionario
+                host: process.env.database_host,
+                dialect: 'mysql'
+            });
+
+            const response = await alunoModel(sequelize).findOne({
+                where: {
+                    id_aluno: id_aluno,
+                    token: token.replace("\"", "")
+                }
+            })
+            if (!!response == false) {
+                reject(novoErro("Id_aluno ou token inválidos, permissão negada.", 403))
             }
-        })
-        if (!!response == false) {
-            reject(novoErro("Id_aluno ou token inválidos, permissão negada.", 403))
-        }
 
-        resolve(response)
+            resolve(response)
         }
-    catch(err){
-        reject(err)
-    }
+        catch (err) {
+            reject(err)
+        }
     })
 
 }
@@ -63,7 +64,7 @@ function criarConexaoBanco(usuarioBanco, senhaBanco) {
     const sequelize = new Sequelize({
         database: process.env.database_name,
         username: "alunos",
-        password: process.env.database_password_aluno,
+        password: process.env.database_password_alunos,
         host: process.env.database_host,
         dialect: 'mysql'
     });
@@ -113,4 +114,4 @@ const authMiddleware_aluno = (req, res, next) => {
 
 };
 
-module.exports = {authMiddleware_aluno, validarDataToken}
+module.exports = { authMiddleware_aluno, validarDataToken }
