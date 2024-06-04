@@ -10,13 +10,13 @@ function cadastroDoacaoProduto(doacaoProduto, sequelize) {
             const { idAluno, idProduto, quantidade, contrato, data } = doacaoProduto
 
             const produto = await pesquisarProdutoAtivoPeloId(idProduto, sequelize)
-
-            if(!!produto[0] == false){
+            console.log(produto)
+            if(!!produto == false){
                 reject(novoErro("Produto não encontrado", 404))
                 return
             }
 
-            if (quantidade > produto[0].qtd_disponivel) {
+            if (quantidade > produto.qtd_disponivel) {
                 reject(novoErro("Quantidade maior do que estoque disponivel", 400))
                 return
             }
@@ -28,6 +28,7 @@ function cadastroDoacaoProduto(doacaoProduto, sequelize) {
 
             const linkContrato = await salvarImagemAzure('contrato', contrato)
 
+            console.log(data)
 
             await sequelize.query("call doar_produto(?,?,?,?,?)", {
                 replacements: [idAluno, idProduto, quantidade, linkContrato, data],

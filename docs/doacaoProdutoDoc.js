@@ -84,7 +84,6 @@
 *                 format: binary
 *               data:
 *                 type: string
-*                 format: date
 *     tags:
 *       - doacaoProduto
 *     summary: cadastro de doação de Produto
