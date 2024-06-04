@@ -60,7 +60,19 @@ function enviarEmailRedefinirSenha(email) {
 
             await atualizarTokenUsuario(usuario[0], tabelaUsuario, token, sequelize)
 
-            await enviarEmail(email, "", "Definição de Senha AAPM", `<h1>Clique para atualizar sua senha: <a href="http://https://plan-nexus-gestao.agreeableisland-158f361b.brazilsouth.azurecontainerapps.io/recuperar-senha/${token}" >Aqui</a> </h1> `)
+            if (tabelaUsuario == "Funcionario") {
+                await enviarEmail(email, "", "Definição de Senha AAPM", `<h1>Clique para atualizar sua senha: <a href="https://plan-nexus-gestao.agreeableisland-158f361b.brazilsouth.azurecontainerapps.io/recuperar-senha/${token}" >Aqui</a> </h1> `)
+                    .then((r) => {
+                        if (!!r.accepted[0] == true) {
+                            resolve(r.accepted[0])
+                        }
+                        else {
+                            reject(novoErro("Email não encontrado ou inválido.", 400))
+                        }
+                    })
+            }
+            else if (tabelaUsuario == "Aluno"){
+                await enviarEmail(email, "", "Definição de Senha AAPM", `<h1>Clique para atualizar sua senha: <a href="https://plan-nexus-alunos.agreeableisland-158f361b.brazilsouth.azurecontainerapps.io/recuperar-senha/${token}" >link</a> </h1> `)
                 .then((r) => {
                     if (!!r.accepted[0] == true) {
                         resolve(r.accepted[0])
@@ -69,6 +81,8 @@ function enviarEmailRedefinirSenha(email) {
                         reject(novoErro("Email não encontrado ou inválido.", 400))
                     }
                 })
+            }
+
         } catch (error) {
             reject(error)
         }
