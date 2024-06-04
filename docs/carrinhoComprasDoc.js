@@ -19,6 +19,55 @@
  *       idProduto:
  *         type: "string"
  *
+ * /aluno/carrinhoCompras/valor:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id_aluno
+ *         in: header
+ *         description: id do aluno que está logado
+ *         required: true
+ *         type: string
+ *     tags:
+ *       - Carrinho
+ *     summary: pega o valor do carrinho de compras do aluno.
+ *     description: pega o valor do carrinho de compras do aluno.
+ *     responses:
+ *       201:
+ *         description: Item adicionado ao carrinho com sucesso.
+ *       400:
+ *         description: Dados inválidos.
+ *       403:
+ *         description: Sem autorização.
+ *       500:
+ *         description: Erro no banco de dados.
+ *
+ * /aluno/carrinhoCompras/desconto:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id_aluno
+ *         in: header
+ *         description: id do aluno que está logado
+ *         required: true
+ *         type: string
+ *     tags:
+ *       - Carrinho
+ *     summary: pega o valor do carrinho de compras do aluno.
+ *     description: pega o valor do carrinho de compras do aluno.
+ *     responses:
+ *       201:
+ *         description: Item adicionado ao carrinho com sucesso.
+ *       400:
+ *         description: Dados inválidos.
+ *       403:
+ *         description: Sem autorização.
+ *       500:
+ *         description: Erro no banco de dados.
+ *
+ * 
  * /aluno/carrinhoCompras/adicionar:
  *   patch:
  *     security:
