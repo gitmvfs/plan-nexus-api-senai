@@ -10,6 +10,7 @@ const rateLimit = require("express-rate-limit")
 
 //Importando as rotas
 const alunosRota = require("./routes/alunoRota")
+const alunosSite = require("./routes/alunoSiteRota")
 const armarioRota = require("./routes/armarioRota")
 const funcionarioRota = require("./routes/funcionarioRota")
 const produtoRota = require("./routes/produtoRota")
@@ -65,9 +66,11 @@ const options = {
 
 
 //Configurando rotas
+
 app.use("/smtp", smtpRota)
 app.use("/funcionario", funcionarioRota)
-app.use("/aluno", alunosRota)
+app.use("/aluno", alunosSite) // PARTE QUE FICA NO SITE DOS ALUNOS
+app.use("/aluno", alunosRota) // PARTE QUE FICA NA GESTÃO
 app.use("/armario", armarioRota)
 app.use("/produto", produtoRota)
 app.use("/doacaoDinheiro", doacaoDinheiroRota)
@@ -82,6 +85,10 @@ app.get("", (req,res) => {
   res.json({ server_status: "ok", api_v : "1.0.0"})
 
 })
+
+app.use((req, res, next) => {
+  res.status(404).json({ error: 'Rota não encontrada' });
+});
 
 
 app.listen(serverPort, "0.0.0.0" ,() => console.log(`HTTP RUNNING AT: http://localhost:${serverPort}`))
