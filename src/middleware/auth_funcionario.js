@@ -29,31 +29,36 @@ function validarDataToken(token) {
 async function encontrarFuncionarioLogin(nif, token) {
 
     return new Promise(async (resolve, reject) => {
-        try{
-                // Se conecta usando um usuario q só tem acesso a uma view de login
-        const sequelize = new Sequelize({
-            database: process.env.database_name,
-            username: process.env.database_user_root, // dps atualizar para o login funcionario
-            password: process.env.database_password_root, // dps atualizar para o senha funcionario
-            host: process.env.database_host,
-            dialect: 'mysql'
-        });
+        try {
+            // Se conecta usando um usuario q só tem acesso a uma view de login
+            const sequelize = new Sequelize({
+                database: process.env.database_name,
+                username: process.env.database_user_root, // dps atualizar para o login funcionario
+                password: process.env.database_password_root, // dps atualizar para o senha funcionario
+                host: process.env.database_host,
+                dialect: 'mysql'
+            });
 
-        const response = await funcionarioModel(sequelize).findOne({
-            where: {
-                NIF: nif,
-                token:token.replace("\"","")
+            if (nif && token) {
+                const response = await funcionarioModel(sequelize).findOne({
+                    where: {
+                        NIF: nif,
+                        token: token.replace("\"", "")
+                    }
+                })
+                if (!!response == false) {
+                    reject(novoErro("Nif ou token inválidos, permissão negada.", 403))
+                }
+
+                resolve(response)
             }
-        })
-        if (!!response == false) {
-            reject(novoErro("Nif ou token inválidos, permissão negada.", 403))
+            else {
+                reject(novoErro("Token ou nif vazios",400))
+            }
         }
-
-        resolve(response)
+        catch (err) {
+            reject(err)
         }
-    catch(err){
-        reject(err)
-    }
     })
 
 }
@@ -106,6 +111,7 @@ const authMiddleware = (req, res, next) => {
     return new Promise(async (resolve, reject) => {
 
         try {
+            console.log("ME CHAMOU")
             const { nif } = req.headers
             let token = req.headers.authorization || " "
 
@@ -136,12 +142,15 @@ const authMiddleware = (req, res, next) => {
             next();
         }
         catch (err) {
-            const erroTratado = await tratarMensagensDeErro(err)
-            res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
+            console.log("\n ------------------------------------------------------------------------------")
+
+            console.log("ERRO DURANTE AUTH:", err)
+            console.log("\n ------------------------------------------------------------------------------")
+            next()
         }
 
     })
 
 };
 
-module.exports = {authMiddleware, validarDataToken}
+module.exports = { authMiddleware, validarDataToken }
