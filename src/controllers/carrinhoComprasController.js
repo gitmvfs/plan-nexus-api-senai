@@ -1,29 +1,66 @@
-function adicionarItemCarrinho(idProduto, quantidade, aluno, sequelize) {
+const { novoErro } = require("../utils/errorMsg")
+const { pesquisarProdutoAtivoPeloId } = require("./produtoController")
+
+function adicionarItemCarrinho(idProduto, quantidadePedido, aluno, sequelize) {
 
     return new Promise(async (resolve, reject) => {
         try {
-
-            const listaCarrinho = { '1': '2', '2': '3' }
-
             const idCarrinho = aluno.id_aluno
+            const listaCarrinho = await pesquisarCarrinhoPeloId(idCarrinho, sequelize)
 
-            // => produto e quantidade
+            
+            // Pesquisa pelo produto
+            const produto = await pesquisarProdutoAtivoPeloId(idProduto,sequelize)
+            .catch((err) => reject(err))
 
-            listaCarrinho[`${idProduto}`] = quantidade
+            // verifica se o produto existe
+            if(!produto){
+                reject(novoErro("Produto não encontrado", 404))
+                return
+            }
+            
+            // verifica o estoque
+            if(produto.qtd_disponivel < quantidadePedido){
+                reject(novoErro("A quantidade do pedido excede o disponivel do produto", 400))
+                return
+            }
 
+            // adiciona o produto a lista
+            listaCarrinho[`${idProduto}`] = quantidadePedido
 
+            // manda para o banco
             await sequelize.query("call adicionar_item_carrinho(? , ?)", {
                 replacements: [idCarrinho, JSON.stringify(listaCarrinho)],
                 type: sequelize.QueryTypes.UPDATE
             })
+            .catch((err)=> reject(err))
 
-            resolve()
+            resolve(listaCarrinho)
 
         }
-        catch(err){
+        catch (err) {
             reject(err)
         }
     })
+}
+
+function pesquisarCarrinhoPeloId(idAluno, sequelize) {
+
+    return new Promise(async (resolve, reject) => {
+        try {
+
+            await sequelize.query("select * from todos_carrinhos where fk_aluno = ?", {
+                replacements: [idAluno],
+                type: sequelize.QueryTypes.SELECT
+            })
+                .then((r) => !!r[0] == false? resolve({}) : resolve(r[0].itens_carrinho))
+                .catch((err) => reject(err))
+        }
+        catch (err) {
+            reject(err)
+        }
+    })
+
 }
 
 function valorCarrinhoCompras() {
