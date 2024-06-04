@@ -289,7 +289,7 @@ function pesquisaTodosAlunos(sequelize) {
 }
 
 
-async function loginAluno(funcionario) {
+async function loginAluno(aluno) {
 
     return new Promise(async (resolve, reject) => {
         try {
@@ -301,7 +301,7 @@ async function loginAluno(funcionario) {
                 dialect: 'mysql'
             });
 
-            const { email, senha } = funcionario;
+            const { email, senha } = aluno;
 
             if (!email || !senha) {
                 reject(novoErro("Email ou senha vazios.", 400))
