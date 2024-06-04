@@ -9,7 +9,7 @@ const { uploadArquivoAlunos, uploadImagem } = require("../utils/multer")
 const { alunoUnicoValidacao } = require("../utils/validacao")
 const { retirarFormatacao } = require("../utils/converterString")
 const { authMiddleware_aluno } = require("../middleware/auth_aluno")
-const { adicionarItemCarrinho } = require("../controllers/carrinhoComprasController")
+const { adicionarItemCarrinho, removerItemCarrinho } = require("../controllers/carrinhoComprasController")
 
 
 router.post("/login", async (req, res) => {
@@ -38,7 +38,7 @@ router.patch("/carrinhoCompras/adicionar", authMiddleware_aluno, async (req, res
     try {
         const { idProduto, quantidade } = req.body
 
-        await adicionarItemCarrinho(idProduto, quantidade,req.aluno , req.sequelize)
+        const response = await adicionarItemCarrinho(idProduto, quantidade, req.aluno, req.sequelize)
         res.status(200).json({ "msg": "Carrinho atualizado com sucesso", "statusCode": 201, "response": response })
     }
     catch (err) {
@@ -48,6 +48,20 @@ router.patch("/carrinhoCompras/adicionar", authMiddleware_aluno, async (req, res
 
 })
 
+router.patch("/carrinhoCompras/remover", authMiddleware_aluno, async (req, res) => {
+
+    try {
+        const { idProduto } = req.body
+
+        const response = await removerItemCarrinho(idProduto, req.aluno, req.sequelize)
+        res.status(200).json({ "msg": "Carrinho atualizado com sucesso", "statusCode": 201, "response": response })
+    }
+    catch (err) {
+        const erroTratado = await tratarMensagensDeErro(err)
+        res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
+    }
+
+})
 
 
 // ROTAS PROTEGIDAS FUNCIONARIOS
