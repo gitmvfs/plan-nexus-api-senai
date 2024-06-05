@@ -1,6 +1,7 @@
 const produtoModel = require("../models/produtoModel")
 const { novoErro } = require("../utils/errorMsg")
 const { salvarImagemAzure } = require("./blobController")
+const Sequelize = require("sequelize")
 
 async function cadastrarProduto(produto, imagensAgrupadas, sequelize) {
     return new Promise(async (resolve, reject) => {
@@ -90,7 +91,6 @@ function criarProdutosParaCadastro(produto, imagensAgrupadasParams) {
                 listaTamanho.map((tamanho) => {
 
                     let cor = cores.trim()
-                    console.log(listaDeLinks)
                     //Cria o modelo do produto para o banco
                     const produtoModeloBanco = {
                         nome: produto.nome,
@@ -232,10 +232,19 @@ function pesquisarProdutosUnicos(sequelize) {
 
 }
 
-function pesquisarTodosProdutosAtivos(sequelize) {
+function pesquisarTodosProdutosAtivos() {
     return new Promise(async (resolve, reject) => {
 
         try {
+            const sequelize = new Sequelize({
+                database: process.env.database_name,
+                username: process.env.database_user_root, // dps atualizar para o login funcionario
+                password: process.env.database_password_root, // dps atualizar para o senha funcionario
+                host: process.env.database_host,
+                dialect: 'mysql'
+            });
+
+
             await sequelize.query("select * from todos_produtos WHERE status = 1 ;")
                 .then((r) => resolve(r[0]))
                 .catch((e) => resolve(e))
