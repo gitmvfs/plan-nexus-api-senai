@@ -6,6 +6,20 @@ const { tratarMensagensDeErro, novoErro } = require("../utils/errorMsg")
 const { uploadImagem } = require("../utils/multer")
 const { array } = require("zod")
 
+
+router.get("/todosAtivos", async (req, res) => {
+
+    try {
+        pesquisarTodosProdutosAtivos()
+            .then((response) => res.status(200).json({ msg: "Consulta realizada com sucesso", "statusCode": 200, "response": response }))
+            .catch((e) => res.status(400).json({ msg: "Erro ao realizar consulta", "statusCode": 400, errMsg: e }))
+    }
+    catch (err) {
+        const erroTratado = await tratarMensagensDeErro(err)
+        res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
+
+    }
+
 router.use(authMiddleware)
 
 router.post("/", uploadImagem.any(), async (req, res) => {
@@ -58,18 +72,6 @@ router.get("/todos", async (req, res) => {
 
 })
 
-router.get("/todosAtivos", async (req, res) => {
-
-    try {
-        pesquisarTodosProdutosAtivos(req.sequelize)
-            .then((response) => res.status(200).json({ msg: "Consulta realizada com sucesso", "statusCode": 200, "response": response }))
-            .catch((e) => res.status(400).json({ msg: "Erro ao realizar consulta", "statusCode": 400, errMsg: e }))
-    }
-    catch (err) {
-        const erroTratado = await tratarMensagensDeErro(err)
-        res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
-
-    }
 
 
 })
