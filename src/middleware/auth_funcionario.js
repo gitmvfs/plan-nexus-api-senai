@@ -111,18 +111,18 @@ const authMiddleware = (req, res, next) => {
     return new Promise(async (resolve, reject) => {
 
         try {
-            console.log("ME CHAMOU")
             const { nif } = req.headers
             let token = req.headers.authorization || " "
 
-            token = token.split(" ")[1]
-
             if (!!nif == false || !!token == false) {
                 novoErro("Usuario ou token inválidos, permissão negada", 403)
+                return
             }
 
+            token = token.split(" ")[1]
+
             await validarDataToken(token)
-                .catch((e) => novoErro("Token inválido ou expirado", 403))
+                .catch((e) => {novoErro("Token inválido ou expirado", 403); return})
 
             const funcionario = await encontrarFuncionarioLogin(nif, token) // procura o funcionario no banco
 
