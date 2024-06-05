@@ -1,6 +1,7 @@
 const { authMiddleware_aluno } = require("../middleware/auth_aluno")
 const { adicionarItemCarrinho, removerItemCarrinho, valorCarrinhoCompras, simularDesconto } = require("../controllers/carrinhoComprasController")
 const { tratarMensagensDeErro } = require("../utils/errorMsg")
+const { loginAluno } = require("../controllers/alunoController")
 const router = require("express").Router()
 
 
