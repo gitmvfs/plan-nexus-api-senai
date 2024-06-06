@@ -181,4 +181,54 @@ function simularDesconto(aluno, sequelize) {
 
 // }
 
-module.exports = { adicionarItemCarrinho, removerItemCarrinho, valorCarrinhoCompras, valorCarrinhoCompras, simularDesconto }
+function retornarItensCarrinho(aluno, sequelize) {
+
+    return new Promise(async (resolve, reject) => {
+
+        try {
+            console.log(aluno)
+            const idCarrinho = aluno.id_aluno
+            const listaCarrinho = await pesquisarCarrinhoPeloId(idCarrinho, sequelize)
+            const response = {}
+            let indexProdutoResponse = 0
+
+            if (Object.keys(listaCarrinho).length === 0) {
+                resolve(valorTotal)
+            }
+
+            const produtosInfo = Object.keys(listaCarrinho).map(async (key) => {
+
+                const produto = await pesquisarProdutoAtivoPeloId(key, sequelize);
+                
+                response[indexProdutoResponse] = {
+                    idProduto: produto.id_produto,
+                    nome: produto.nome,
+                    foto: produto.foto[0],
+                    cor: produto.cor,
+                    tamanho: produto.tamanho,
+                    quantidade: listaCarrinho[key],
+                    valor: produto.valor,
+                    valorComDesconto: Number(produto.valor) - Number(produto.desconto_associado),
+                    quantidadeEstoque: produto.qtd_disponivel
+                }
+                indexProdutoResponse++
+            });
+
+            await Promise.all(produtosInfo);
+
+            response["valor"] = await simularDesconto(aluno, sequelize)
+
+            resolve(response)
+
+        }
+        catch (err) {
+            reject(err)
+        }
+
+
+
+    })
+
+}
+
+module.exports = { adicionarItemCarrinho, removerItemCarrinho, valorCarrinhoCompras, valorCarrinhoCompras, simularDesconto, retornarItensCarrinho }
