@@ -24,7 +24,7 @@ function visualizarTodasDoacoesArmario(sequelize) {
 
     return new Promise(async(resolve, reject) => {
         try {
-            await sequelize.query("select * from doacao_armario order by data;", {
+            await sequelize.query("select * from doacoes_armario order by data;", {
                 type: sequelize.QueryTypes.SELECT
             })
                 .then(r => resolve(r))
