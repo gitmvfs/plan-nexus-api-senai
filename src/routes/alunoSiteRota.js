@@ -1,7 +1,8 @@
 const { authMiddleware_aluno } = require("../middleware/auth_aluno")
-const { adicionarItemCarrinho, removerItemCarrinho, retornarItensCarrinho } = require("../controllers/carrinhoComprasController")
+const { adicionarItemCarrinho, removerItemCarrinho, retornarItensCarrinho, criarReserva } = require("../controllers/carrinhoComprasController")
 const { tratarMensagensDeErro } = require("../utils/errorMsg")
 const { loginAluno } = require("../controllers/alunoController")
+const { definirTipoPagamento } = require("../utils/converterString")
 const router = require("express").Router()
 
 
@@ -56,13 +57,31 @@ router.patch("/carrinhoCompras/remover", authMiddleware_aluno, async (req, res) 
 
 })
 
-router.get("/carrinhoCompras", authMiddleware_aluno, async(req, res) => {
+router.get("/carrinhoCompras", authMiddleware_aluno, async (req, res) => {
 
 
     try {
         const response = await retornarItensCarrinho(req.aluno, req.sequelize)
-        console.log('ALUNO:',req)
         res.status(200).json({ "msg": "Carrinho de compras resgatado com sucesso", "statusCode": 200, "response": response })
+
+    } catch (err) {
+        const erroTratado = await tratarMensagensDeErro(err)
+        res.status(erroTratado.status).json({ errMsg: erroTratado.message, "statusCode": erroTratado.status })
+    }
+
+
+})
+
+router.post("/carrinhoCompras", authMiddleware_aluno, async (req, res) => {
+
+    try {
+        const data = new Date(req.body.data)
+        let tipoPagamento = req.body.tipoPagamento
+        const virandoSocio = req.body.virandoSocio
+        tipoPagamento = await definirTipoPagamento(tipoPagamento)
+
+        const response = await criarReserva(tipoPagamento, virandoSocio, req.aluno, data)
+        res.status(200).json({ "msg": "Reserva gerada com sucesso", "statusCode": 200 })
 
     } catch (err) {
         const erroTratado = await tratarMensagensDeErro(err)

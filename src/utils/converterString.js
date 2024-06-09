@@ -38,7 +38,7 @@ function definirStatusArmario(status) {
                 resolve(2)
                 break;
             case "trancado":
-                resolve(3) 
+                resolve(3)
                 break;
             default:
                 reject(novoErro("Opção inválida do Status Armario, insira : 'Desocupado', 'Ocupado', 'trancado '", 400)) // retorna trancado por padrão
@@ -54,4 +54,32 @@ function retirarFormatacao(string) {
 
 }
 
-module.exports = { definirGraduacao, definirStatusArmario, retirarFormatacao }
+function definirTipoPagamento(string) {
+
+    return new Promise((resolve, reject) => {
+
+        let stringLower = string.toLowerCase().trim()
+
+        switch (stringLower) {
+            case "pix":
+                resolve(1)
+                break;
+            case "crédito":
+                resolve(2)
+                break;
+            case "débito":
+                resolve(3)
+                break;
+            case "dinheiro":
+                resolve(4)
+                break;
+            default:
+                reject(novoErro("Opção inválida do tipo pagamento , insira : 'pix', 'crédito', 'débito', 'dinheiro' ", 400)) // retorna trancado por padrão
+                break;
+        }
+
+    })
+
+}
+
+module.exports = { definirGraduacao, definirStatusArmario, retirarFormatacao, definirTipoPagamento }

@@ -18,7 +18,16 @@
  *     properties:
  *       idProduto:
  *         type: "string"
- *
+ *   
+ *   reservar:
+ *     type:
+ *     properties:
+ *       tipoPagamento:
+ *         type: "string"   
+ *       data:
+ *         type: "string"   
+  *       virandoSocio:
+ *         type: "boolean"   
  
  * /aluno/carrinhoCompras:
  *   get:
@@ -95,6 +104,36 @@
  *         application/json:
  *           schema:
  *             $ref: '#/definitions/carrinhoDeComprasRemover'
+ *     responses:
+ *       201:
+ *         description: Item removido do carrinho com sucesso.
+ *       400:
+ *         description: Dados inválidos.
+ *       403:
+ *         description: Sem autorização.
+ *       500:
+ *         description: Erro no banco de dados.
+ * 
+ * /aluno/carrinhoCompras/:
+ *   post:
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id_aluno
+ *         in: header
+ *         description: id do aluno que está logado
+ *         required: true
+ *         type: string
+ *     tags:
+ *       - Carrinho
+ *     summary: Gera a reserva do aluno.
+ *     description: Gera a reserva do carrinho.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/definitions/reservar'
  *     responses:
  *       201:
  *         description: Item removido do carrinho com sucesso.

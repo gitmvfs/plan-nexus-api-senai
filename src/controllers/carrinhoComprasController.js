@@ -1,6 +1,7 @@
 const { novoErro } = require("../utils/errorMsg")
-const { pesquisarUmAssociadoPeloId } = require("./associadoController")
+const { pesquisarUmAssociadoPeloId, associarAluno } = require("./associadoController")
 const { pesquisarProdutoAtivoPeloId, pesquisarProdutoPeloId } = require("./produtoController")
+const Sequelize = require("sequelize")
 
 function adicionarItemCarrinho(idProduto, quantidadePedido, aluno, sequelize) {
 
@@ -96,18 +97,39 @@ function pesquisarCarrinhoPeloId(idAluno, sequelize) {
 
 }
 
-function criarReserva(tipo_pagamento, aluno, sequelize) {
+function criarReserva(tipoPagamento, virandoSocio, aluno, data) {
 
-    return Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
 
-        cons
+        try {
+            const sequelize = new Sequelize({
+                database: process.env.database_name,
+                username: process.env.database_user_root, // dps atualizar para o login funcionario
+                password: process.env.database_password_root, // dps atualizar para o senha funcionario
+                host: process.env.database_host,
+                dialect: 'mysql'
+            });
 
+            const valorCarrinho = await valorCarrinhoCompras(aluno, virandoSocio, data, sequelize)
+            const idAluno = aluno.id_aluno
+            const fk_carrinho = aluno.id_aluno
 
+            await sequelize.query("call criar_reserva(?,?,?,?,?)", {
+                replacements: [idAluno, fk_carrinho, tipoPagamento, Number(valorCarrinho).toFixed(2), data],
+                type: sequelize.QueryTypes.INSERT
+            })
+                .then((r) => resolve(r))
+                .catch((e) => reject(e))
+
+        }
+        catch (err) {
+            reject(err)
+        }
     })
 
 }
 
-function valorCarrinhoCompras(aluno, sequelize) {
+function valorCarrinhoCompras(aluno, virandoSocio, data, sequelize) {
 
     return new Promise(async (resolve, reject) => {
 
@@ -118,10 +140,18 @@ function valorCarrinhoCompras(aluno, sequelize) {
 
             // Define se o aluno é sócio
             await pesquisarUmAssociadoPeloId(aluno.id_aluno, sequelize)
-                .then(() => resultadoSocio = true)
-                .catch(() => resultadoSocio = false)
+                .then(() => alunoSocio = true)
+                .catch(() => alunoSocio = false)
 
             let valorTotal = 0
+
+            // verifica se ele esta virando sócio
+            if (virandoSocio && !alunoSocio) {
+                const associacao = { id_aluno: aluno.id_aluno, brinde: false, dataAssociacao: data }
+                await associarAluno(associacao, sequelize)
+                alunoSocio = true
+                valorTotal += 100
+            }
 
             if (Object.keys(listaCarrinho).length === 0) {
                 resolve(valorTotal)
@@ -177,10 +207,6 @@ function simularDesconto(aluno, sequelize) {
     })
 }
 
-// function valorAssociadoCarrinhoCompras(idCarrinho, aluno, sequelize){
-
-// }
-
 function retornarItensCarrinho(aluno, sequelize) {
 
     return new Promise(async (resolve, reject) => {
@@ -199,7 +225,7 @@ function retornarItensCarrinho(aluno, sequelize) {
             const produtosInfo = Object.keys(listaCarrinho).map(async (key) => {
 
                 const produto = await pesquisarProdutoAtivoPeloId(key, sequelize);
-                
+
                 response[indexProdutoResponse] = {
                     idProduto: produto.id_produto,
                     nome: produto.nome,
@@ -231,4 +257,4 @@ function retornarItensCarrinho(aluno, sequelize) {
 
 }
 
-module.exports = { adicionarItemCarrinho, removerItemCarrinho, valorCarrinhoCompras, valorCarrinhoCompras, simularDesconto, retornarItensCarrinho }
+module.exports = { adicionarItemCarrinho, removerItemCarrinho, valorCarrinhoCompras, simularDesconto, retornarItensCarrinho, criarReserva }
