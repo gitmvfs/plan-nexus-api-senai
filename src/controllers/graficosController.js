@@ -7,6 +7,7 @@ function gerarGraficos(sequelize) {
             let response = {}
             response = await estoqueInfo(response, sequelize)
             response = await doacaoCustoInfo(response, sequelize)
+            response = await itensMaisDoadosInfo(response, sequelize)
             resolve(response)
         }
         catch (err) {
@@ -25,7 +26,7 @@ function estoqueInfo(response, sequelize) {
             const produtos = await sequelize.query("select * from todos_produtos where status = 1")
                 .catch((err) => reject(err))
 
-            const produtosAgrupados = agruparProdutos(produtos[0])
+            const produtosAgrupados = agruparPorNomeCor(produtos[0])
 
             const estoque = {
                 Label: {},
@@ -50,25 +51,6 @@ function estoqueInfo(response, sequelize) {
     })
 
 }
-function agruparProdutos(produtos) {
-    const agrupados = {};
-
-    produtos.forEach(produto => {
-        const chave = `${produto.nome}_${produto.cor}`;
-        if (!agrupados[chave]) {
-            agrupados[chave] = {
-                nome: produto.nome,
-                cor: produto.cor,
-                qtd_estoque: 0,
-                produtos: []
-            };
-        }
-        agrupados[chave].qtd_estoque += produto.qtd_estoque;
-        agrupados[chave].produtos.push(produto);
-    });
-
-    return Object.values(agrupados);
-}
 
 function doacaoCustoInfo(response, sequelize) {
 
@@ -92,7 +74,7 @@ function doacaoCustoInfo(response, sequelize) {
             });
 
             await Promise.allSettled(resultadoDoacaoProduto)
-            
+
             const doacao = {
                 Label: {
                     0: "Produto",
@@ -114,6 +96,79 @@ function doacaoCustoInfo(response, sequelize) {
         }
 
     })
+}
+
+function itensMaisDoadosInfo(response, sequelize) {
+    return new Promise(async (resolve, reject) => {
+        try {
+
+            const doacaoProduto = await sequelize.query("select * from doacoes_produto order by id_produto")
+            const listaProdutosMaisDoados = listarProdutosMaisDoados(doacaoProduto)
+            let index = 0
+
+            const produtosMaisDoados = {
+                Label: {},
+                Data: {}
+            }
+
+            listaProdutosMaisDoados.map(produto => {
+                produtosMaisDoados.Label[index] = produto.nome
+                produtosMaisDoados.Data[index] = produto.quantidadeTotal
+                index++
+            })
+            response["ProdutosMaisDoados"] = produtosMaisDoados
+            resolve(response)
+
+        }
+        catch (err) {
+            reject(err)
+        }
+    })
+}
+
+function agruparPorNomeCor(produtos) {
+    const agrupados = {};
+
+    produtos.forEach(produto => {
+        const chave = `${produto.nome}_${produto.cor}`;
+        if (!agrupados[chave]) {
+            agrupados[chave] = {
+                nome: produto.nome,
+                cor: produto.cor,
+                qtd_estoque: 0,
+                produtos: []
+            };
+        }
+        agrupados[chave].qtd_estoque += produto.qtd_estoque;
+        agrupados[chave].produtos.push(produto);
+    });
+
+    return Object.values(agrupados);
+}
+
+function listarProdutosMaisDoados(doacoes) {
+    // Combinar todas as listas de doações em uma única lista
+    const todasDoacoes = doacoes.flat();
+
+    // Agrupar as doações por produto e calcular a quantidade total doada para cada produto
+    const doacoesPorProduto = todasDoacoes.reduce((acc, doacao) => {
+        if (!acc[doacao.produto]) {
+            acc[doacao.produto] = {
+                nome: doacao.produto,
+                quantidadeTotal: 0
+            };
+        }
+        acc[doacao.produto].quantidadeTotal += doacao.quantidade;
+        return acc;
+    }, {});
+
+    // Converter o objeto de doações por produto em uma lista
+    const listaDeDoacoes = Object.values(doacoesPorProduto);
+
+    // Ordenar a lista de produtos pela quantidade total doada em ordem decrescente
+    listaDeDoacoes.sort((a, b) => b.quantidadeTotal - a.quantidadeTotal);
+
+    return listaDeDoacoes;
 }
 
 module.exports = { gerarGraficos }
