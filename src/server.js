@@ -21,6 +21,7 @@ const turmaRota = require("./routes/turmaRota")
 const associadoRota = require("./routes/associadoRota")
 const doacaoProdutoRota = require("./routes/doacaoProdutoRota")
 const smtpRota = require("./routes/smtpRota")
+const graficosRota = require("./routes/graficosRota")
 
 // Config dotenv
 dotenv.config({ path: resolve("../", ".env") })
@@ -79,6 +80,7 @@ app.use("/reserva", reservaRota)
 app.use("/turma", turmaRota)
 app.use("/associado", associadoRota)
 app.use("/doacaoProduto", doacaoProdutoRota)
+app.use("/graficos", graficosRota)
 
 app.get("", (req,res) => {
 
