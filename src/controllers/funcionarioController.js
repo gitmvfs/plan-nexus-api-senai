@@ -113,6 +113,7 @@ async function loginFuncionario(funcionario) {
 
             if(!email || !senha){
                 reject(novoErro("Email ou senha vazios.", 400))
+                return
             }
 
             const usuario_criptografado = await retornarSenhaCriptografada(email, sequelize);
