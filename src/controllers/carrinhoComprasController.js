@@ -112,10 +112,13 @@ function criarReserva(tipoPagamento, virandoSocio, aluno, data) {
 
             const valorCarrinho = await valorCarrinhoCompras(aluno, virandoSocio, data, sequelize)
             const idAluno = aluno.id_aluno
-            const fk_carrinho = aluno.id_aluno
 
-            await sequelize.query("call criar_reserva(?,?,?,?,?)", {
-                replacements: [idAluno, fk_carrinho, tipoPagamento, Number(valorCarrinho).toFixed(2), data],
+            if(valorCarrinho == 0 ){
+                reject(novoErro("Carrinho vazio",400))
+            }
+
+            await sequelize.query("call criar_reserva(?,?,?,?)", {
+                replacements: [idAluno, tipoPagamento, Number(valorCarrinho).toFixed(2), data],
                 type: sequelize.QueryTypes.INSERT
             })
                 .then((r) => resolve(r))
