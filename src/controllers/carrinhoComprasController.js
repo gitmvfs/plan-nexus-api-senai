@@ -21,6 +21,11 @@ function adicionarItemCarrinho(idProduto, quantidadePedido, aluno, sequelize) {
                 return
             }
 
+            if(!quantidadePedido){
+                reject(novoErro("A quantidade do pedido está vazia.",400))
+                return
+            }
+
             // verifica o estoque
             if (produto.qtd_disponivel < quantidadePedido) {
                 reject(novoErro("A quantidade do pedido excede o disponivel do produto", 400))
