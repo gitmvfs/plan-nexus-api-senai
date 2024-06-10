@@ -31,15 +31,18 @@ function criarProdutosParaCadastro(produto, imagensAgrupadasParams) {
 
             }
             const imagensAgrupadas = imagensAgrupadasParams;
+            console.log(imagensAgrupadas)
+            // console.log(imagensAgrupadas)
             const listaDeLinks = {}; // lista com a cor da imagem + url de resposta
             const listaErrosImagem = [] // lista com os erros de tentar cadastrar imagem
             console.log(imagensAgrupadas)
 
             for (let index = 0; index < imagensAgrupadas.length; index++) {
                 try {
-                    if (imagensAgrupadas[index].fieldname.contains('][')) {
+                    if (imagensAgrupadas[index].fieldname.includes('][')) {
                         imagensAgrupadas[index].fieldname = imagensAgrupadas[index].fieldname.split("][")[2]
-                    }
+
+                        }
                 }
                 catch (err) { console.log(err) }
 
@@ -292,7 +295,7 @@ async function atualizarProduto(idProdutoParams, dadosProduto, fotosFile, sequel
             const id_produto = idProdutoParams
             let brinde = dadosProduto.brinde == "true" ? 1 : 0
 
-            if (!!linksFotosAntigas[0] == false && fotos[0] == false) {
+            if (fotoArray[0] == false) {
                 reject(novoErro("Nenhum link e/ou foto foi inserido", 400))
                 return
             }
@@ -310,6 +313,9 @@ async function atualizarProduto(idProdutoParams, dadosProduto, fotosFile, sequel
             }
 
             const produtoExiste = await pesquisarProdutoPeloId(id_produto, sequelize)
+            console.log(produtoExiste)
+
+            console.log('PRE-VUID',dadosProduto)
 
             if (!produtoExiste[0]) {
                 reject(novoErro("Produto não encontrado", 404))
