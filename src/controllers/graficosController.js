@@ -29,13 +29,13 @@ function estoqueInfo(response, sequelize) {
             const produtosAgrupados = agruparPorNomeCor(produtos[0])
 
             const estoque = {
-                Label: {},
-                Data: {}
+                Label: [],
+                Data: []
             };
 
             produtosAgrupados.forEach((produto, index) => {
-                estoque.Label[index] = produto.nome;
-                estoque.Data[index] = produto.qtd_estoque;
+                estoque.Label.push(produto.nome);
+                estoque.Data.push(produto.qtd_estoque);
             });
 
             response["Estoque"] = estoque
@@ -76,14 +76,9 @@ function doacaoCustoInfo(response, sequelize) {
             await Promise.allSettled(resultadoDoacaoProduto)
 
             const doacao = {
-                Label: {
-                    0: "Produto",
-                    1: "Dinheiro"
-                },
-                Data: {
-                    0: totalDoacaoProduto,
-                    1: totalDoacaoDinheiro
-                }
+                Label:
+                    ["Produto", "Dinheiro"],
+                Data: [totalDoacaoProduto, totalDoacaoDinheiro]
             }
 
 
@@ -107,13 +102,13 @@ function itensMaisDoadosInfo(response, sequelize) {
             let index = 0
 
             const produtosMaisDoados = {
-                Label: {},
-                Data: {}
+                Label: [],
+                Data: []
             }
 
             listaProdutosMaisDoados.map(produto => {
-                produtosMaisDoados.Label[index] = produto.nome
-                produtosMaisDoados.Data[index] = produto.quantidadeTotal
+                produtosMaisDoados.Label.push(produto.nome)
+                produtosMaisDoados.Data.push(produto.quantidadeTotal)
                 index++
             })
             response["ProdutosMaisDoados"] = produtosMaisDoados
@@ -125,6 +120,15 @@ function itensMaisDoadosInfo(response, sequelize) {
         }
     })
 }
+
+function itensMaisVendidosInfo(response, sequelize) {
+    return new Promise((resolve, reject) => {
+
+
+
+    })
+}
+
 
 function agruparPorNomeCor(produtos) {
     const agrupados = {};
