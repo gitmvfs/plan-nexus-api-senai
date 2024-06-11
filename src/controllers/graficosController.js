@@ -254,7 +254,7 @@ function graficoAssociadosComparativo(response, sequelize) {
             }
             else {
                 situacaoHoje = 'diminuiu'
-                valorHoje = (associadosHoje - associadosHojeComparativo) * -1
+                valorHoje = (associadosHoje - associadosHojeComparativo) 
 
             }
 
@@ -287,7 +287,7 @@ function graficoAssociadosComparativo(response, sequelize) {
             }
             else {
                 situacaoSemana = 'diminuiu'
-                valorSemana = (associadosSemana - associadosSemanaComparativo) * -1
+                valorSemana = (associadosSemana - associadosSemanaComparativo)
 
             }
 
@@ -319,7 +319,7 @@ function graficoAssociadosComparativo(response, sequelize) {
             }
             else {
                 situacaoMes = 'diminuiu'
-                valorMes = (associadosMes - associadosMesComparativo) * -1
+                valorMes = (associadosMes - associadosMesComparativo)
 
             }
 
